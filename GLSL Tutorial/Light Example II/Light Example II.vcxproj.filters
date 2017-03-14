@@ -14,8 +14,16 @@
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
     <Filter Include="Shaders">
-      <UniqueIdentifier>{7961e96a-eb13-4f54-ae15-4fc560fcf588}</UniqueIdentifier>
+      <UniqueIdentifier>{e56d095e-8097-44eb-ae44-d99992eb7051}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\color.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\color.vert">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="shaderDemo.h">
@@ -38,13 +46,5 @@
     <ClCompile Include="vsShaderLib.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="shaders\color.frag">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="shaders\color.vert">
-      <Filter>Shaders</Filter>
-    </None>
   </ItemGroup>
 </Project>

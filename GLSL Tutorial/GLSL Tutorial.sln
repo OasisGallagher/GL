@@ -9,6 +9,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Cube Example", "Cube Exampl
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "L3DLighting1", "L3DLighting1\L3DLighting1\L3DLighting1.vcxproj", "{6C93911C-CAB7-42FD-B196-3A166399F3A4}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Light Example I", "Light Example I\Light Example I.vcxproj", "{E6726979-D6BB-41B2-9652-A43E9560DDFB}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Light Example II", "Light Example II\Light Example II.vcxproj", "{72E47560-FA64-4E25-8A31-FD957DD2EE15}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -27,6 +31,14 @@ Global
 		{6C93911C-CAB7-42FD-B196-3A166399F3A4}.Debug|Win32.Build.0 = Debug|Win32
 		{6C93911C-CAB7-42FD-B196-3A166399F3A4}.Release|Win32.ActiveCfg = Release|Win32
 		{6C93911C-CAB7-42FD-B196-3A166399F3A4}.Release|Win32.Build.0 = Release|Win32
+		{E6726979-D6BB-41B2-9652-A43E9560DDFB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E6726979-D6BB-41B2-9652-A43E9560DDFB}.Debug|Win32.Build.0 = Debug|Win32
+		{E6726979-D6BB-41B2-9652-A43E9560DDFB}.Release|Win32.ActiveCfg = Release|Win32
+		{E6726979-D6BB-41B2-9652-A43E9560DDFB}.Release|Win32.Build.0 = Release|Win32
+		{72E47560-FA64-4E25-8A31-FD957DD2EE15}.Debug|Win32.ActiveCfg = Debug|Win32
+		{72E47560-FA64-4E25-8A31-FD957DD2EE15}.Debug|Win32.Build.0 = Debug|Win32
+		{72E47560-FA64-4E25-8A31-FD957DD2EE15}.Release|Win32.ActiveCfg = Release|Win32
+		{72E47560-FA64-4E25-8A31-FD957DD2EE15}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

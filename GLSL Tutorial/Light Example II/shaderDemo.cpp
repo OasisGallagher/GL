@@ -95,14 +95,22 @@ void renderScene(void) {
 	vsml->normalize(res);
 	shader.setBlockUniform("Lights", "l_dir", res);
 
-	float diffuse[] = { 0.99f, 0.99f, 0.99f, 0 };
+	float diffuse[] = { 0.01f, 0.01f, 0.01f, 0 };
 	shader.setBlockUniform("Materials", "diffuse", diffuse);
+
+	float specular[] = { 0.45f, 0.45f, 0.45f, 0 };
+	shader.setBlockUniform("Materials", "specular", specular);
+
+	float ambient[] = { 0.31f, 0.31f, 0.31f, 0 };
+	shader.setBlockUniform("Materials", "ambient", ambient);
 
 	float* view = vsml->get(VSMathLib::VIEW);
 
 	// If you don't have non-uniform scaling as part of your model view matrix, 
 	// the upper 3x3 of the model-view matrix is just as good as the "normal matrix" 
 	// (which is the transpose of the inverse of the model view matrix) for transforming normals.
+	// Otherwise, see
+	// http://www.lighthouse3d.com/tutorials/glsl-tutorial/spaces-and-matrices/
 	float normalMatrix[9];
 	int index = 0;
 	for (int i = 0; i < 3; ++i) {
@@ -112,6 +120,7 @@ void renderScene(void) {
 	}
 
 	shader.setBlockUniform("Matrices", "m_normal", normalMatrix);
+	shader.setBlockUniform("Matrices", "m_viewModel", view);
 
 	// use our shader
 	glUseProgram(shader.getProgramIndex());
@@ -259,17 +268,17 @@ GLuint setupShaders() {
 	shader.loadShader(VSShaderLib::FRAGMENT_SHADER, "shaders/color.frag");
 
 	// set semantics for the shader variables
-	shader.setProgramOutput(0,"outputF");
+	shader.setProgramOutput(0, "outputF");
 	shader.setVertexAttribName(VSShaderLib::VERTEX_COORD_ATTRIB, "position");
 
 	shader.prepareProgram();
 
 	// this is only useful for the uniform version of the shader
-	float c[4] = {1.0f, 0.8f, 0.2f, 1.0f};
+	float c[4] = { 1.0f, 0.8f, 0.2f, 1.0f };
 	shader.setUniform("color", c);
 
 	printf("InfoLog for Hello World Shader\n%s\n\n", shader.getAllInfoLogs().c_str());
-	
+
 	return(shader.isProgramValid());
 }
 
