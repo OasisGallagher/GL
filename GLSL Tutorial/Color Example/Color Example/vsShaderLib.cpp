@@ -1,4 +1,4 @@
-/** ----------------------------------------------------------
+﻿/** ----------------------------------------------------------
  * \class VSShaderLib
  *
  * Lighthouse3D
@@ -484,7 +484,7 @@ VSShaderLib::isProgramValid() {
 	if (pProgram) {
 	
 		glValidateProgram(pProgram);
-		glGetProgramiv(pProgram, GL_VALIDATE_STATUS,&b);
+		glGetProgramiv(pProgram, GL_VALIDATE_STATUS, &b);
 	}
 
 	return (b != GL_FALSE);
@@ -582,7 +582,6 @@ VSShaderLib::addBlocks() {
 
 	int count, dataSize, actualLen, activeUnif, maxUniLength;
 	int uniType, uniSize, uniOffset, uniMatStride, uniArrayStride, auxSize;
-	char *name, *name2;
 
 	UniformBlock block;
 
@@ -591,7 +590,7 @@ VSShaderLib::addBlocks() {
 	for (int i = 0; i < count; ++i) {
 		// Get buffers name
 		glGetActiveUniformBlockiv(pProgram, i, GL_UNIFORM_BLOCK_NAME_LENGTH, &actualLen);
-		name = (char *)malloc(sizeof(char) * actualLen);
+		char* name = (char *)malloc(sizeof(char) * actualLen);
 		glGetActiveUniformBlockName(pProgram, i, actualLen, NULL, name);
 
 		if (!spBlocks.count(name)) {
@@ -602,7 +601,11 @@ VSShaderLib::addBlocks() {
 			glGenBuffers(1, &block.buffer);
 			glBindBuffer(GL_UNIFORM_BUFFER, block.buffer);
 			glBufferData(GL_UNIFORM_BUFFER, dataSize, NULL, GL_DYNAMIC_DRAW);
+
+			// assign a binding point to an active uniform block.
 			glUniformBlockBinding(pProgram, i, spBlockCount);
+
+			//  bind a range within a buffer object to an indexed buffer target.
 			glBindBufferRange(GL_UNIFORM_BUFFER, spBlockCount, block.buffer, 0, dataSize);
 
 			glGetActiveUniformBlockiv(pProgram, i, GL_UNIFORM_BLOCK_ACTIVE_UNIFORMS, &activeUnif);
@@ -610,55 +613,78 @@ VSShaderLib::addBlocks() {
 			unsigned int *indices;
 			indices = (unsigned int *)malloc(sizeof(unsigned int) * activeUnif);
 			glGetActiveUniformBlockiv(pProgram, i, GL_UNIFORM_BLOCK_ACTIVE_UNIFORM_INDICES, (int *)indices);
-			
+
 			glGetProgramiv(pProgram, GL_ACTIVE_UNIFORM_MAX_LENGTH, &maxUniLength);
-			name2 = (char *)malloc(sizeof(char) * maxUniLength);
+			char* name2 = (char *)malloc(sizeof(char) * maxUniLength);
 
 			for (int k = 0; k < activeUnif; ++k) {
-		
+
 				myBlockUniform bUni;
 
 				glGetActiveUniformName(pProgram, indices[k], maxUniLength, &actualLen, name2);
 				glGetActiveUniformsiv(pProgram, 1, &indices[k], GL_UNIFORM_TYPE, &uniType);
-				glGetActiveUniformsiv(pProgram, 1, &indices[k], GL_UNIFORM_SIZE, &uniSize);
-				glGetActiveUniformsiv(pProgram, 1, &indices[k], GL_UNIFORM_OFFSET, &uniOffset);
-				glGetActiveUniformsiv(pProgram, 1, &indices[k], GL_UNIFORM_MATRIX_STRIDE, &uniMatStride);
-				glGetActiveUniformsiv(pProgram, 1, &indices[k], GL_UNIFORM_ARRAY_STRIDE, &uniArrayStride);
-			
-				if (uniArrayStride > 0)
-					auxSize = uniArrayStride * uniSize;
-				
-				else if (uniMatStride > 0) {
 
-					switch(uniType) {
-						case GL_FLOAT_MAT2:
-						case GL_FLOAT_MAT2x3:
-						case GL_FLOAT_MAT2x4:
-						case GL_DOUBLE_MAT2:
-						case GL_DOUBLE_MAT2x3:
-						case GL_DOUBLE_MAT2x4:
-							auxSize = 2 * uniMatStride;
-							break;
-						case GL_FLOAT_MAT3:
-						case GL_FLOAT_MAT3x2:
-						case GL_FLOAT_MAT3x4:
-						case GL_DOUBLE_MAT3:
-						case GL_DOUBLE_MAT3x2:
-						case GL_DOUBLE_MAT3x4:
-							auxSize = 3 * uniMatStride;
-							break;
-						case GL_FLOAT_MAT4:
-						case GL_FLOAT_MAT4x2:
-						case GL_FLOAT_MAT4x3:
-						case GL_DOUBLE_MAT4:
-						case GL_DOUBLE_MAT4x2:
-						case GL_DOUBLE_MAT4x3:
-							auxSize = 4 * uniMatStride;
-							break;
+				// identifying the size of the uniforms specified by the corresponding array of uniformIndices​ is returned. 
+				// The sizes returned are in units of the type returned by a query of GL_UNIFORM_TYPE. For active uniforms that are arrays, 
+				// the size is the number of active elements in the array; for all other uniforms, the size is one.
+				glGetActiveUniformsiv(pProgram, 1, &indices[k], GL_UNIFORM_SIZE, &uniSize);
+
+				// then an array of uniform buffer offsets is returned. 
+				// For uniforms in a named uniform block, the returned value will be its offset,
+				// in basic machine units, relative to the beginning of the uniform block in the buffer object data store.
+				// For atomic counter uniforms, the returned value will be its offset relative to the beginning of its active atomic counter buffer.
+				// For all other uniforms, -1 will be returned.
+				glGetActiveUniformsiv(pProgram, 1, &indices[k], GL_UNIFORM_OFFSET, &uniOffset);
+
+				// identifying the stride between columns of a column-major matrix or rows of a row-major matrix, in basic machine units,
+				// of each of the uniforms specified by the corresponding array of uniformIndices​ is returned. The matrix stride of a uniform 
+				// associated with the default uniform block is -1. Note that this information only makes sense for uniforms that are matrices.
+				// For uniforms that are not matrices, but are declared in a named uniform block, a matrix stride of zero is returned.
+				glGetActiveUniformsiv(pProgram, 1, &indices[k], GL_UNIFORM_MATRIX_STRIDE, &uniMatStride);
+
+				// identifying the stride between elements of each of the uniforms specified by the corresponding array of uniformIndices​ is returned.
+				// For uniforms in named uniform blocks and for uniforms declared as atomic counters, the stride is the difference, in basic machine units,
+				// of consecutive elements in an array, or zero for uniforms not declared as an array.For all other uniforms, a stride of - 1 will be returned.
+				glGetActiveUniformsiv(pProgram, 1, &indices[k], GL_UNIFORM_ARRAY_STRIDE, &uniArrayStride);
+
+				if (uniArrayStride > 0)
+				{
+					auxSize = uniArrayStride * uniSize;
+				}
+				else if (uniMatStride > 0)
+				{
+					switch (uniType)
+					{
+					case GL_FLOAT_MAT2:
+					case GL_FLOAT_MAT2x3:
+					case GL_FLOAT_MAT2x4:
+					case GL_DOUBLE_MAT2:
+					case GL_DOUBLE_MAT2x3:
+					case GL_DOUBLE_MAT2x4:
+						auxSize = 2 * uniMatStride;
+						break;
+					case GL_FLOAT_MAT3:
+					case GL_FLOAT_MAT3x2:
+					case GL_FLOAT_MAT3x4:
+					case GL_DOUBLE_MAT3:
+					case GL_DOUBLE_MAT3x2:
+					case GL_DOUBLE_MAT3x4:
+						auxSize = 3 * uniMatStride;
+						break;
+					case GL_FLOAT_MAT4:
+					case GL_FLOAT_MAT4x2:
+					case GL_FLOAT_MAT4x3:
+					case GL_DOUBLE_MAT4:
+					case GL_DOUBLE_MAT4x2:
+					case GL_DOUBLE_MAT4x3:
+						auxSize = 4 * uniMatStride;
+						break;
 					}
 				}
 				else
+				{
 					auxSize = typeSize(uniType);
+				}
 
 				bUni.offset = uniOffset;
 				bUni.type = uniType;
@@ -666,19 +692,21 @@ VSShaderLib::addBlocks() {
 				bUni.arrayStride = uniArrayStride;
 
 				block.uniformOffsets[name2] = bUni;
-
-
 			}
+
 			free(name2);
 
 			block.size = dataSize;
 			block.bindingIndex = spBlockCount;
 			spBlocks[name] = block;
+			free(name);
+
 			spBlockCount++;
 		}
 		else
+		{
 			glUniformBlockBinding(pProgram, i, spBlocks[name].bindingIndex);
-
+		}
 	}
 
 }
@@ -695,15 +723,19 @@ VSShaderLib::addUniforms() {
 	char *name;
 
 	int maxUniLength;
+	// returns the number of active uniform variables for program​.
 	glGetProgramiv(pProgram, GL_ACTIVE_UNIFORMS, &count);
 
+	// returns the length of the longest active uniform variable name for program​, 
+	// including the null termination character(i.e., the size of the character buffer required to store the longest uniform variable name).
+	// If no active uniform variables exist, 0 is returned.
 	glGetProgramiv(pProgram, GL_ACTIVE_UNIFORM_MAX_LENGTH, &maxUniLength);
 
 	name = (char *)malloc(sizeof(char) * maxUniLength);
 
 	unsigned int loc;
 	for (int i = 0; i < count; ++i) {
-
+		// Returns information about several active uniform variables for the specified program object.
 		glGetActiveUniform(pProgram, i, maxUniLength, &actualLen, &size, &type, name);
 		// -1 indicates that is not an active uniform, although it may be present in a
 		// uniform block

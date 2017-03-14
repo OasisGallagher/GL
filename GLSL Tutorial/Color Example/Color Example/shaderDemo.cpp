@@ -86,15 +86,16 @@ void renderScene(void) {
 	vsml->loadIdentity(VSMathLib::VIEW);
 	vsml->loadIdentity(VSMathLib::MODEL);
 	// set the camera using a function similar to gluLookAt
-	vsml->lookAt(camX, camY, camZ, 0,0,0, 0,1,0);
+	vsml->lookAt(camX, camY, camZ, 0, 0, 0, 0, 1, 0);
+
 	// use our shader
 	glUseProgram(shader.getProgramIndex());
 	// send matrices to uniform buffer
 	vsml->matricesToGL();
 	// render VAO
 	glBindVertexArray(vao);
-	glDrawElements(GL_TRIANGLES, faceCount*3, GL_UNSIGNED_INT, 0);
-	 //swap buffers
+	glDrawElements(GL_TRIANGLES, faceCount * 3, GL_UNSIGNED_INT, 0);
+	//swap buffers
 	glutSwapBuffers();
 }
 
@@ -242,7 +243,6 @@ GLuint setupShaders() {
 	float c[4] = {1.0f, 0.8f, 0.2f, 1.0f};
 	shader.setUniform("color", c);
 
-
 	printf("InfoLog for Hello World Shader\n%s\n\n", shader.getAllInfoLogs().c_str());
 	
 	return(shader.isProgramValid());
@@ -271,6 +271,7 @@ void initOpenGL()
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
 	// create the VAO
+	// Vertex Array Object-VAO, VAO是一个对象, 其中包含一个或者更多的Vertex Buffer Objects.
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
 
@@ -279,6 +280,7 @@ void initOpenGL()
 	glGenBuffers(4, buffers);
 
 	//vertex coordinates buffer
+	// 将vertices绑定到Vertex shader的location = VSShaderLib::VERTEX_COORD_ATTRIB(0)的变量上.
 	glBindBuffer(GL_ARRAY_BUFFER, buffers[0]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(VSShaderLib::VERTEX_COORD_ATTRIB);
@@ -358,7 +360,10 @@ int main(int argc, char **argv) {
 	printf ("GLSL: %s\n", glGetString (GL_SHADING_LANGUAGE_VERSION));
 
 	if (!setupShaders())
+	{
+		system("pause");
 		return(1);
+	}
 
 	initOpenGL();
 
