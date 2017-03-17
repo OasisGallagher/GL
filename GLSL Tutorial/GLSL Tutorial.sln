@@ -13,6 +13,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Light Example I", "Light Ex
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Light Example II", "Light Example II\Light Example II.vcxproj", "{72E47560-FA64-4E25-8A31-FD957DD2EE15}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Directional Lights per Pixel", "Directional Lights per Pixel\Directional Lights per Pixel.vcxproj", "{26FD3548-120C-4EAD-B166-03E735B9FCD5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -39,6 +41,10 @@ Global
 		{72E47560-FA64-4E25-8A31-FD957DD2EE15}.Debug|Win32.Build.0 = Debug|Win32
 		{72E47560-FA64-4E25-8A31-FD957DD2EE15}.Release|Win32.ActiveCfg = Release|Win32
 		{72E47560-FA64-4E25-8A31-FD957DD2EE15}.Release|Win32.Build.0 = Release|Win32
+		{26FD3548-120C-4EAD-B166-03E735B9FCD5}.Debug|Win32.ActiveCfg = Debug|Win32
+		{26FD3548-120C-4EAD-B166-03E735B9FCD5}.Debug|Win32.Build.0 = Debug|Win32
+		{26FD3548-120C-4EAD-B166-03E735B9FCD5}.Release|Win32.ActiveCfg = Release|Win32
+		{26FD3548-120C-4EAD-B166-03E735B9FCD5}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

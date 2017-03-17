@@ -95,16 +95,16 @@ void renderScene(void) {
 	vsml->normalize(res);
 	shader.setBlockUniform("Lights", "l_dir", res);
 
-	float diffuse[] = { 0.2f, 0.2f, 0.2f, 0 };
+	float diffuse[] = { 0.8f, 0.8f, 0.8f, 1.f };
 	shader.setBlockUniform("Materials", "diffuse", diffuse);
 
-	float specular[] = { 0.7f, 0.7f, 0, 0 };
+	float specular[] = { 0.8f, 0.8f, 0.8f, 1.f };
 	shader.setBlockUniform("Materials", "specular", specular);
 
-	/*float ambient[] = { 0.2f, 0.2f, 0.2f, 0 };*/
-	shader.setBlockUniform("Materials", "ambient", diffuse);
+	float ambient[] = { 0.2f, 0.2f, 0.2f, 1.f };
+	shader.setBlockUniform("Materials", "ambient", ambient);
 
-	float shininess = 100;
+	float shininess = 100.f;
 	shader.setBlockUniform("Materials", "shininess", &shininess);
 
 	float* view = vsml->get(VSMathLib::VIEW);

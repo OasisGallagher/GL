@@ -4,7 +4,7 @@ layout (std140) uniform Matrices {
 	mat4 m_pvm;
 	mat4 m_viewModel;
 	mat3 m_normal;
-} ;
+};
 
 layout (std140) uniform Materials {
 	vec4 diffuse;
@@ -29,7 +29,7 @@ void main()
 	vec4 spec = vec4(0);
 
 	vec3 n = normalize(m_normal * normal);
-	float intensity = max(dot(n, l_dir), 0.0);
+	float intensity = max(dot(n, l_dir), 0);
 
 	if (intensity > 0) {
 		vec3 pos = vec3(m_viewModel * position);
@@ -43,5 +43,5 @@ void main()
 
 	DataOut.color = max(intensity * diffuse + spec, ambient);
 
-	gl_Position = m_pvm * position ;
-} 
+	gl_Position = m_pvm * position;
+}
