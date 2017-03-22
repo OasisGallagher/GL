@@ -104,7 +104,7 @@ void renderScene(void) {
 
 	shader.setBlockUniform("Lights", "l_spotCutOff", &spotCutOff);
 
-	float color[] = { 1.f, 0.f, 1.f, 1.f };
+	float color[] = { 0.f, 1.f, 1.f, 1.f };
 	shader.setBlockUniform("Materials", "color", color);
 
 	float diffuse[] = { 0.8f, 0.8f, 0.8f, 1.f };
