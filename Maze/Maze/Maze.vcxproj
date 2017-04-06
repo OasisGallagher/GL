@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClCompile Include="engine\src\app.cpp" />
     <ClCompile Include="engine\src\shader.cpp" />
+    <ClCompile Include="engine\src\texture.cpp" />
     <ClCompile Include="global\src\debug.cpp" />
     <ClCompile Include="global\src\os_linux.cpp" />
     <ClCompile Include="global\src\os_windows.cpp" />
@@ -24,6 +25,7 @@
   <ItemGroup>
     <ClInclude Include="engine\include\app.h" />
     <ClInclude Include="engine\include\shader.h" />
+    <ClInclude Include="engine\include\texture.h" />
     <ClInclude Include="global\include\debug.h" />
     <ClInclude Include="global\include\os.h" />
     <ClInclude Include="global\include\os_linux.h" />

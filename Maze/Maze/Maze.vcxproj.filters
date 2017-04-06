@@ -60,6 +60,9 @@
     <ClCompile Include="engine\src\app.cpp">
       <Filter>engine\src</Filter>
     </ClCompile>
+    <ClCompile Include="engine\src\texture.cpp">
+      <Filter>engine\src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="engine\include\shader.h">
@@ -96,6 +99,9 @@
       <Filter>main\include</Filter>
     </ClInclude>
     <ClInclude Include="engine\include\app.h">
+      <Filter>engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\include\texture.h">
       <Filter>engine\include</Filter>
     </ClInclude>
   </ItemGroup>
