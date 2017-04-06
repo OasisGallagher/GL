@@ -11,7 +11,30 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="engine\src\shader.cpp" />
+    <ClCompile Include="global\src\debug.cpp" />
+    <ClCompile Include="global\src\os_linux.cpp" />
+    <ClCompile Include="global\src\os_windows.cpp" />
+    <ClCompile Include="global\src\reader.cpp" />
+    <ClCompile Include="global\src\utilities.cpp" />
     <ClCompile Include="main\src\main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="engine\include\shader.h" />
+    <ClInclude Include="global\include\debug.h" />
+    <ClInclude Include="global\include\os.h" />
+    <ClInclude Include="global\include\os_linux.h" />
+    <ClInclude Include="global\include\os_windows.h" />
+    <ClInclude Include="global\include\reader.h" />
+    <ClInclude Include="global\include\reference_countable.h" />
+    <ClInclude Include="global\include\utilities.h" />
+    <ClInclude Include="utilities\include\debug.h" />
+    <ClInclude Include="utilities\include\reader.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="engine\include\shader.inl" />
+    <None Include="shaders\simple.frag" />
+    <None Include="shaders\simple.vert" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{803BBD78-7D13-4204-97CD-0434CCC0F61B}</ProjectGuid>
@@ -47,12 +70,14 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>external/glew-1.9.0/include;external/glm-0.9.7.1/;external/glfw-3.1.2/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>main/include;engine/include;global/include;external/glew-1.9.0/include;external/glm-0.9.7.1/;external/glfw-3.1.2/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>PLATFORM_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
-      <IgnoreSpecificDefaultLibraries>libcmt.lib</IgnoreSpecificDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>
+      </IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

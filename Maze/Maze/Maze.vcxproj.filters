@@ -1,10 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="资源文件">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
     <Filter Include="main">
       <UniqueIdentifier>{d669a666-596c-40ff-bd19-228efd175751}</UniqueIdentifier>
     </Filter>
@@ -14,10 +10,92 @@
     <Filter Include="main\src">
       <UniqueIdentifier>{398cb838-fa53-42b7-9388-f505c107fa5a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="engine">
+      <UniqueIdentifier>{0963c400-aaf9-4790-b36e-ecbd489079db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\include">
+      <UniqueIdentifier>{608647b5-7a57-48e8-94e3-694488e607b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\src">
+      <UniqueIdentifier>{0e1251af-3ced-4901-b70b-0ac493f39ac2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="global">
+      <UniqueIdentifier>{c87b3448-0575-4683-808e-f1c70dcd6768}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="global\include">
+      <UniqueIdentifier>{a2ea234c-4b28-4a8b-a346-27f8c3e6eb9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="global\src">
+      <UniqueIdentifier>{f5ede739-71a6-44e2-b5d3-68c57146b842}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shaders">
+      <UniqueIdentifier>{8cd48869-f21c-4b44-96f8-5187d7902b48}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main\src\main.cpp">
       <Filter>main\src</Filter>
     </ClCompile>
+    <ClCompile Include="engine\src\shader.cpp">
+      <Filter>engine\src</Filter>
+    </ClCompile>
+    <ClCompile Include="global\src\debug.cpp">
+      <Filter>global\src</Filter>
+    </ClCompile>
+    <ClCompile Include="global\src\reader.cpp">
+      <Filter>global\src</Filter>
+    </ClCompile>
+    <ClCompile Include="global\src\utilities.cpp">
+      <Filter>global\src</Filter>
+    </ClCompile>
+    <ClCompile Include="global\src\os_linux.cpp">
+      <Filter>global\src</Filter>
+    </ClCompile>
+    <ClCompile Include="global\src\os_windows.cpp">
+      <Filter>global\src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="engine\include\shader.h">
+      <Filter>engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="utilities\include\reader.h">
+      <Filter>global\include</Filter>
+    </ClInclude>
+    <ClInclude Include="utilities\include\debug.h">
+      <Filter>global\include</Filter>
+    </ClInclude>
+    <ClInclude Include="global\include\utilities.h">
+      <Filter>global\include</Filter>
+    </ClInclude>
+    <ClInclude Include="global\include\reference_countable.h">
+      <Filter>global\include</Filter>
+    </ClInclude>
+    <ClInclude Include="global\include\debug.h">
+      <Filter>global\include</Filter>
+    </ClInclude>
+    <ClInclude Include="global\include\os.h">
+      <Filter>global\include</Filter>
+    </ClInclude>
+    <ClInclude Include="global\include\os_linux.h">
+      <Filter>global\include</Filter>
+    </ClInclude>
+    <ClInclude Include="global\include\os_windows.h">
+      <Filter>global\include</Filter>
+    </ClInclude>
+    <ClInclude Include="global\include\reader.h">
+      <Filter>global\include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="engine\include\shader.inl">
+      <Filter>engine\include</Filter>
+    </None>
+    <None Include="shaders\simple.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\simple.vert">
+      <Filter>shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
