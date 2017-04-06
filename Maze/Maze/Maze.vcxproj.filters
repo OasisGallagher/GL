@@ -54,6 +54,12 @@
     <ClCompile Include="global\src\os_windows.cpp">
       <Filter>global\src</Filter>
     </ClCompile>
+    <ClCompile Include="main\src\example.cpp">
+      <Filter>main\src</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\src\app.cpp">
+      <Filter>engine\src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="engine\include\shader.h">
@@ -86,6 +92,12 @@
     <ClInclude Include="global\include\reader.h">
       <Filter>global\include</Filter>
     </ClInclude>
+    <ClInclude Include="main\include\example.h">
+      <Filter>main\include</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\include\app.h">
+      <Filter>engine\include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="engine\include\shader.inl">
@@ -95,6 +107,18 @@
       <Filter>shaders</Filter>
     </None>
     <None Include="shaders\simple.vert">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\simple_transform.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\simple_transform.vert">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\colored.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\colored.vert">
       <Filter>shaders</Filter>
     </None>
   </ItemGroup>

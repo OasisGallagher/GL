@@ -26,6 +26,7 @@ public:
 public:
 	bool Load(ShaderType shaderType, const std::string& path);
 	bool Link();
+	bool Use();
 
 public:
 	GLuint GetProgram() const;

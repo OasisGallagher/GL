@@ -8,6 +8,11 @@ static GLenum shaderTypeMap[] = {
 	GL_FRAGMENT_SHADER,
 };
 
+static const char* shaderNameMap[] = {
+	"VertexShader",
+	"FragmentShader",
+};
+
 Shader::Shader() {
 	program_ = glCreateProgram();
 	std::fill(shaderObjs_, shaderObjs_ + ShaderTypeCount, 0);
@@ -33,6 +38,11 @@ bool Shader::Link() {
 	}
 
 	return LinkShader();
+}
+
+bool Shader::Use() {
+	glUseProgram(program_);
+	return true;
 }
 
 void Shader::DeleteAllShaders() {
@@ -107,8 +117,9 @@ bool Shader::LoadShader(ShaderType shaderType, const char* source) {
 	GLuint shaderObj = glCreateShader(shaderTypeMap[shaderType]);
 
 	glShaderSource(shaderObj, 1, &source, nullptr);
-	glAttachShader(program_, shaderObj);
 	glCompileShader(shaderObj);
+
+	glAttachShader(program_, shaderObj);
 
 	std::string message;
 	if (GetInfoLog(shaderObj, message)) {
@@ -119,7 +130,7 @@ bool Shader::LoadShader(ShaderType shaderType, const char* source) {
 		return true;
 	}
 
-	Debug::LogError(message);
+	Debug::LogError(shaderNameMap[shaderType] + std::string(" ") + message);
 	return false;
 }
 
