@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 
 #include "app.h"
+#include "input.h"
 #include "debug.h"
 #include "example.h"
 
@@ -74,6 +75,8 @@ void App::EnterMainLoop() {
 		}
 
 		glClear(mask);
+
+		Input::Update(window_, deltaTime);
 		example_->Update(deltaTime);
 
 		glfwSwapBuffers(window_);

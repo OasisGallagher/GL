@@ -6,7 +6,13 @@ layout(location = 0) out vec3 color;
 uniform sampler2D textureSamplerDDS;
 uniform sampler2D textureSamplerBmp;
 
+uniform int option = 1;
+
 void main() {
-	color = texture(textureSamplerDDS, uvFragment).rgb;
-	color = texture(textureSamplerBmp, uvFragment).rgb;
+	if (option == 0) {
+		color = texture(textureSamplerDDS, uvFragment).rgb;
+	}
+	else {
+		color = texture(textureSamplerBmp, uvFragment).rgb;
+	}
 }

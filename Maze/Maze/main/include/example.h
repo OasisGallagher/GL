@@ -28,6 +28,7 @@ public:
 
 public:
 	virtual void Update(float deltaTime);
+	virtual void GetEnvRequirement(AppEnv& env);
 
 private:
 	GLuint vao_, vbo_;
@@ -40,6 +41,7 @@ public:
 
 public:
 	virtual void Update(float deltaTime);
+	virtual void GetEnvRequirement(AppEnv& env);
 
 private:
 	GLuint vao_, vbo_;
@@ -53,7 +55,6 @@ public:
 
 public:
 	virtual void Update(float deltaTime);
-	virtual void GetEnvRequirement(AppEnv& env);
 
 private:
 	GLuint vao_, vbo_[2];
@@ -66,7 +67,6 @@ public:
 
 public:
 	virtual void Update(float deltaTime);
-	virtual void GetEnvRequirement(AppEnv& env);
 
 private:
 	glm::mat4 mvp_;

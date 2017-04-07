@@ -66,6 +66,9 @@
     <ClCompile Include="engine\src\texture.cpp">
       <Filter>engine\src</Filter>
     </ClCompile>
+    <ClCompile Include="engine\src\input.cpp">
+      <Filter>engine\src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="engine\include\shader.h">
@@ -107,11 +110,14 @@
     <ClInclude Include="engine\include\texture.h">
       <Filter>engine\include</Filter>
     </ClInclude>
+    <ClInclude Include="global\include\ptr_table.h">
+      <Filter>global\include</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\include\input.h">
+      <Filter>engine\include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="engine\include\shader.inl">
-      <Filter>engine\include</Filter>
-    </None>
     <None Include="shaders\simple.frag">
       <Filter>shaders</Filter>
     </None>

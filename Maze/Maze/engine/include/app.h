@@ -16,6 +16,7 @@ public:
 	void Destroy();
 
 public:
+	GLFWwindow* GetWindow() { return window_; }
 	void SetExample(Example* example);
 	void EnterMainLoop();
 

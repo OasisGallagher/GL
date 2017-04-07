@@ -3,6 +3,8 @@
 #include <string>
 #include <gl/glew.h>
 
+#include "ptr_table.h"
+
 enum ShaderType {
 	ShaderTypeVertex,
 	ShaderTypeFragment,
@@ -13,11 +15,29 @@ class Shader {
 private:
 	struct Uniform {
 		GLenum type;
-		GLuint location;
+		union {
+			GLuint offset;
+			GLuint location;
+		};
+
 		GLuint size;
+		GLuint stride;
 	};
 
-	typedef std::map<std::string, Uniform*> Uniforms;
+	typedef PtrTable<Uniform> Uniforms;
+
+	struct UniformBlock {
+		UniformBlock();
+		~UniformBlock();
+
+		GLuint size;
+		GLuint buffer;
+		GLuint binding;
+		
+		Uniforms uniforms;
+	};
+
+	typedef PtrTable<UniformBlock> UniformBlocks;
 
 public:
 	Shader();
@@ -29,24 +49,35 @@ public:
 	bool Use();
 
 public:
-	GLuint GetProgram() const;
+	GLuint GetProgram() const { return program_; }
+
 	void SetUniform(const std::string& name, int value);
 	void SetUniform(const std::string& name, float value);
 	void SetUniform(const std::string& name, void* value);
+
+	void SetBlock(const std::string& name, void* value);
+	void SetBlockUniform(const std::string& blockName, const std::string& uniformName, void* value);
+	void SetBlockUniformArrayElement(const std::string& blockName, const std::string& uniformName, GLint index, void* value);
 
 private:
 	bool LinkShader();
 	bool LoadShader(ShaderType shaderType, const char* source);
 
+	void AddAllBlocks();
 	void AddAllUniforms();
+
+	GLuint GetSizeOfType(GLint type);
+	GLuint GetUniformSize(GLint uniformType, GLint uniformSize, GLint uniformOffset, GLint uniformMatrixStride, GLint uniformArrayStride);
 
 	bool GetErrorMessage(GLuint shaderObj, std::string& answer);
 
 private:
 	Uniforms uniforms_;
+	UniformBlocks blocks_;
 
 	GLuint program_;
 	GLuint shaderObjs_[ShaderTypeCount];
-};
 
-#include "shader.inl"
+private:
+	static GLuint blockCount;
+};

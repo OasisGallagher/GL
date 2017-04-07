@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="engine\src\app.cpp" />
+    <ClCompile Include="engine\src\input.cpp" />
     <ClCompile Include="engine\src\shader.cpp" />
     <ClCompile Include="engine\src\texture.cpp" />
     <ClCompile Include="global\src\debug.cpp" />
@@ -24,12 +25,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="engine\include\app.h" />
+    <ClInclude Include="engine\include\input.h" />
     <ClInclude Include="engine\include\shader.h" />
     <ClInclude Include="engine\include\texture.h" />
     <ClInclude Include="global\include\debug.h" />
     <ClInclude Include="global\include\os.h" />
     <ClInclude Include="global\include\os_linux.h" />
     <ClInclude Include="global\include\os_windows.h" />
+    <ClInclude Include="global\include\ptr_table.h" />
     <ClInclude Include="global\include\reader.h" />
     <ClInclude Include="global\include\reference_countable.h" />
     <ClInclude Include="global\include\utilities.h" />
@@ -38,7 +41,6 @@
     <ClInclude Include="utilities\include\reader.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="engine\include\shader.inl" />
     <None Include="shaders\colored.frag" />
     <None Include="shaders\colored.vert" />
     <None Include="shaders\simple.frag" />

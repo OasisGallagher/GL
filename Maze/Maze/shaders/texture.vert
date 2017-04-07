@@ -5,7 +5,9 @@ layout(location = 1) in vec2 uv;
 
 out vec2 uvFragment;
 
-uniform mat4 MVP;
+uniform Matrices {
+	mat4 MVP;
+};
 
 void main() {
 	gl_Position = MVP * vec4(vertex, 1);

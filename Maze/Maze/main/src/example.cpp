@@ -1,3 +1,4 @@
+#include "input.h"
 #include "shader.h"
 #include "texture.h"
 #include "example.h"
@@ -13,7 +14,7 @@ Example::~Example() {
 }
 
 void Example::GetEnvRequirement(AppEnv& env) {
-	env.depthTest = false;
+	env.depthTest = true;
 	env.backgroundColor = glm::vec4(0.0f, 0.0f, 0.4f, 0.0f);
 }
 
@@ -42,6 +43,11 @@ void Example_RedTriangle::Update(float deltaTime) {
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 	glDisableVertexAttribArray(0);
+}
+
+void Example_RedTriangle::GetEnvRequirement(AppEnv& env) {
+	Example::GetEnvRequirement(env);
+	env.depthTest = false;
 }
 
 Example_RedTriangle::~Example_RedTriangle() {
@@ -91,6 +97,11 @@ void Example_Matrices::Update(float deltaTime) {
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 	glDisableVertexAttribArray(0);
+}
+
+void Example_Matrices::GetEnvRequirement(AppEnv& env) {
+	Example::GetEnvRequirement(env);
+	env.depthTest = false;
 }
 
 Example_ColoredCube::Example_ColoredCube() {
@@ -215,11 +226,6 @@ void Example_ColoredCube::Update(float deltaTime) {
 	glDisableVertexAttribArray(1);
 }
 
-void Example_ColoredCube::GetEnvRequirement(AppEnv& env) {
-	Example::GetEnvRequirement(env);
-	env.depthTest = true;
-}
-
 Example_TexturedCube::Example_TexturedCube() {
 	texture0_ = new Texture;
 	texture1_ = new Texture;
@@ -322,7 +328,7 @@ Example_TexturedCube::Example_TexturedCube() {
 	glm::mat4 view = glm::lookAt(glm::vec3(4, 3, 3), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
 	glm::mat4 model = glm::mat4(1.f);
 	mvp_ = proj * view * model;
-	shader_->SetUniform("MVP", &mvp_);
+	shader_->SetBlockUniform("Matrices", "MVP", &mvp_);
 
 	texture0_->Load("textures/uvtemplate.dds");
 	texture1_->Load("textures/uvtemplate.bmp");
@@ -344,12 +350,10 @@ Example_TexturedCube::~Example_TexturedCube() {
 	glDeleteBuffers(2, vbo_);
 }
 
-void Example_TexturedCube::GetEnvRequirement(AppEnv& env) {
-	Example::GetEnvRequirement(env);
-	env.depthTest = true;
-}
-
 void Example_TexturedCube::Update(float deltaTime) {
+	glm::mat4 mvp = Input::GetProjectionMatrix() * Input::GetViewMatrix();
+	shader_->SetBlockUniform("Matrices", "MVP", &mvp);
+
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo_[0]);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
