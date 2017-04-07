@@ -45,6 +45,12 @@
     <None Include="shaders\simple.vert" />
     <None Include="shaders\simple_transform.frag" />
     <None Include="shaders\simple_transform.vert" />
+    <None Include="shaders\texture.frag" />
+    <None Include="shaders\texture.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="textures\uvtemplate.bmp" />
+    <Image Include="textures\uvtemplate.dds" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{803BBD78-7D13-4204-97CD-0434CCC0F61B}</ProjectGuid>

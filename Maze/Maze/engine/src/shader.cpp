@@ -20,7 +20,15 @@ Shader::Shader() {
 
 Shader::~Shader() {
 	glDeleteProgram(program_);
-	DeleteAllShaders();
+	for (int i = 0; i < ShaderTypeCount; ++i) {
+		if (shaderObjs_[i] != 0) {
+			glDeleteShader(shaderObjs_[i]);
+		}
+	}
+
+	for (Uniforms::iterator ite = uniforms_.begin(); ite != uniforms_.end(); ++ite) {
+		delete ite->second;
+	}
 }
 
 bool Shader::Load(ShaderType shaderType, const std::string& path) {
@@ -45,15 +53,7 @@ bool Shader::Use() {
 	return true;
 }
 
-void Shader::DeleteAllShaders() {
-	for (int i = 0; i < ShaderTypeCount; ++i) {
-		if (shaderObjs_[i] != 0) {
-			glDeleteShader(shaderObjs_[i]);
-		}
-	}
-}
-
-bool Shader::GetInfoLog(GLuint shaderObj, std::string& answer) {
+bool Shader::GetErrorMessage(GLuint shaderObj, std::string& answer) {
 	if (shaderObj == 0) {
 		answer = "invalid shader id";
 		return false;
@@ -61,16 +61,15 @@ bool Shader::GetInfoLog(GLuint shaderObj, std::string& answer) {
 
 	GLint length = 0, writen = 0;
 	glGetShaderiv(shaderObj, GL_INFO_LOG_LENGTH, &length);
-	if (length > 0) {
+	if (length > 1) {
 		char* log = new char[length];
 		glGetShaderInfoLog(shaderObj, length, &writen, log);
 		answer = log;
 		delete[] log;
-
-		return false;
+		return true;
 	}
 
-	return true;
+	return false;
 }
 
 void Shader::AddAllUniforms() {
@@ -122,7 +121,7 @@ bool Shader::LoadShader(ShaderType shaderType, const char* source) {
 	glAttachShader(program_, shaderObj);
 
 	std::string message;
-	if (GetInfoLog(shaderObj, message)) {
+	if (!GetErrorMessage(shaderObj, message)) {
 		if (shaderObjs_[shaderType] != 0) {
 			glDeleteShader(shaderObjs_[shaderType]);
 		}

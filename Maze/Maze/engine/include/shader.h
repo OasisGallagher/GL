@@ -17,7 +17,7 @@ private:
 		GLuint size;
 	};
 
-	std::map<std::string, Uniform*> uniforms_;
+	typedef std::map<std::string, Uniform*> Uniforms;
 
 public:
 	Shader();
@@ -39,11 +39,12 @@ private:
 	bool LoadShader(ShaderType shaderType, const char* source);
 
 	void AddAllUniforms();
-	void DeleteAllShaders();
 
-	bool GetInfoLog(GLuint shaderObj, std::string& answer);
+	bool GetErrorMessage(GLuint shaderObj, std::string& answer);
 
 private:
+	Uniforms uniforms_;
+
 	GLuint program_;
 	GLuint shaderObjs_[ShaderTypeCount];
 };

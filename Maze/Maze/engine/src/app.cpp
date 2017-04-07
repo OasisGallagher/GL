@@ -21,7 +21,7 @@ bool App::Initialize() {
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	// Open a window and create its OpenGL context
-	window_ = glfwCreateWindow(512, 384, "Tutorial 01", NULL, NULL);
+	window_ = glfwCreateWindow(512, 384, "Maze", NULL, NULL);
 	if (window_ == NULL){
 		Debug::LogError("failed to open GLFW window.");
 		glfwTerminate();

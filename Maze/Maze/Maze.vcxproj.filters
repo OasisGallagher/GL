@@ -31,6 +31,9 @@
     <Filter Include="shaders">
       <UniqueIdentifier>{8cd48869-f21c-4b44-96f8-5187d7902b48}</UniqueIdentifier>
     </Filter>
+    <Filter Include="textures">
+      <UniqueIdentifier>{5231546a-6fe9-42d7-a0d6-53c34ba5d19e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main\src\main.cpp">
@@ -127,5 +130,19 @@
     <None Include="shaders\colored.vert">
       <Filter>shaders</Filter>
     </None>
+    <None Include="shaders\texture.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\texture.vert">
+      <Filter>shaders</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="textures\uvtemplate.bmp">
+      <Filter>textures</Filter>
+    </Image>
+    <Image Include="textures\uvtemplate.dds">
+      <Filter>textures</Filter>
+    </Image>
   </ItemGroup>
 </Project>

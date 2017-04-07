@@ -6,6 +6,7 @@
 #include "app.h"
 
 class Shader;
+class Texture;
 
 class Example {
 public:
@@ -55,5 +56,21 @@ public:
 	virtual void GetEnvRequirement(AppEnv& env);
 
 private:
+	GLuint vao_, vbo_[2];
+};
+
+class Example_TexturedCube : public Example {
+public:
+	Example_TexturedCube();
+	~Example_TexturedCube();
+
+public:
+	virtual void Update(float deltaTime);
+	virtual void GetEnvRequirement(AppEnv& env);
+
+private:
+	glm::mat4 mvp_;
+
+	Texture* texture0_, *texture1_;
 	GLuint vao_, vbo_[2];
 };
