@@ -4,6 +4,8 @@
 #include "app.h"
 #include "input.h"
 
+#include <cstdio>
+
 static const float PI = 3.14f;
 
 bool Input::enabled_ = false;
@@ -19,7 +21,8 @@ WindowInput::WindowInput() {
 	mouseSpeed_ = 0.005f;
 }
 
-void GLFWInput::Update(void* ptr, float deltaTime) {
+void GLFWInput::Update(float deltaTime, void* ptr)
+{
 	GLFWwindow* window = (GLFWwindow*)ptr;
 
 	double xpos, ypos;
@@ -29,7 +32,7 @@ void GLFWInput::Update(void* ptr, float deltaTime) {
 	glfwGetWindowSize(window, &width, &height);
 	glfwSetCursorPos(window, width / 2.0, height / 2.0);
 
-	horizontalAngle_ += mouseSpeed_ * float(width / 2.0 - xpos);
+	horizontalAngle_ += mouseSpeed_ *  float(width / 2.0 - xpos);
 	verticalAngle_ += mouseSpeed_ * float(height / 2.0 - ypos);
 
 	glm::vec3 dir(

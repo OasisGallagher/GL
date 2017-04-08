@@ -76,7 +76,7 @@ void App::EnterMainLoop() {
 
 		glClear(mask);
 
-		Input::Update(window_, deltaTime);
+		Input::Update(deltaTime, window_);
 		example_->Update(deltaTime);
 
 		glfwSwapBuffers(window_);

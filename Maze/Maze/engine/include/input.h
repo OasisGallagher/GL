@@ -15,7 +15,7 @@ public:
 	}
 
 public:
-	virtual void Update(void* ptr, float deltaTime) = 0;
+	virtual void Update(float deltaTime, void* ptr) = 0;
 
 protected:
 	glm::vec3 position_;
@@ -28,7 +28,7 @@ protected:
 
 class GLFWInput : public WindowInput {
 public:
-	virtual void Update(void* ptr, float deltaTime);
+	virtual void Update(float deltaTime, void* ptr);
 };
 
 class Input {
@@ -38,9 +38,9 @@ public:
 	}
 
 public:
-	static void Update(void* ptr, float deltaTime) {
+	static void Update(float deltaTime, void* ptr) {
 		if (enabled_) {
-			input_->Update(ptr, deltaTime);
+			input_->Update(deltaTime, ptr);
 		}
 	}
 
