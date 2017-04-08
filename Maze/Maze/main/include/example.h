@@ -74,3 +74,16 @@ private:
 	Texture* texture0_, *texture1_;
 	GLuint vao_, vbo_[2];
 };
+
+class Example_KeyboardAndMouse : public Example_TexturedCube {
+public:
+	Example_KeyboardAndMouse();
+	~Example_KeyboardAndMouse();
+
+public:
+	virtual void Update(float deltaTime);
+
+private:
+	Shader* coordShader_;
+	GLuint vao_, vbo_;
+};

@@ -322,7 +322,6 @@ Example_TexturedCube::Example_TexturedCube() {
 	shader_->Load(ShaderTypeVertex, "shaders/texture.vert");
 	shader_->Load(ShaderTypeFragment, "shaders/texture.frag");
 	shader_->Link();
-	shader_->Use();
 
 	glm::mat4 proj = glm::perspective(45.f, defaultAspect, 0.1f, 100.f);
 	glm::mat4 view = glm::lookAt(glm::vec3(4, 3, 3), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
@@ -351,8 +350,7 @@ Example_TexturedCube::~Example_TexturedCube() {
 }
 
 void Example_TexturedCube::Update(float deltaTime) {
-	glm::mat4 mvp = Input::GetProjectionMatrix() * Input::GetViewMatrix();
-	shader_->SetBlockUniform("Matrices", "MVP", &mvp);
+	shader_->Use();
 
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo_[0]);
@@ -366,4 +364,52 @@ void Example_TexturedCube::Update(float deltaTime) {
 
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
+}
+
+Example_KeyboardAndMouse::Example_KeyboardAndMouse() {
+	coordShader_ = new Shader;
+	coordShader_->Load(ShaderTypeVertex, "shaders/coord.vert");
+	coordShader_->Load(ShaderTypeFragment, "shaders/coord.frag");
+	coordShader_->Link();
+
+	Input::SetEnabled(true);
+	glGenVertexArrays(1, &vao_);
+
+	glGenBuffers(1, &vbo_);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_);
+	glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(float), nullptr, GL_DYNAMIC_DRAW);
+}
+
+Example_KeyboardAndMouse::~Example_KeyboardAndMouse() {
+	delete coordShader_;
+
+	Input::SetEnabled(false);
+	glDeleteVertexArrays(1, &vao_);
+	glDeleteBuffers(1, &vbo_);
+}
+
+void Example_KeyboardAndMouse::Update(float deltaTime) {
+	coordShader_->Use();
+
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+	glm::mat4 view = Input::GetViewMatrix();
+	glm::vec4 x = view[0], y = view[1], z = view[2];
+
+	float coord[] = { 0, 0, 0, x.x, x.y, x.z,  0, 0, 0, y.x, y.y, y.z , 0, 0, 0, z.x, z.y, z.z };
+	float color[] = { 1, 0, 0, 0, 1, 0, 0, 0, 1 };
+
+	for (GLint i = 0; i < 3; ++i) {
+		coordShader_->SetUniform("color", color + i * 3);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, 6 * sizeof(float), coord + i * 6);
+		glDrawArrays(GL_LINES, 0, 18);
+	}
+
+	glDisableVertexAttribArray(0);
+
+	glm::mat4 mvp = Input::GetProjectionMatrix() * Input::GetViewMatrix();
+	shader_->SetBlockUniform("Matrices", "MVP", &mvp);
+	Example_TexturedCube::Update(deltaTime);
 }

@@ -8,7 +8,7 @@ int main(void)
 		return -1;
 	}
 
-	Example* example = new Example_TexturedCube;
+	Example* example = new Example_KeyboardAndMouse;
 	app.SetExample(example);
 
 	app.EnterMainLoop();

@@ -33,8 +33,15 @@ public:
 
 class Input {
 public:
+	static void SetEnabled(bool enable) {
+		enabled_ = enable;
+	}
+
+public:
 	static void Update(void* ptr, float deltaTime) {
-		return input_->Update(ptr, deltaTime);
+		if (enabled_) {
+			input_->Update(ptr, deltaTime);
+		}
 	}
 
 	static const glm::mat4& GetViewMatrix() {
@@ -49,5 +56,6 @@ private:
 	Input();
 
 private:
+	static bool enabled_;
 	static WindowInput* input_;
 };

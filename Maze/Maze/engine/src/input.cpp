@@ -4,11 +4,14 @@
 #include "app.h"
 #include "input.h"
 
+static const float PI = 3.14f;
+
+bool Input::enabled_ = false;
 WindowInput* Input::input_ = new GLFWInput;
 
 WindowInput::WindowInput() {
 	position_ = glm::vec3(0, 0, 5);
-	horizontalAngle_ = 3.14f;
+	horizontalAngle_ = PI;
 	verticalAngle_ = 0.f;
 	fov_ = 45.f;
 
@@ -36,9 +39,9 @@ void GLFWInput::Update(void* ptr, float deltaTime) {
 		);
 
 	glm::vec3 right(
-		sin(horizontalAngle_ - 3.14f / 2.f),
+		sin(horizontalAngle_ - PI / 2.f),
 		0,
-		cos(horizontalAngle_ - 3.14f / 2.f)
+		cos(horizontalAngle_ - PI / 2.f)
 		);
 
 	glm::vec3 up = glm::cross(right, dir);

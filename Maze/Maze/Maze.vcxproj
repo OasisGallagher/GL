@@ -37,12 +37,12 @@
     <ClInclude Include="global\include\reference_countable.h" />
     <ClInclude Include="global\include\utilities.h" />
     <ClInclude Include="main\include\example.h" />
-    <ClInclude Include="utilities\include\debug.h" />
-    <ClInclude Include="utilities\include\reader.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\colored.frag" />
     <None Include="shaders\colored.vert" />
+    <None Include="shaders\coord.frag" />
+    <None Include="shaders\coord.vert" />
     <None Include="shaders\simple.frag" />
     <None Include="shaders\simple.vert" />
     <None Include="shaders\simple_transform.frag" />

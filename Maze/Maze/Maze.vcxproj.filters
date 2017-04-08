@@ -74,12 +74,6 @@
     <ClInclude Include="engine\include\shader.h">
       <Filter>engine\include</Filter>
     </ClInclude>
-    <ClInclude Include="utilities\include\reader.h">
-      <Filter>global\include</Filter>
-    </ClInclude>
-    <ClInclude Include="utilities\include\debug.h">
-      <Filter>global\include</Filter>
-    </ClInclude>
     <ClInclude Include="global\include\utilities.h">
       <Filter>global\include</Filter>
     </ClInclude>
@@ -140,6 +134,12 @@
       <Filter>shaders</Filter>
     </None>
     <None Include="shaders\texture.vert">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\coord.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\coord.vert">
       <Filter>shaders</Filter>
     </None>
   </ItemGroup>
