@@ -10,7 +10,7 @@ uniform int option = 0;
 
 void main() {
 	if (option == 0) {
-		color = texture(textureSamplerDDS, uvFragment).rgb;
+		color = texture(textureSamplerDDS, vec2(uvFragment.s, -uvFragment.t)).rgb;
 	}
 	else {
 		color = texture(textureSamplerBmp, uvFragment).rgb;

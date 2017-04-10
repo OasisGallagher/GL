@@ -12,10 +12,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="engine\src\app.cpp" />
+    <ClCompile Include="engine\src\camera.cpp" />
     <ClCompile Include="engine\src\input.cpp" />
     <ClCompile Include="engine\src\shader.cpp" />
     <ClCompile Include="engine\src\texture.cpp" />
     <ClCompile Include="global\src\debug.cpp" />
+    <ClCompile Include="global\src\mathf.cpp" />
     <ClCompile Include="global\src\os_linux.cpp" />
     <ClCompile Include="global\src\os_windows.cpp" />
     <ClCompile Include="global\src\reader.cpp" />
@@ -25,10 +27,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="engine\include\app.h" />
+    <ClInclude Include="engine\include\camera.h" />
     <ClInclude Include="engine\include\input.h" />
     <ClInclude Include="engine\include\shader.h" />
     <ClInclude Include="engine\include\texture.h" />
     <ClInclude Include="global\include\debug.h" />
+    <ClInclude Include="global\include\mathf.h" />
     <ClInclude Include="global\include\os.h" />
     <ClInclude Include="global\include\os_linux.h" />
     <ClInclude Include="global\include\os_windows.h" />
@@ -39,10 +43,13 @@
     <ClInclude Include="main\include\example.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="models\cube.xobj" />
     <None Include="shaders\colored.frag" />
     <None Include="shaders\colored.vert" />
     <None Include="shaders\coord.frag" />
     <None Include="shaders\coord.vert" />
+    <None Include="shaders\model_loading.frag" />
+    <None Include="shaders\model_loading.vert" />
     <None Include="shaders\simple.frag" />
     <None Include="shaders\simple.vert" />
     <None Include="shaders\simple_transform.frag" />
@@ -51,6 +58,7 @@
     <None Include="shaders\texture.vert" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="textures\uvmap.dds" />
     <Image Include="textures\uvtemplate.bmp" />
     <Image Include="textures\uvtemplate.dds" />
   </ItemGroup>

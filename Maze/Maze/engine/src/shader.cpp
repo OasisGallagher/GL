@@ -31,7 +31,7 @@ Shader::~Shader() {
 
 bool Shader::Load(ShaderType shaderType, const std::string& path) {
 	std::string source;
-	if (!Reader::ReadAll(path, source)) {
+	if (!Reader::ReadAllText(path, source)) {
 		return false;
 	}
 

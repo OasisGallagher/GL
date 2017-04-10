@@ -5,8 +5,11 @@
 
 #include "app.h"
 
+class Input;
 class Shader;
+class Camera;
 class Texture;
+struct ModelInfo;
 
 class Example {
 public:
@@ -18,6 +21,8 @@ public:
 	virtual void Update(float deltaTime) = 0;
 
 protected:
+	Input* input_;
+	Camera* camera_;
 	Shader* shader_;
 };
 
@@ -86,4 +91,18 @@ public:
 private:
 	Shader* coordShader_;
 	GLuint vao_, vbo_;
+};
+
+class Example_ModelLoading : public Example {
+public:
+	Example_ModelLoading();
+	~Example_ModelLoading();
+
+public:
+	virtual void Update(float deltaTime);
+
+private:
+	ModelInfo* info_;
+	Texture* texture_;
+	GLuint vao_, vbo_[3];
 };

@@ -1,16 +1,25 @@
+#include "mathf.h"
 #include "input.h"
 #include "shader.h"
+#include "camera.h"
+#include "reader.h"
 #include "texture.h"
 #include "example.h"
 
+extern App app;
 static const float defaultAspect = 4.f / 3.f;
+static const float moveSpeed = 3.f;
 
 Example::Example() {
 	shader_ = new Shader;
+	camera_ = new Camera;
+	input_ = new GLFWInput(app.GetWindow());
 }
 
 Example::~Example() {
 	delete shader_;
+	delete camera_;
+	delete input_;
 }
 
 void Example::GetEnvRequirement(AppEnv& env) {
@@ -323,10 +332,10 @@ Example_TexturedCube::Example_TexturedCube() {
 	shader_->Load(ShaderTypeFragment, "shaders/texture.frag");
 	shader_->Link();
 
-	glm::mat4 proj = glm::perspective(45.f, defaultAspect, 0.1f, 100.f);
-	glm::mat4 view = glm::lookAt(glm::vec3(4, 3, 3), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+	camera_->Reset(glm::vec3(4, 3, 3), glm::vec3(0), glm::vec3(0, 1, 0));
+
 	glm::mat4 model = glm::mat4(1.f);
-	mvp_ = proj * view * model;
+	mvp_ = camera_->GetProjMatrix() * camera_->GetViewMatrix() * model;
 	shader_->SetBlockUniform("Matrices", "MVP", &mvp_);
 
 	texture0_->Load("textures/uvtemplate.dds");
@@ -372,7 +381,8 @@ Example_KeyboardAndMouse::Example_KeyboardAndMouse() {
 	coordShader_->Load(ShaderTypeFragment, "shaders/coord.frag");
 	coordShader_->Link();
 
-	Input::SetEnabled(true);
+	camera_->Reset(glm::vec3(0, 0, 5), glm::vec3(0), glm::vec3(0, 1, 0));
+
 	glGenVertexArrays(1, &vao_);
 
 	glGenBuffers(1, &vbo_);
@@ -383,7 +393,6 @@ Example_KeyboardAndMouse::Example_KeyboardAndMouse() {
 Example_KeyboardAndMouse::~Example_KeyboardAndMouse() {
 	delete coordShader_;
 
-	Input::SetEnabled(false);
 	glDeleteVertexArrays(1, &vao_);
 	glDeleteBuffers(1, &vbo_);
 }
@@ -391,25 +400,124 @@ Example_KeyboardAndMouse::~Example_KeyboardAndMouse() {
 void Example_KeyboardAndMouse::Update(float deltaTime) {
 	coordShader_->Use();
 
+	if (input_->IsKeyDown(KeyCodeForward)) {
+		camera_->Walk(-deltaTime * moveSpeed);
+	}
+
+	if (input_->IsKeyDown(KeyCodeBackward)) {
+		camera_->Walk(deltaTime * moveSpeed);
+	}
+
+	if (input_->IsKeyDown(KeyCodeLeft)) {
+		camera_->Strafe(-deltaTime * moveSpeed);
+	}
+
+	if (input_->IsKeyDown(KeyCodeRight)) {
+		camera_->Strafe(deltaTime * moveSpeed);
+	}
+
+	if (input_->IsKeyDown(KeyCodePitchClockwise)) {
+		camera_->Pitch(deltaTime * Mathf::PI / 50);
+	}
+
+	if (input_->IsKeyDown(KeyCodePitchAnticlockwise)) {
+		camera_->Pitch(-deltaTime * Mathf::PI / 50);
+	}
+
+	if (input_->IsKeyDown(KeyCodeYawClockwise)) {
+		camera_->Yaw(deltaTime * Mathf::PI / 50);
+	}
+
+	if (input_->IsKeyDown(KeyCodeYawAnticlockwise)) {
+		camera_->Yaw(-deltaTime * Mathf::PI / 50);
+	}
+
+	if (input_->IsKeyDown(KeyCodeRollClockwise)) {
+		camera_->Roll(deltaTime * Mathf::PI / 50);
+	}
+
+	if (input_->IsKeyDown(KeyCodeRollAnticlockwise)) {
+		camera_->Roll(-deltaTime * Mathf::PI / 50);
+	}
+
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo_);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 
-	glm::mat4 view = Input::GetViewMatrix();
-	glm::vec4 x = view[0], y = view[1], z = view[2];
+	const glm::mat4& view = camera_->GetViewMatrix();
 
-	float coord[] = { 0, 0, 0, x.x, x.y, x.z,  0, 0, 0, y.x, y.y, y.z , 0, 0, 0, z.x, z.y, z.z };
+	float coord[] = { 
+		0, 0, 0, view[0][0], view[1][0], view[2][0],
+		0, 0, 0, view[0][1], view[1][1], view[2][1],
+		0, 0, 0, view[0][2], view[1][2], view[2][2]
+	};
+
 	float color[] = { 1, 0, 0, 0, 1, 0, 0, 0, 1 };
 
 	for (GLint i = 0; i < 3; ++i) {
 		coordShader_->SetUniform("color", color + i * 3);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, 6 * sizeof(float), coord + i * 6);
-		glDrawArrays(GL_LINES, 0, 18);
+		glDrawArrays(GL_LINES, 0, 6);
 	}
-
+	
 	glDisableVertexAttribArray(0);
 
-	glm::mat4 mvp = Input::GetProjectionMatrix() * Input::GetViewMatrix();
+	glm::mat4 mvp = camera_->GetProjMatrix() * view;
 	shader_->SetBlockUniform("Matrices", "MVP", &mvp);
 	Example_TexturedCube::Update(deltaTime);
+}
+
+Example_ModelLoading::Example_ModelLoading() {
+	texture_ = new Texture;
+	info_ = new ModelInfo;
+
+	texture_->Load("textures/uvmap.dds");
+
+	shader_->Load(ShaderTypeVertex, "shaders/model_loading.vert");
+	shader_->Load(ShaderTypeFragment, "shaders/model_loading.frag");
+	shader_->Link();
+	shader_->Use();
+
+	glGenVertexArrays(1, &vao_);
+	glBindVertexArray(vao_);
+
+	ModelLoader::Load("models/cube.xobj", *info_);
+
+	glGenBuffers(1, vbo_);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_[0]);
+	glBufferData(GL_ARRAY_BUFFER, info_->vertices.size() * sizeof(glm::vec3), &info_->vertices[0], GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_[1]);
+	glBufferData(GL_ARRAY_BUFFER, info_->uvs.size() * sizeof(glm::vec2), &info_->uvs[0], GL_STATIC_DRAW);
+
+	glActiveTexture(GL_TEXTURE0);
+	texture_->Use();
+	shader_->SetUniform("normalSampler", 0);
+
+	glm::mat4 mvp = camera_->GetProjMatrix() * camera_->GetViewMatrix();
+	shader_->SetUniform("MVP", &mvp);
+}
+
+Example_ModelLoading::~Example_ModelLoading() {
+	delete texture_;
+	delete info_;
+
+	glDeleteVertexArrays(1, &vao_);
+	glDeleteBuffers(2, vbo_);
+}
+
+void Example_ModelLoading::Update(float deltaTime) {
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_[0]);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+	glEnableVertexAttribArray(1);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_[1]);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+	glDrawArrays(GL_TRIANGLES, 0, info_->vertices.size());
+
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
 }

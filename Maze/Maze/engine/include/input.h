@@ -1,61 +1,39 @@
 #pragma once
 #include <glm/glm.hpp>
 
-class WindowInput {
-public:
-	WindowInput();
+enum KeyCode {
+	KeyCodeForward,
+	KeyCodeBackward,
+	KeyCodeLeft,
+	KeyCodeRight,
 
-public:
-	const glm::mat4& GetViewMatrix() const {
-		return view_;
-	}
-
-	const glm::mat4 GetProjectionMatrix() const {
-		return proj_;
-	}
-
-public:
-	virtual void Update(float deltaTime, void* ptr) = 0;
-
-protected:
-	glm::vec3 position_;
-	float horizontalAngle_;
-	float verticalAngle_;
-	float fov_;
-	float speed_, mouseSpeed_;
-	glm::mat4 view_, proj_;
-};
-
-class GLFWInput : public WindowInput {
-public:
-	virtual void Update(float deltaTime, void* ptr);
+	KeyCodePitchClockwise,
+	KeyCodePitchAnticlockwise,
+	KeyCodeYawClockwise,
+	KeyCodeYawAnticlockwise,
+	KeyCodeRollClockwise,
+	KeyCodeRollAnticlockwise,
 };
 
 class Input {
 public:
-	static void SetEnabled(bool enable) {
-		enabled_ = enable;
-	}
+	virtual bool IsKeyDown(KeyCode key) = 0;
+	virtual float GetMouseWheel() = 0;
+};
+
+struct GLFWwindow;
+
+class GLFWInput : public Input {
+public:
+	GLFWInput(GLFWwindow* window);
 
 public:
-	static void Update(float deltaTime, void* ptr) {
-		if (enabled_) {
-			input_->Update(deltaTime, ptr);
-		}
-	}
-
-	static const glm::mat4& GetViewMatrix() {
-		return input_->GetViewMatrix();
-	}
-
-	static const glm::mat4 GetProjectionMatrix() {
-		return input_->GetProjectionMatrix();
-	}
+	virtual bool IsKeyDown(KeyCode key);
+	virtual float GetMouseWheel();
 
 private:
-	Input();
+	static void OnMouseWheel(GLFWwindow* window, double x, double y);
 
 private:
-	static bool enabled_;
-	static WindowInput* input_;
+	GLFWwindow* window_;
 };

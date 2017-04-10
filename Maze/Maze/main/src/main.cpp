@@ -1,14 +1,14 @@
 #include "app.h"
 #include "example.h"
 
-int main(void)
-{
-	App app;
+App app;
+
+int main() {
 	if (!app.Initialize()) {
 		return -1;
 	}
 
-	Example* example = new Example_KeyboardAndMouse;
+	Example* example = new Example_ModelLoading;
 	app.SetExample(example);
 
 	app.EnterMainLoop();
