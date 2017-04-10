@@ -4,6 +4,10 @@
 #include <string>
 #include <fstream>
 
+template <class _CountofType, size_t _SizeOfArray>
+char(*__countof_helper(_UNALIGNED _CountofType(&_Array)[_SizeOfArray]))[_SizeOfArray];
+#define COUNT_OF(_Array) (sizeof(*__countof_helper(_Array)) + 0)
+
 class Utility {
 public:
 	static int MakeDword(int low, int high);

@@ -221,7 +221,7 @@ void Shader::SetUniform(const std::string& name, float value) {
 	glProgramUniform1f(program_, u->location, value);
 }
 
-void Shader::SetUniform(const std::string& name, void* value) {
+void Shader::SetUniform(const std::string& name, const void* value) {
 	Assert(uniforms_.contains(name), "invalid uniform " + name + ".");
 	Uniform* u = uniforms_[name];
 	switch (u->type) {
@@ -382,7 +382,7 @@ void Shader::SetUniform(const std::string& name, void* value) {
 	}
 }
 
-void Shader::SetBlock(const std::string& name, void* value) {
+void Shader::SetBlock(const std::string& name, const void* value) {
 	Assert(blocks_.contains(name), "invalid block name " + name + ".");
 	UniformBlock* block = blocks_[name];
 	glBindBuffer(GL_UNIFORM_BUFFER, block->buffer);
@@ -390,7 +390,7 @@ void Shader::SetBlock(const std::string& name, void* value) {
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
-void Shader::SetBlockUniform(const std::string& blockName, const std::string& uniformName, void* value) {
+void Shader::SetBlockUniform(const std::string& blockName, const std::string& uniformName, const void* value) {
 	Assert(blocks_.contains(blockName), "invalid block name " + blockName + ".");
 	UniformBlock* block = blocks_[blockName];
 
@@ -411,7 +411,7 @@ void Shader::SetBlockUniform(const std::string& blockName, const std::string& un
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
-void Shader::SetBlockUniformArrayElement(const std::string& blockName, const std::string& uniformName, GLint index, void* value) {
+void Shader::SetBlockUniformArrayElement(const std::string& blockName, const std::string& uniformName, GLint index, const void* value) {
 	Assert(blocks_.contains(blockName), "invalid block name " + blockName + ".");
 	UniformBlock* block = blocks_[blockName];
 	Assert(block->uniforms.contains(uniformName), "invalid uniform name " + uniformName + ".");

@@ -8,7 +8,7 @@ int main() {
 		return -1;
 	}
 
-	Example* example = new Example_ModelLoading;
+	Example* example = new Example_BasicShading;
 	app.SetExample(example);
 
 	app.EnterMainLoop();

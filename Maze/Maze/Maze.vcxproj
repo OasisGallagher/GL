@@ -14,6 +14,7 @@
     <ClCompile Include="engine\src\app.cpp" />
     <ClCompile Include="engine\src\camera.cpp" />
     <ClCompile Include="engine\src\input.cpp" />
+    <ClCompile Include="engine\src\model_loader.cpp" />
     <ClCompile Include="engine\src\shader.cpp" />
     <ClCompile Include="engine\src\texture.cpp" />
     <ClCompile Include="global\src\debug.cpp" />
@@ -29,6 +30,7 @@
     <ClInclude Include="engine\include\app.h" />
     <ClInclude Include="engine\include\camera.h" />
     <ClInclude Include="engine\include\input.h" />
+    <ClInclude Include="engine\include\model_loader.h" />
     <ClInclude Include="engine\include\shader.h" />
     <ClInclude Include="engine\include\texture.h" />
     <ClInclude Include="global\include\debug.h" />
@@ -43,7 +45,8 @@
     <ClInclude Include="main\include\example.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="models\cube.xobj" />
+    <None Include="shaders\basic.frag" />
+    <None Include="shaders\basic.vert" />
     <None Include="shaders\colored.frag" />
     <None Include="shaders\colored.vert" />
     <None Include="shaders\coord.frag" />
@@ -56,11 +59,6 @@
     <None Include="shaders\simple_transform.vert" />
     <None Include="shaders\texture.frag" />
     <None Include="shaders\texture.vert" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="textures\uvmap.dds" />
-    <Image Include="textures\uvtemplate.bmp" />
-    <Image Include="textures\uvtemplate.dds" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{803BBD78-7D13-4204-97CD-0434CCC0F61B}</ProjectGuid>

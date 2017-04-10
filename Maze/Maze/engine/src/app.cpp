@@ -52,6 +52,13 @@ void App::SetExample(Example* example) {
 	glm::vec4& bgColor = env_.backgroundColor;
 	glClearColor(bgColor.r, bgColor.g, bgColor.b, bgColor.a);
 
+	if (env_.cullFace)  {
+		glEnable(GL_CULL_FACE);
+	}
+	else {
+		glDisable(GL_CULL_FACE);
+	}
+
 	if (env_.depthTest) {
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LESS);

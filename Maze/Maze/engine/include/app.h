@@ -6,6 +6,7 @@ class Example;
 struct GLFWwindow;
 
 struct AppEnv {
+	bool cullFace;
 	bool depthTest;
 	glm::vec4 backgroundColor;
 };

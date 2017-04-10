@@ -53,11 +53,11 @@ public:
 
 	void SetUniform(const std::string& name, int value);
 	void SetUniform(const std::string& name, float value);
-	void SetUniform(const std::string& name, void* value);
+	void SetUniform(const std::string& name, const void* value);
 
-	void SetBlock(const std::string& name, void* value);
-	void SetBlockUniform(const std::string& blockName, const std::string& uniformName, void* value);
-	void SetBlockUniformArrayElement(const std::string& blockName, const std::string& uniformName, GLint index, void* value);
+	void SetBlock(const std::string& name, const void* value);
+	void SetBlockUniform(const std::string& blockName, const std::string& uniformName, const void* value);
+	void SetBlockUniformArrayElement(const std::string& blockName, const std::string& uniformName, GLint index, const void* value);
 
 private:
 	bool LinkShader();

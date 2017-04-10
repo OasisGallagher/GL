@@ -25,11 +25,11 @@ bool Texture::Load(const std::string& path) {
 	}
 
 	const char* ptr = path.c_str() + i + 1;
-	if (_stricmp("bmp", ptr) == 0) {
+	if (strcmp("bmp", ptr) == 0) {
 		return LoadBmp(path);
 	}
 
-	if (_stricmp("dds", ptr) == 0) {
+	if (strcmp("dds", ptr) == 0) {
 		return LoadDDS(path);
 	}
 

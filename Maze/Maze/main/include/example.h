@@ -104,5 +104,20 @@ public:
 private:
 	ModelInfo* info_;
 	Texture* texture_;
+	GLuint vao_, vbo_[2];
+};
+
+class Example_BasicShading : public Example {
+public:
+	Example_BasicShading();
+	~Example_BasicShading();
+
+public:
+	virtual void Update(float deltaTime);
+	virtual void GetEnvRequirement(AppEnv& env);
+
+private:
+	ModelInfo* info_;
+	Texture* texture_;
 	GLuint vao_, vbo_[3];
 };

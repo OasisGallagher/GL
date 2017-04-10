@@ -31,12 +31,6 @@
     <Filter Include="shaders">
       <UniqueIdentifier>{8cd48869-f21c-4b44-96f8-5187d7902b48}</UniqueIdentifier>
     </Filter>
-    <Filter Include="textures">
-      <UniqueIdentifier>{5231546a-6fe9-42d7-a0d6-53c34ba5d19e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="models">
-      <UniqueIdentifier>{8e8385c3-92b6-4ed3-a603-bc7899b76a9b}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main\src\main.cpp">
@@ -77,6 +71,9 @@
     </ClCompile>
     <ClCompile Include="global\src\mathf.cpp">
       <Filter>global\src</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\src\model_loader.cpp">
+      <Filter>engine\src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -125,6 +122,9 @@
     <ClInclude Include="global\include\mathf.h">
       <Filter>global\include</Filter>
     </ClInclude>
+    <ClInclude Include="engine\include\model_loader.h">
+      <Filter>engine\include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\simple.frag">
@@ -157,25 +157,17 @@
     <None Include="shaders\coord.vert">
       <Filter>shaders</Filter>
     </None>
-    <None Include="models\cube.xobj">
-      <Filter>models</Filter>
-    </None>
     <None Include="shaders\model_loading.frag">
       <Filter>shaders</Filter>
     </None>
     <None Include="shaders\model_loading.vert">
       <Filter>shaders</Filter>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="textures\uvtemplate.bmp">
-      <Filter>textures</Filter>
-    </Image>
-    <Image Include="textures\uvtemplate.dds">
-      <Filter>textures</Filter>
-    </Image>
-    <Image Include="textures\uvmap.dds">
-      <Filter>textures</Filter>
-    </Image>
+    <None Include="shaders\basic.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\basic.vert">
+      <Filter>shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
