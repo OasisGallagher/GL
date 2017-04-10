@@ -532,7 +532,7 @@ Example_BasicShading::Example_BasicShading() {
 	texture_->Load("textures/suzanne_uvmap.dds");
 
 	shader_->Load(ShaderTypeVertex, "shaders/basic.vert");
-	shader_->Load(ShaderTypeFragment, "shaders/basic.frag");
+	shader_->Load(ShaderTypeFragment, "shaders/spotlight.frag");
 	shader_->Link();
 	shader_->Use();
 

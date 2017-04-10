@@ -169,5 +169,8 @@
     <None Include="shaders\basic.vert">
       <Filter>shaders</Filter>
     </None>
+    <None Include="shaders\spotlight.frag">
+      <Filter>shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

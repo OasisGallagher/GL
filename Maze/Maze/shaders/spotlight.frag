@@ -22,7 +22,7 @@ uniform mat4 V;
 uniform mat4 MVP;
 uniform vec3 LightPosition_worldspace;
 
-uniform CutOff = cos(15 * 3.14 / 180);
+uniform float CutOff = cos(15 * 3.14 / 180);
 
 void main() {
 	vec3 LightColor = vec3(1, 1, 1);
@@ -38,7 +38,7 @@ void main() {
 	float dist = length(LightPosition_worldspace - Position_worldspace);
 	float distSquared = dist * dist;
 
-	vec3 spec;
+	vec3 spec = vec3(0);
 
 	if (cosBeta > CutOff) {
 		float intensity = max(dot(Normal_cameraspace, LightDirection_cameraspace), 0);
@@ -50,5 +50,5 @@ void main() {
 	}
 
 	float cosTheta = max(dot(Normal_cameraspace, LightDirection_cameraspace), 0);
-	color = spec + MaterialAmbientColor + MaterialDiffuseColor * LightColor * LightPower * cosTheta / distSquared;
+	color = spec + MaterialAmbientColor;// + MaterialDiffuseColor * LightColor * LightPower * cosTheta / distSquared;
 }
