@@ -14,7 +14,7 @@ in vec3 EyeDirection_cameraspace;
 // vector that goes from the vertex to the light, in camera space.
 in vec3 LightDirection_cameraspace;
 
-out vec3 color;
+out vec4 color;
 
 uniform sampler2D textureSampler;
 uniform mat4 M;
@@ -53,7 +53,9 @@ void main() {
 	
 	float distSquared = (dist * dist);
 	
-	color = MaterialAmbientColor +
+	color.rgb = MaterialAmbientColor +
 		MaterialDiffuseColor * LightColor * LightPower * cosTheta / distSquared +
 		MaterialSpecularColor * LightColor * LightPower * pow(cosAlpha, 5) / distSquared;
+
+	color.a = 0.3;
 }

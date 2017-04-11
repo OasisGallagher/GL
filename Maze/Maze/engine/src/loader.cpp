@@ -1,7 +1,34 @@
 #include <map>
 
 #include "debug.h"
-#include "model_loader.h"
+#include "loader.h"
+
+#include <fstream>
+
+#include "debug.h"
+
+bool TextLoader::Load(const std::string& file, std::string& text) {
+	std::ifstream ifs(file, std::ios::in);
+	if (!ifs) {
+		Debug::LogError("failed to open file " + file + ".");
+		return false;
+	}
+
+	text.clear();
+	const char* seperator = "";
+
+	std::string line;
+	for (; getline(ifs, line);) {
+		text += seperator;
+		text += line;
+		seperator = "\n";
+	}
+
+	ifs.close();
+
+	return true;
+}
+
 
 bool ModelLoader::Load(const std::string& path, ModelInfo& info){
 	std::string::size_type i = path.rfind('.');

@@ -6,6 +6,7 @@ class Example;
 struct GLFWwindow;
 
 struct AppEnv {
+	bool blend;
 	bool cullFace;
 	bool depthTest;
 	glm::vec4 backgroundColor;
@@ -18,6 +19,8 @@ public:
 
 public:
 	GLFWwindow* GetWindow() { return window_; }
+	void GetWindowSize(int& width, int& height);
+
 	void SetExample(Example* example);
 	void EnterMainLoop();
 

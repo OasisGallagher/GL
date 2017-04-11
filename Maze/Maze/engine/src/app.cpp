@@ -45,12 +45,25 @@ bool App::Initialize() {
 	return true;
 }
 
+void App::GetWindowSize(int& width, int& height) {
+	glfwGetWindowSize(window_, &width, &height);
+}
+
 void App::SetExample(Example* example) {
 	example_ = example;
 	example->GetEnvRequirement(env_);
 
 	glm::vec4& bgColor = env_.backgroundColor;
 	glClearColor(bgColor.r, bgColor.g, bgColor.b, bgColor.a);
+
+	if (env_.blend) {
+		// color = colorCurrent * alphaCurrent + colorOut * (1 - alphaCurrent).
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	}
+	else {
+		glDisable(GL_BLEND);
+	}
 
 	if (env_.cullFace)  {
 		glEnable(GL_CULL_FACE);

@@ -14,14 +14,14 @@
     <ClCompile Include="engine\src\app.cpp" />
     <ClCompile Include="engine\src\camera.cpp" />
     <ClCompile Include="engine\src\input.cpp" />
-    <ClCompile Include="engine\src\model_loader.cpp" />
+    <ClCompile Include="engine\src\loader.cpp" />
     <ClCompile Include="engine\src\shader.cpp" />
+    <ClCompile Include="engine\src\text2d.cpp" />
     <ClCompile Include="engine\src\texture.cpp" />
     <ClCompile Include="global\src\debug.cpp" />
     <ClCompile Include="global\src\mathf.cpp" />
     <ClCompile Include="global\src\os_linux.cpp" />
     <ClCompile Include="global\src\os_windows.cpp" />
-    <ClCompile Include="global\src\reader.cpp" />
     <ClCompile Include="global\src\utilities.cpp" />
     <ClCompile Include="main\src\example.cpp" />
     <ClCompile Include="main\src\main.cpp" />
@@ -30,16 +30,16 @@
     <ClInclude Include="engine\include\app.h" />
     <ClInclude Include="engine\include\camera.h" />
     <ClInclude Include="engine\include\input.h" />
-    <ClInclude Include="engine\include\model_loader.h" />
+    <ClInclude Include="engine\include\loader.h" />
     <ClInclude Include="engine\include\shader.h" />
     <ClInclude Include="engine\include\texture.h" />
+    <ClInclude Include="engine\include\text2d.h" />
     <ClInclude Include="global\include\debug.h" />
     <ClInclude Include="global\include\mathf.h" />
     <ClInclude Include="global\include\os.h" />
     <ClInclude Include="global\include\os_linux.h" />
     <ClInclude Include="global\include\os_windows.h" />
     <ClInclude Include="global\include\ptr_table.h" />
-    <ClInclude Include="global\include\reader.h" />
     <ClInclude Include="global\include\reference_countable.h" />
     <ClInclude Include="global\include\utilities.h" />
     <ClInclude Include="main\include\example.h" />
@@ -58,6 +58,8 @@
     <None Include="shaders\simple_transform.frag" />
     <None Include="shaders\simple_transform.vert" />
     <None Include="shaders\spotlight.frag" />
+    <None Include="shaders\text2d.frag" />
+    <None Include="shaders\text2d.vert" />
     <None Include="shaders\texture.frag" />
     <None Include="shaders\texture.vert" />
   </ItemGroup>

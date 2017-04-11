@@ -1,11 +1,12 @@
 #include "mathf.h"
 #include "input.h"
 #include "shader.h"
+#include "loader.h"
+#include "text2d.h"
 #include "camera.h"
 #include "texture.h"
 #include "example.h"
 #include "utilities.h"
-#include "model_loader.h"
 
 extern App app;
 static const float defaultAspect = 4.f / 3.f;
@@ -24,6 +25,7 @@ Example::~Example() {
 }
 
 void Example::GetEnvRequirement(AppEnv& env) {
+	env.blend = false;
 	env.cullFace = false;
 	env.depthTest = true;
 	env.backgroundColor = glm::vec4(0.0f, 0.0f, 0.4f, 0.0f);
@@ -607,11 +609,14 @@ void Example_BasicShading::Update(float deltaTime) {
 Example_VBOIndexing::Example_VBOIndexing() {
 	texture_ = new Texture;
 	info_ = new ModelInfo;
+	text_ = new Text2D;
 
+	text_->Load("textures/font.dds");
+	/*
 	texture_->Load("textures/suzanne_uvmap.dds");
 
 	shader_->Load(ShaderTypeVertex, "shaders/basic.vert");
-	shader_->Load(ShaderTypeFragment, "shaders/spotlight.frag");
+	shader_->Load(ShaderTypeFragment, "shaders/basic.frag");
 	shader_->Link();
 	shader_->Use();
 
@@ -651,11 +656,12 @@ Example_VBOIndexing::Example_VBOIndexing() {
 	shader_->SetUniform("MVP", &mvp);
 
 	glm::vec3 lightPos(4, 0, 4);
-	shader_->SetUniform("LightPosition_worldspace", &lightPos);
+	shader_->SetUniform("LightPosition_worldspace", &lightPos);*/
 }
 
 Example_VBOIndexing::~Example_VBOIndexing() {
 	delete info_;
+	delete text_;
 	delete texture_;
 
 	glDeleteVertexArrays(1, &vao_);
@@ -664,10 +670,14 @@ Example_VBOIndexing::~Example_VBOIndexing() {
 
 void Example_VBOIndexing::GetEnvRequirement(AppEnv& env) {
 	Example::GetEnvRequirement(env);
-	env.cullFace = true;
+	//env.blend = true;
+	env.cullFace = false;
 }
 
 void Example_VBOIndexing::Update(float deltaTime) {
+	/*
+	shader_->Use();
+
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo_[0]);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
@@ -681,9 +691,11 @@ void Example_VBOIndexing::Update(float deltaTime) {
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo_[3]);
-	glDrawElements(GL_TRIANGLES, indices_.size(), GL_UNSIGNED_INT, nullptr);
+	//glDrawElements(GL_TRIANGLES, indices_.size(), GL_UNSIGNED_INT, nullptr);
 
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(2);
+	*/
+	text_->Print("X", 0, 200, 20);
 }

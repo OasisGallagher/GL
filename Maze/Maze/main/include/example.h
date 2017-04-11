@@ -10,6 +10,7 @@
 class Input;
 class Shader;
 class Camera;
+class Text2D;
 class Texture;
 struct ModelInfo;
 
@@ -134,6 +135,9 @@ public:
 	virtual void GetEnvRequirement(AppEnv& env);
 
 private:
+
+	Text2D* text_;
+
 	ModelInfo* info_;
 	Texture* texture_;
 	GLuint vao_, vbo_[4];

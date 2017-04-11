@@ -1,5 +1,5 @@
 #include "debug.h"
-#include "reader.h"
+#include "loader.h"
 #include "shader.h"
 #include "utilities.h"
 
@@ -31,7 +31,7 @@ Shader::~Shader() {
 
 bool Shader::Load(ShaderType shaderType, const std::string& path) {
 	std::string source;
-	if (!Reader::ReadAllText(path, source)) {
+	if (!TextLoader::Load(path, source)) {
 		return false;
 	}
 
