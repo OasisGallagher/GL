@@ -8,7 +8,7 @@ int main() {
 		return -1;
 	}
 
-	Example* example = new Example_BasicShading;
+	Example* example = new Example_VBOIndexing;
 	app.SetExample(example);
 
 	app.EnterMainLoop();

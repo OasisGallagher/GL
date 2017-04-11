@@ -15,3 +15,17 @@ public:
 private:
 	static bool LoadBlenderObj(const std::string& path, ModelInfo& info);
 };
+
+class VBOIndexer {
+	struct VBOBuffer {
+		glm::vec3 vertex;
+		glm::vec2 uv;
+		glm::vec3 normal;
+
+		bool operator < (const VBOBuffer& other) const {
+			return memcmp(this, &other, sizeof(other)) < 0;
+		}
+	};
+public:
+	static void Index(ModelInfo& packed, std::vector<unsigned>& indices, const ModelInfo& info);
+};

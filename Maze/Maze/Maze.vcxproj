@@ -97,6 +97,7 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>main/include;engine/include;global/include;external/glew-1.9.0/include;external/glm-0.9.7.1/;external/glfw-3.1.2/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>PLATFORM_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

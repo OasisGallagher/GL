@@ -85,7 +85,7 @@ void Shader::AddAllBlocks() {
 		glGetActiveUniformBlockiv(program_, i, GL_UNIFORM_BLOCK_NAME_LENGTH, &blockNameLength);
 
 		blockName.resize(blockNameLength);
-		glGetActiveUniformBlockName(program_, i, blockNameLength, &nameWritten, (char*)blockName.data());
+		glGetActiveUniformBlockName(program_, i, blockNameLength, &nameWritten, &blockName[0]);
 		blockName.resize(nameWritten);
 
 		if (blocks_.contains(blockName)) {
@@ -113,7 +113,7 @@ void Shader::AddAllBlocks() {
 		uniformName.resize(uniformNameLength);
 
 		for (GLint j = 0; j < uniformCount; ++j) {
-			glGetActiveUniformName(program_, indices[j], uniformNameLength, &nameWritten, (char*)uniformName.data());
+			glGetActiveUniformName(program_, indices[j], uniformNameLength, &nameWritten, &uniformName[0]);
 			uniformName.resize(nameWritten);
 
 			Uniform* uniform = block->uniforms[uniformName];

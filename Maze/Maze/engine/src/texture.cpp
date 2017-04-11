@@ -80,7 +80,7 @@ GLuint Texture::CreateFromBmp(const TextureData& td) {
 	glGenTextures(1, &textureID);
 
 	glBindTexture(GL_TEXTURE_2D, textureID);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, td.width, td.height, 0, td.format, GL_UNSIGNED_BYTE, td.pixels.data());
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, td.width, td.height, 0, td.format, GL_UNSIGNED_BYTE, &td.pixels[0]);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -107,7 +107,7 @@ GLuint Texture::CreateFromDDS(const TextureData& td) {
 		 level < td.mipMapCount && (width != 0 || height != 0); ++level) {
 		unsigned int size = ((width + 3) / 4)*((height + 3) / 4)*blockSize;
 		glCompressedTexImage2D(GL_TEXTURE_2D, level, td.format, width, height,
-							   0, size, td.pixels.data() + offset);
+							   0, size, &td.pixels[offset]);
 
 		offset += size;
 		width /= 2;
@@ -184,7 +184,7 @@ bool Texture::GetBmpData(const std::string& path, TextureData& td) {
 	// Create a buffer
 	td.pixels.resize(imageSize);
 	// Read the actual data from the file into the buffer
-	fread(td.pixels.data(), 1, imageSize, file);
+	fread(&td.pixels[0], 1, imageSize, file);
 
 	// Everything is in memory now, the file wan be closed
 	fclose(file);
@@ -233,7 +233,7 @@ bool Texture::GetDDSData(const std::string& path, TextureData& td) {
 	/* how big is it going to be including all mipmaps? */
 	bufsize = mipMapCount > 1 ? linearSize * 2 : linearSize;
 	td.pixels.resize(bufsize);
-	fread(td.pixels.data(), 1, bufsize, fp);
+	fread(&td.pixels[0], 1, bufsize, fp);
 	/* close the file pointer */
 	fclose(fp);
 

@@ -48,7 +48,7 @@ void main() {
 	float cosAlpha = clamp(dot(n, H), 0, 1);
 #else
 	vec3 R = reflect(-l, n);
-	float cosAlpha = clamp(dot(E, H), 0, 1);
+	float cosAlpha = clamp(dot(E, R), 0, 1);
 #endif
 	
 	float distSquared = (dist * dist);

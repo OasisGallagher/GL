@@ -1,3 +1,5 @@
+#include <vector>
+
 #include <GL/glew.h>
 #include <GL/glfw3.h>
 #include <glm/glm.hpp>
@@ -120,4 +122,20 @@ private:
 	ModelInfo* info_;
 	Texture* texture_;
 	GLuint vao_, vbo_[3];
+};
+
+class Example_VBOIndexing : public Example {
+public:
+	Example_VBOIndexing();
+	~Example_VBOIndexing();
+
+public:
+	virtual void Update(float deltaTime);
+	virtual void GetEnvRequirement(AppEnv& env);
+
+private:
+	ModelInfo* info_;
+	Texture* texture_;
+	GLuint vao_, vbo_[4];
+	std::vector<unsigned> indices_;
 };

@@ -1,3 +1,5 @@
+#include <map>
+
 #include "debug.h"
 #include "model_loader.h"
 
@@ -78,4 +80,32 @@ bool ModelLoader::LoadBlenderObj(const std::string& path, ModelInfo& info) {
 	}
 
 	return true;
+}
+
+void VBOIndexer::Index(ModelInfo& packed, std::vector<unsigned>& indices, const ModelInfo& info) {
+	ModelInfo newInfo;
+	typedef std::map<VBOBuffer, unsigned> Container;
+	Container dict;
+	unsigned index = 0;
+	unsigned size = info.vertices.size();
+
+	for (unsigned i = 0; i < size; ++i) {
+		VBOBuffer buffer = { info.vertices[i], info.uvs[i], info.normals[i] };
+		Container::iterator pos = dict.find(buffer);
+		if (pos == dict.end()) {
+			dict.insert(std::make_pair(buffer, index));
+
+			newInfo.vertices.push_back(buffer.vertex);
+			newInfo.uvs.push_back(buffer.uv);
+			newInfo.normals.push_back(buffer.normal);
+
+			indices.push_back(index);
+			++index;
+		}
+		else {
+			indices.push_back(pos->second);
+		}
+	}
+
+	packed = newInfo;
 }
