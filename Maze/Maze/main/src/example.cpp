@@ -671,7 +671,7 @@ Example_VBOIndexing::~Example_VBOIndexing() {
 void Example_VBOIndexing::GetEnvRequirement(AppEnv& env) {
 	Example::GetEnvRequirement(env);
 	//env.blend = true;
-	env.cullFace = false;
+	env.cullFace = true;
 }
 
 void Example_VBOIndexing::Update(float deltaTime) {
@@ -697,5 +697,5 @@ void Example_VBOIndexing::Update(float deltaTime) {
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(2);
 	*/
-	text_->Print("X", 0, 200, 20);
+	text_->Print("1", 0, 200, 512);
 }

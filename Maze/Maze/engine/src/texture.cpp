@@ -104,10 +104,10 @@ GLuint Texture::CreateFromDDS(const TextureData& td) {
 
 	/* load the mipmaps */
 	for (unsigned int level = 0, width = td.width, height = td.height;
-		 level < td.mipMapCount && (width != 0 || height != 0); ++level) {
+		level < td.mipMapCount && (width != 0 || height != 0); ++level) {
 		unsigned int size = ((width + 3) / 4)*((height + 3) / 4)*blockSize;
 		glCompressedTexImage2D(GL_TEXTURE_2D, level, td.format, width, height,
-							   0, size, &td.pixels[offset]);
+			0, size, &td.pixels[offset]);
 
 		offset += size;
 		width /= 2;
