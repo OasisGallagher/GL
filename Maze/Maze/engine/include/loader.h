@@ -32,6 +32,25 @@ class VBOIndexer {
 			return memcmp(this, &other, sizeof(other)) < 0;
 		}
 	};
+
+	struct NormalMappingVBOBuffer {
+		glm::vec3 vertex;
+		glm::vec2 uv;
+		glm::vec3 normal;
+
+		glm::vec3 tangent;
+		glm::vec3 bitangent;
+
+		bool operator < (const NormalMappingVBOBuffer& other) const {
+			return memcmp(this, &other, sizeof(other)) < 0;
+		}
+	};
 public:
 	static void Index(ModelInfo& packed, std::vector<unsigned>& indices, const ModelInfo& info);
+	static void Index(ModelInfo& packed, std::vector<glm::vec3>& packedTangents, std::vector<glm::vec3>& packedBitangents, std::vector<unsigned>& indices, const ModelInfo& info, const std::vector<glm::vec3>& tangents, const std::vector<glm::vec3>& bitangents);
+};
+
+class TBNParser {
+public:
+	static void Parse(std::vector<glm::vec3>& tangents, std::vector<glm::vec3>& bitangents, const ModelInfo& info);
 };

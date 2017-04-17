@@ -704,7 +704,12 @@ Example_NormalMapping::Example_NormalMapping() {
 	modelInfo_ = new ModelInfo;
 	ModelLoader::Load("models/cylinder.obj", *modelInfo_);
 
-	VBOIndexer::Index(*modelInfo_, indices_, *modelInfo_);
+	std::vector<glm::vec3> tangents;
+	std::vector<glm::vec3> bitangents;
+
+	TBNParser::Parse(tangents, bitangents, *modelInfo_);
+
+	VBOIndexer::Index(*modelInfo_, tangents, bitangents, indices_, *modelInfo_, tangents, bitangents);
 
 	normal_ = new Texture;
 	normal_->Load("textures/normal.bmp");
@@ -734,11 +739,19 @@ Example_NormalMapping::Example_NormalMapping() {
 	glBindBuffer(GL_ARRAY_BUFFER, normalVbo_);
 	glBufferData(GL_ARRAY_BUFFER, modelInfo_->normals.size() * sizeof(glm::vec3), &modelInfo_->normals[0], GL_STATIC_DRAW);
 
+	glGenBuffers(1, &tangentVbo_);
+	glBindBuffer(GL_ARRAY_BUFFER, tangentVbo_);
+	glBufferData(GL_ARRAY_BUFFER, tangents.size() * sizeof(glm::vec3), &tangents[0], GL_STATIC_DRAW);
+
+	glGenBuffers(1, &bitangentVbo_);
+	glBindBuffer(GL_ARRAY_BUFFER, bitangentVbo_);
+	glBufferData(GL_ARRAY_BUFFER, bitangents.size() * sizeof(glm::vec3), &bitangents[0], GL_STATIC_DRAW);
+
 	glGenBuffers(1, &indexVbo_);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexVbo_);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_.size() * sizeof(unsigned), &indices_[0], GL_STATIC_DRAW);
 
-	camera_->Reset(glm::vec3(3, 8, 5), glm::vec3(0), glm::vec3(0, 1, 0));
+	camera_->Reset(glm::vec3(0, 2, 7), glm::vec3(0), glm::vec3(0, 1, 0));
 	const glm::mat4& proj = camera_->GetProjMatrix();
 	const glm::mat4& view = camera_->GetViewMatrix();
 
@@ -749,13 +762,17 @@ Example_NormalMapping::Example_NormalMapping() {
 
 	glActiveTexture(GL_TEXTURE0);
 	diffuse_->Use();
-	shader_->SetUniform("diffuse", 0);
+	shader_->SetUniform("diffuseSampler", 0);
 	
 	glActiveTexture(GL_TEXTURE1);
 	specular_->Use();
-	shader_->SetUniform("specular", 1);
+	shader_->SetUniform("specularSampler", 1);
 
-	glm::vec3 lightPosition(3, 8, 5);
+	glActiveTexture(GL_TEXTURE2);
+	normal_->Use();
+	shader_->SetUniform("normalSampler", 2);
+
+	glm::vec3 lightPosition(0, 0, 5);// 3, 8, 5);
 	shader_->SetUniform("lightPosition_worldspace", &lightPosition);
 }
 
@@ -770,6 +787,12 @@ Example_NormalMapping::~Example_NormalMapping() {
 	glDeleteBuffers(1, &vertexVbo_);
 	glDeleteBuffers(1, &indexVbo_);
 	glDeleteBuffers(1, &normalVbo_);
+}
+
+void Example_NormalMapping::GetEnvRequirement(AppEnv& env){
+	Example::GetEnvRequirement(env);
+	env.depthTest = true;
+	env.cullFace = true;
 }
 
 void Example_NormalMapping::Update(float deltaTime) {
@@ -787,9 +810,19 @@ void Example_NormalMapping::Update(float deltaTime) {
 	glBindBuffer(GL_ARRAY_BUFFER, normalVbo_);
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 
+	glEnableVertexAttribArray(3);
+	glBindBuffer(GL_ARRAY_BUFFER, tangentVbo_);
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+	glEnableVertexAttribArray(4);
+	glBindBuffer(GL_ARRAY_BUFFER, bitangentVbo_);
+	glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+
 	glDrawElements(GL_TRIANGLES, indices_.size(), GL_UNSIGNED_INT, nullptr);
 
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(2);
+	glDisableVertexAttribArray(3);
+	glDisableVertexAttribArray(4);
 }

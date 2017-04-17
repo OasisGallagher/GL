@@ -151,7 +151,8 @@ public:
 
 public:
 	virtual void Update(float deltaTime);
-	
+	virtual void GetEnvRequirement(AppEnv& env);
+
 private:
 	ModelInfo* modelInfo_;
 	std::vector<unsigned> indices_;
@@ -161,4 +162,5 @@ private:
 
 	GLuint vao_;
 	GLuint vertexVbo_, uvVbo_, indexVbo_, normalVbo_;
+	GLuint tangentVbo_, bitangentVbo_;
 };
