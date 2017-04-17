@@ -143,3 +143,22 @@ private:
 	GLuint vao_, vbo_[4];
 	std::vector<unsigned> indices_;
 };
+
+class Example_NormalMapping : public Example {
+public:
+	Example_NormalMapping();
+	~Example_NormalMapping();
+
+public:
+	virtual void Update(float deltaTime);
+	
+private:
+	ModelInfo* modelInfo_;
+	std::vector<unsigned> indices_;
+
+	Texture* normal_;
+	Texture* diffuse_, *specular_;
+
+	GLuint vao_;
+	GLuint vertexVbo_, uvVbo_, indexVbo_, normalVbo_;
+};

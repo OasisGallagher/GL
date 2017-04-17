@@ -178,5 +178,11 @@
     <None Include="shaders\text2d.vert">
       <Filter>shaders</Filter>
     </None>
+    <None Include="shaders\normal_mapping.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\normal_mapping.vert">
+      <Filter>shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

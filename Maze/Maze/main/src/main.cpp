@@ -8,7 +8,7 @@ int main() {
 		return -1;
 	}
 
-	Example* example = new Example_VBOIndexing;
+	Example* example = new Example_NormalMapping;
 	app.SetExample(example);
 
 	app.EnterMainLoop();

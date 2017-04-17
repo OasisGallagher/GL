@@ -31,9 +31,12 @@ void APIENTRY DebugOutputCallback(GLenum source, GLenum type, GLuint id, GLenum 
 
 	text += message;
 
-	Assert(severity != GL_DEBUG_SEVERITY_HIGH_ARB, text);
+	//Assert(severity != GL_DEBUG_SEVERITY_HIGH_ARB, text);
 
-	if (severity == GL_DEBUG_SEVERITY_MEDIUM_ARB){
+	if (severity == GL_DEBUG_SEVERITY_HIGH_ARB) {
+		Debug::LogError(text);
+	}
+	else if (severity == GL_DEBUG_SEVERITY_MEDIUM_ARB){
 		Debug::LogWarning(text);
 	}
 	else {

@@ -53,6 +53,8 @@
     <None Include="shaders\coord.vert" />
     <None Include="shaders\model_loading.frag" />
     <None Include="shaders\model_loading.vert" />
+    <None Include="shaders\normal_mapping.frag" />
+    <None Include="shaders\normal_mapping.vert" />
     <None Include="shaders\simple.frag" />
     <None Include="shaders\simple.vert" />
     <None Include="shaders\simple_transform.frag" />
