@@ -164,3 +164,18 @@ private:
 	GLuint vertexVbo_, uvVbo_, indexVbo_, normalVbo_;
 	GLuint tangentVbo_, bitangentVbo_;
 };
+
+class Example_RenderToTexture : public Example {
+public:
+	Example_RenderToTexture();
+	~Example_RenderToTexture();
+
+public:
+	virtual void Update(float deltaTime);
+
+private:
+	ModelInfo* modelInfo_;
+
+	GLuint vao_;
+	GLuint vbo_[3];
+};

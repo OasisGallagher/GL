@@ -74,6 +74,7 @@ bool ModelLoader::LoadBlenderObj(const std::string& path, ModelInfo& info) {
 		}
 		else if (strcmp(header, "vt") == 0) {
 			fscanf(file, "%f %f\n", &uv.x, &uv.y);
+			uv.y = -uv.y;
 			uvs.push_back(uv);
 		}
 		else if (strcmp(header, "vn") == 0) {

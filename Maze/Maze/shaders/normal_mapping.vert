@@ -2,6 +2,7 @@
 
 uniform mat4 M = mat4(1);
 uniform mat4 V;
+uniform mat3 MV3x3;
 uniform mat4 MVP;
 uniform vec3 lightPosition_worldspace;
 
@@ -28,11 +29,11 @@ void main() {
 	UV = uv_modelspace;
 	gl_Position = MVP * vec4(vert_modelspace, 1);
 	
-	normal_cameraspace = (V * M * vec4(normal_modelspace, 0)).xyz;
+	normal_cameraspace = MV3x3 * normal_modelspace;
 	vert_worldspace = (M * vec4(vert_modelspace, 1)).xyz;
 
-	vec3 tangent_cameraspace = (V * M * vec4(tangent_modelspace, 0)).xyz;
-	vec3 bitangent_cameraspace = (V * M * vec4(bitangent_modelspace, 0)).xyz;
+	vec3 tangent_cameraspace = MV3x3 * tangent_modelspace;
+	vec3 bitangent_cameraspace = MV3x3 * bitangent_modelspace;
 
 	mat3 TBN = transpose(mat3(tangent_cameraspace, bitangent_cameraspace, normal_cameraspace));
 

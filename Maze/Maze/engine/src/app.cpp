@@ -52,7 +52,7 @@ bool App::Initialize() {
 		return false;
 	}
 
-	glfwWindowHint(GLFW_SAMPLES, 4);
+	glfwWindowHint(GLFW_SAMPLES, 1);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
@@ -68,7 +68,7 @@ bool App::Initialize() {
 	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, 1);
 
 	// Open a window and create its OpenGL context
-	window_ = glfwCreateWindow(512, 384, "Maze", NULL, NULL);
+	window_ = glfwCreateWindow(512, 384, "Maze", nullptr, nullptr);
 	if (window_ == NULL){
 		Debug::LogError("failed to open GLFW window.");
 		glfwTerminate();

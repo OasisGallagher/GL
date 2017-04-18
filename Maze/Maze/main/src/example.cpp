@@ -709,7 +709,7 @@ Example_NormalMapping::Example_NormalMapping() {
 
 	TBNParser::Parse(tangents, bitangents, *modelInfo_);
 
-	VBOIndexer::Index(*modelInfo_, tangents, bitangents, indices_, *modelInfo_, tangents, bitangents);
+	//VBOIndexer::Index(*modelInfo_, tangents, bitangents, indices_, *modelInfo_, tangents, bitangents);
 
 	normal_ = new Texture;
 	normal_->Load("textures/normal.bmp");
@@ -747,17 +747,20 @@ Example_NormalMapping::Example_NormalMapping() {
 	glBindBuffer(GL_ARRAY_BUFFER, bitangentVbo_);
 	glBufferData(GL_ARRAY_BUFFER, bitangents.size() * sizeof(glm::vec3), &bitangents[0], GL_STATIC_DRAW);
 
-	glGenBuffers(1, &indexVbo_);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexVbo_);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_.size() * sizeof(unsigned), &indices_[0], GL_STATIC_DRAW);
+	//glGenBuffers(1, &indexVbo_);
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexVbo_);
+	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_.size() * sizeof(unsigned), &indices_[0], GL_STATIC_DRAW);
 
-	camera_->Reset(glm::vec3(0, 2, 7), glm::vec3(0), glm::vec3(0, 1, 0));
+	camera_->Reset(glm::vec3(6, 4, 1), glm::vec3(0), glm::vec3(0, 1, 0));
 	const glm::mat4& proj = camera_->GetProjMatrix();
 	const glm::mat4& view = camera_->GetViewMatrix();
-
 	glm::mat4 mvp = proj * view;
 	
 	shader_->SetUniform("MVP", &mvp);
+
+	glm::mat3 MV3x3 = glm::mat3(view);
+	shader_->SetUniform("MV3x3", &MV3x3);
+
 	shader_->SetUniform("V", &view);
 
 	glActiveTexture(GL_TEXTURE0);
@@ -766,13 +769,13 @@ Example_NormalMapping::Example_NormalMapping() {
 	
 	glActiveTexture(GL_TEXTURE1);
 	specular_->Use();
-	shader_->SetUniform("specularSampler", 1);
+	//shader_->SetUniform("specularSampler", 1);
 
 	glActiveTexture(GL_TEXTURE2);
 	normal_->Use();
 	shader_->SetUniform("normalSampler", 2);
 
-	glm::vec3 lightPosition(0, 0, 5);// 3, 8, 5);
+	glm::vec3 lightPosition(0, 0, 4);// 3, 8, 5);
 	shader_->SetUniform("lightPosition_worldspace", &lightPosition);
 }
 
@@ -793,6 +796,7 @@ void Example_NormalMapping::GetEnvRequirement(AppEnv& env){
 	Example::GetEnvRequirement(env);
 	env.depthTest = true;
 	env.cullFace = true;
+	env.blend = false;
 }
 
 void Example_NormalMapping::Update(float deltaTime) {
@@ -818,11 +822,62 @@ void Example_NormalMapping::Update(float deltaTime) {
 	glBindBuffer(GL_ARRAY_BUFFER, bitangentVbo_);
 	glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 
-	glDrawElements(GL_TRIANGLES, indices_.size(), GL_UNSIGNED_INT, nullptr);
+	glDrawArrays(GL_TRIANGLES, 0, modelInfo_->vertices.size());
 
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(2);
 	glDisableVertexAttribArray(3);
 	glDisableVertexAttribArray(4);
+}
+
+Example_RenderToTexture::Example_RenderToTexture() {
+	shader_->Load(ShaderTypeVertex, "shaders/render_to_texture.vert");
+	shader_->Load(ShaderTypeFragment, "shaders/render_to_texture.frag");
+	shader_->Link();
+
+	modelInfo_ = new ModelInfo;
+	ModelLoader::Load("models/suzanne.obj", *modelInfo_);
+
+	glGenBuffers(COUNT_OF(vbo_), vbo_);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_[0]);
+	glBufferData(GL_ARRAY_BUFFER, modelInfo_->vertices.size() * sizeof(glm::vec3), &modelInfo_->vertices[0], GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_[1]);
+	glBufferData(GL_ARRAY_BUFFER, modelInfo_->uvs.size() * sizeof(glm::vec2), &modelInfo_->uvs[0], GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_[2]);
+	glBufferData(GL_ARRAY_BUFFER, modelInfo_->normals.size() * sizeof(glm::vec3), &modelInfo_->normals[0], GL_STATIC_DRAW);
+
+	GLuint frameBuffer;
+	glGenFramebuffers(1, &frameBuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+
+	GLuint targetTexture;
+	glGenTextures(1, &targetTexture);
+	glBindTexture(GL_TEXTURE_2D, targetTexture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 512, 384, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+
+	GLuint depthBuffer;
+	glGenRenderbuffers(1, &depthBuffer);
+	glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuffer);
+
+	glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, targetTexture, 0);
+
+	GLenum drawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
+	glDrawBuffers(COUNT_OF(drawBuffers), drawBuffers);
+}
+
+Example_RenderToTexture::~Example_RenderToTexture() {
+	glDeleteVertexArrays(1, &vao_);
+	glDeleteVertexArrays(COUNT_OF(vbo_), vbo_);
+
+	delete modelInfo_;
 }
