@@ -52,6 +52,8 @@
     <None Include="shaders\coord.frag" />
     <None Include="shaders\coord.vert" />
     <None Include="shaders\depth.frag" />
+    <None Include="shaders\lightmaps.frag" />
+    <None Include="shaders\lightmaps.vert" />
     <None Include="shaders\model_loading.frag" />
     <None Include="shaders\model_loading.vert" />
     <None Include="shaders\normal_mapping.frag" />

@@ -188,3 +188,21 @@ private:
 
 	float elapsed_;
 };
+
+class Example_LightMaps : public Example {
+public:
+	Example_LightMaps();
+	~Example_LightMaps();
+
+public:
+	virtual void Update(float deltaTime);
+	virtual void GetEnvRequirement(AppEnv& env);
+
+private:
+	GLuint vao_;
+	GLuint vbo_[2];
+
+	Texture* texture_;
+	ModelInfo* modelInfo_;
+};
+

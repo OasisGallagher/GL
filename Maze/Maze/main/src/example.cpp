@@ -933,7 +933,8 @@ void Example_RenderToTexture::Update(float deltaTime) {
 
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 	
-	glViewport(0, 0, 512, 384);
+	int width = 512 / 2, height = 384 / 2;
+	glViewport((512 - width) / 2, (384 - height) / 2, width, height);
 
 	shader2_->Use();
 
@@ -950,4 +951,66 @@ void Example_RenderToTexture::Update(float deltaTime) {
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 
 	glDisableVertexAttribArray(0);
+}
+
+Example_LightMaps::Example_LightMaps() {
+	shader_->Load(ShaderTypeVertex, "shaders/lightmaps.vert");
+	shader_->Load(ShaderTypeFragment, "shaders/lightmaps.frag");
+	shader_->Link();
+	shader_->Use();
+
+	camera_->Reset(glm::vec3(-20, 5, -15), glm::vec3(0), glm::vec3(0, 1, 0));
+	const glm::mat4& view = camera_->GetViewMatrix();
+	const glm::mat4& proj = camera_->GetProjMatrix();
+	glm::mat4 MVP = proj * view * glm::mat4(1);
+	shader_->SetUniform("MVP", &MVP);
+
+	texture_ = new Texture();
+	texture_->Load("textures/lightmap.dds");
+
+	glActiveTexture(GL_TEXTURE0);
+	texture_->Use();
+	shader_->SetUniform("textureSampler", 0);
+
+	modelInfo_ = new ModelInfo;
+	ModelLoader::Load("models/room.obj", *modelInfo_);
+	
+	glGenVertexArrays(1, &vao_);
+	glBindVertexArray(vao_);
+
+	glGenBuffers(COUNT_OF(vbo_), vbo_);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_[0]);
+	glBufferData(GL_ARRAY_BUFFER, modelInfo_->vertices.size() * sizeof(glm::vec3), &modelInfo_->vertices[0], GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_[1]);
+	glBufferData(GL_ARRAY_BUFFER, modelInfo_->uvs.size() * sizeof(glm::vec2), &modelInfo_->uvs[0], GL_STATIC_DRAW);
+}
+
+Example_LightMaps::~Example_LightMaps() {
+	delete texture_;
+	delete modelInfo_;
+
+	glDeleteVertexArrays(1, &vao_);
+	glDeleteBuffers(COUNT_OF(vbo_), vbo_);
+}
+
+void Example_LightMaps::Update(float deltaTime) {
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_[0]);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+	glEnableVertexAttribArray(1);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_[1]);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+	glDrawArrays(GL_TRIANGLES, 0, modelInfo_->vertices.size());
+
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+}
+
+void Example_LightMaps::GetEnvRequirement(AppEnv& env) {
+	Example::GetEnvRequirement(env);
+//	env.cullFace = true;
 }

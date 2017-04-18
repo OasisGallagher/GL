@@ -8,7 +8,7 @@ int main() {
 		return -1;
 	}
 
-	Example* example = new Example_RenderToTexture;
+	Example* example = new Example_LightMaps;
 	app.SetExample(example);
 
 	app.EnterMainLoop();
