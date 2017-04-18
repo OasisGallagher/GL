@@ -40,3 +40,29 @@ private:
 private:
 	GLuint textureID_;
 };
+
+enum RenderTarget {
+	RenderTexture2D,
+	RenderDepthTexture,
+};
+
+class RenderTexture {
+public:
+	RenderTexture(RenderTarget target, GLint width, GLint height);
+	~RenderTexture();
+
+public:
+	void Use();
+	GLuint GetTexture() const;
+
+private:
+	void Create(RenderTarget target, GLint width, GLint height);
+	void CreateTexture2D(GLint width, GLint height);
+	void CreateDepthTexture(GLint width, GLint height);
+
+private:
+	GLuint fbo_;
+
+	GLuint depthBuffer_;
+	GLuint targetTexture_;
+};

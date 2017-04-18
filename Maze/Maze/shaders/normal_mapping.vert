@@ -29,11 +29,11 @@ void main() {
 	UV = uv_modelspace;
 	gl_Position = MVP * vec4(vert_modelspace, 1);
 	
-	normal_cameraspace = MV3x3 * normal_modelspace;
+	normal_cameraspace = normalize(MV3x3 * normal_modelspace);
 	vert_worldspace = (M * vec4(vert_modelspace, 1)).xyz;
 
-	vec3 tangent_cameraspace = MV3x3 * tangent_modelspace;
-	vec3 bitangent_cameraspace = MV3x3 * bitangent_modelspace;
+	vec3 tangent_cameraspace = normalize(MV3x3 * tangent_modelspace);
+	vec3 bitangent_cameraspace = normalize(MV3x3 * bitangent_modelspace);
 
 	mat3 TBN = transpose(mat3(tangent_cameraspace, bitangent_cameraspace, normal_cameraspace));
 

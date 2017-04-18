@@ -832,12 +832,42 @@ void Example_NormalMapping::Update(float deltaTime) {
 }
 
 Example_RenderToTexture::Example_RenderToTexture() {
-	shader_->Load(ShaderTypeVertex, "shaders/render_to_texture.vert");
-	shader_->Load(ShaderTypeFragment, "shaders/render_to_texture.frag");
+	elapsed_ = 0.f;
+
+	shader_->Load(ShaderTypeVertex, "shaders/basic.vert");
+	shader_->Load(ShaderTypeFragment, "shaders/basic.frag");
 	shader_->Link();
+
+	texture_ = new Texture;
+	texture_->Load("textures/suzanne_uvmap.dds");
+	glActiveTexture(GL_TEXTURE0);
+	texture_->Use();
+	shader_->SetUniform("textureSampler", 0);
+
+	camera_->Reset(glm::vec3(6, 0, 6), glm::vec3(0), glm::vec3(0, 1, 0));
+	glm::mat4 m = glm::mat4(1.f);
+	const glm::mat4& view = camera_->GetViewMatrix();
+	const glm::mat4& proj = camera_->GetProjMatrix();
+
+	glm::mat4 mvp = proj * view * m;
+
+	shader_->SetUniform("M", &m);
+	shader_->SetUniform("V", &view);
+	shader_->SetUniform("MVP", &mvp);
+
+	glm::vec3 lightPos(4, 0, 4);
+	shader_->SetUniform("LightPosition_worldspace", &lightPos);
+
+	shader2_ = new Shader;
+	shader2_->Load(ShaderTypeVertex, "shaders/render_to_texture.vert");
+	shader2_->Load(ShaderTypeFragment, "shaders/render_to_texture.frag");
+	shader2_->Link();
 
 	modelInfo_ = new ModelInfo;
 	ModelLoader::Load("models/suzanne.obj", *modelInfo_);
+
+	glGenVertexArrays(1, &vao_);
+	glBindVertexArray(vao_);
 
 	glGenBuffers(COUNT_OF(vbo_), vbo_);
 
@@ -849,35 +879,75 @@ Example_RenderToTexture::Example_RenderToTexture() {
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo_[2]);
 	glBufferData(GL_ARRAY_BUFFER, modelInfo_->normals.size() * sizeof(glm::vec3), &modelInfo_->normals[0], GL_STATIC_DRAW);
+	
+	renderTexture_ = new RenderTexture(RenderTexture2D, 512, 384);
 
-	GLuint frameBuffer;
-	glGenFramebuffers(1, &frameBuffer);
-	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+	GLfloat quadData[] = {
+		-1.0f, -1.0f, 0.0f,
+		1.0f, -1.0f, 0.0f,
+		-1.0f, 1.0f, 0.0f,
+		-1.0f, 1.0f, 0.0f,
+		1.0f, -1.0f, 0.0f,
+		1.0f, 1.0f, 0.0f,
+	};
 
-	GLuint targetTexture;
-	glGenTextures(1, &targetTexture);
-	glBindTexture(GL_TEXTURE_2D, targetTexture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 512, 384, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-
-	GLuint depthBuffer;
-	glGenRenderbuffers(1, &depthBuffer);
-	glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuffer);
-
-	glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, targetTexture, 0);
-
-	GLenum drawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
-	glDrawBuffers(COUNT_OF(drawBuffers), drawBuffers);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_[3]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(quadData), quadData, GL_STATIC_DRAW);
 }
 
 Example_RenderToTexture::~Example_RenderToTexture() {
 	glDeleteVertexArrays(1, &vao_);
 	glDeleteVertexArrays(COUNT_OF(vbo_), vbo_);
 
+	delete texture_;
 	delete modelInfo_;
+}
+
+void Example_RenderToTexture::Update(float deltaTime) {
+	elapsed_ += deltaTime;
+
+	renderTexture_->Use();
+
+	shader_->Use();
+	texture_->Use();
+
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_[0]);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+	glEnableVertexAttribArray(1);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_[1]);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+	glEnableVertexAttribArray(2);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_[2]);
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+	glDrawArrays(GL_TRIANGLES, 0, modelInfo_->vertices.size());
+
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+	glDisableVertexAttribArray(2);
+	
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+	
+	glViewport(0, 0, 512, 384);
+
+	shader2_->Use();
+
+	glActiveTexture(GL_TEXTURE0);
+
+	glBindTexture(GL_TEXTURE_2D, renderTexture_->GetTexture());
+	shader2_->SetUniform("textureSampler", 0);
+	shader2_->SetUniform("time", elapsed_);
+
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_[3]);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+	
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+
+	glDisableVertexAttribArray(0);
 }

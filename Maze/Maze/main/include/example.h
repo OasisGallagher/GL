@@ -13,6 +13,7 @@ class Camera;
 class Text2D;
 class Texture;
 struct ModelInfo;
+class RenderTexture;
 
 class Example {
 public:
@@ -165,6 +166,7 @@ private:
 	GLuint tangentVbo_, bitangentVbo_;
 };
 
+
 class Example_RenderToTexture : public Example {
 public:
 	Example_RenderToTexture();
@@ -175,7 +177,14 @@ public:
 
 private:
 	ModelInfo* modelInfo_;
+	Texture* texture_;
+
+	Shader* shader2_;
+
+	RenderTexture* renderTexture_;
 
 	GLuint vao_;
-	GLuint vbo_[3];
+	GLuint vbo_[4];
+
+	float elapsed_;
 };

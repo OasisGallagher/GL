@@ -14,7 +14,7 @@ in vec3 EyeDirection_cameraspace;
 // vector that goes from the vertex to the light, in camera space.
 in vec3 LightDirection_cameraspace;
 
-out vec4 color;
+layout(location = 0) out vec4 color;
 
 uniform sampler2D textureSampler;
 uniform mat4 M;
