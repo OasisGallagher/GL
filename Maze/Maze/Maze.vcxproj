@@ -52,6 +52,7 @@
     <None Include="shaders\coord.frag" />
     <None Include="shaders\coord.vert" />
     <None Include="shaders\depth.frag" />
+    <None Include="shaders\depth.vert" />
     <None Include="shaders\lightmaps.frag" />
     <None Include="shaders\lightmaps.vert" />
     <None Include="shaders\model_loading.frag" />
@@ -60,6 +61,8 @@
     <None Include="shaders\normal_mapping.vert" />
     <None Include="shaders\render_to_texture.frag" />
     <None Include="shaders\render_to_texture.vert" />
+    <None Include="shaders\shadow.frag" />
+    <None Include="shaders\shadow.vert" />
     <None Include="shaders\simple.frag" />
     <None Include="shaders\simple.vert" />
     <None Include="shaders\simple_transform.frag" />

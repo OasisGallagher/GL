@@ -206,3 +206,25 @@ private:
 	ModelInfo* modelInfo_;
 };
 
+class Example_ShadowMaps : public Example {
+public:
+	Example_ShadowMaps();
+	~Example_ShadowMaps();
+
+public:
+	virtual void Update(float deltaTime);
+	virtual void GetEnvRequirement(AppEnv& env);
+
+private:
+	GLuint vao_;
+	GLuint vbo_[5];
+	std::vector<unsigned> indices_;
+
+	Texture* texture_;
+	ModelInfo* modelInfo_;
+
+	Shader* depthShader_;
+	Shader* shadowShader_;
+
+	RenderTexture* depthTexture_;
+};

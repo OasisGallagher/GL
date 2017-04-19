@@ -118,6 +118,7 @@ void App::SetExample(Example* example) {
 
 	if (env_.cullFace)  {
 		glEnable(GL_CULL_FACE);
+		glCullFace(GL_BACK);
 	}
 	else {
 		glDisable(GL_CULL_FACE);

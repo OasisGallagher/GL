@@ -12,6 +12,15 @@ extern App app;
 static const float defaultAspect = 4.f / 3.f;
 static const float moveSpeed = 3.f;
 
+static const GLfloat quadData[] = {
+	-1.0f, -1.0f, 0.0f,
+	1.0f, -1.0f, 0.0f,
+	-1.0f, 1.0f, 0.0f,
+	-1.0f, 1.0f, 0.0f,
+	1.0f, -1.0f, 0.0f,
+	1.0f, 1.0f, 0.0f,
+};
+
 Example::Example() {
 	shader_ = new Shader;
 	camera_ = new Camera;
@@ -882,15 +891,6 @@ Example_RenderToTexture::Example_RenderToTexture() {
 	
 	renderTexture_ = new RenderTexture(RenderTexture2D, 512, 384);
 
-	GLfloat quadData[] = {
-		-1.0f, -1.0f, 0.0f,
-		1.0f, -1.0f, 0.0f,
-		-1.0f, 1.0f, 0.0f,
-		-1.0f, 1.0f, 0.0f,
-		1.0f, -1.0f, 0.0f,
-		1.0f, 1.0f, 0.0f,
-	};
-
 	glBindBuffer(GL_ARRAY_BUFFER, vbo_[3]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(quadData), quadData, GL_STATIC_DRAW);
 }
@@ -1012,5 +1012,106 @@ void Example_LightMaps::Update(float deltaTime) {
 
 void Example_LightMaps::GetEnvRequirement(AppEnv& env) {
 	Example::GetEnvRequirement(env);
-//	env.cullFace = true;
+	env.cullFace = true;
+}
+
+Example_ShadowMaps::Example_ShadowMaps() {
+	texture_ = new Texture;
+	texture_->Load("textures/room_uvmap.dds");
+
+	modelInfo_ = new ModelInfo;
+	ModelLoader::Load("models/room2.obj", *modelInfo_);
+	VBOIndexer::Index(*modelInfo_, indices_, *modelInfo_);
+
+	glGenVertexArrays(1, &vao_);
+	glBindVertexArray(vao_);
+
+	glGenBuffers(COUNT_OF(vbo_), vbo_);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_[0]);
+	glBufferData(GL_ARRAY_BUFFER, modelInfo_->vertices.size() * sizeof(glm::vec3), &modelInfo_->vertices[0], GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_[1]);
+	glBufferData(GL_ARRAY_BUFFER, modelInfo_->uvs.size() * sizeof(glm::vec2), &modelInfo_->uvs[0], GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_[2]);
+	glBufferData(GL_ARRAY_BUFFER, modelInfo_->normals.size() * sizeof(glm::vec3), &modelInfo_->normals[0], GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo_[3]);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_.size() * sizeof(unsigned), &indices_[0], GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_[4]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(quadData), quadData, GL_STATIC_DRAW);
+
+	depthShader_ = new Shader;
+	depthShader_->Load(ShaderTypeVertex, "shaders/depth.vert");
+	depthShader_->Load(ShaderTypeFragment, "shaders/depth.frag");
+	depthShader_->Link();
+
+	shadowShader_ = new Shader;
+	shadowShader_->Load(ShaderTypeVertex, "shaders/shadow.vert");
+	shadowShader_->Load(ShaderTypeFragment, "shaders/shadow.frag");
+	shadowShader_->Link();
+
+	depthTexture_ = new RenderTexture(RenderDepthTexture, 512, 384);
+}
+
+Example_ShadowMaps::~Example_ShadowMaps() {
+	delete texture_;
+	delete modelInfo_;
+	delete depthTexture_;
+
+	delete depthShader_;
+	delete shadowShader_;
+
+	glDeleteVertexArrays(1, &vao_);
+	glDeleteBuffers(COUNT_OF(vbo_), vbo_);
+}
+
+void Example_ShadowMaps::GetEnvRequirement(AppEnv& env) {
+	Example::GetEnvRequirement(env);
+	env.cullFace = true;
+}
+
+void Example_ShadowMaps::Update(float deltaTime) {
+	depthShader_->Use();
+	depthTexture_->Use();
+
+	glm::vec3 lightPosition(0.5f, 2, 2);
+
+	glm::mat4 proj = glm::ortho<float>(-10, 10, -10, 10, -10, 20);
+	glm::mat4 view = glm::lookAt(lightPosition, glm::vec3(0), glm::vec3(0, 1, 0));
+	glm::mat4 depthMVP = proj * view * glm::mat4(1);
+
+	depthShader_->SetUniform("depthMVP", &depthMVP);
+
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_[0]);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo_[3]);
+	glDrawElements(GL_TRIANGLES, indices_.size(), GL_UNSIGNED_INT, nullptr);
+
+	glDisableVertexAttribArray(0);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	int height = 96;
+	//glViewport(0, 384 - height, 128, height);
+
+	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+
+	shadowShader_->Use();
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, depthTexture_->GetTexture());
+	shadowShader_->SetUniform("sampler", 0);
+
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_[4]);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+
+	glDisableVertexAttribArray(0);
 }

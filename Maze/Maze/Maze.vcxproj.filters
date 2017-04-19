@@ -199,5 +199,14 @@
     <None Include="shaders\lightmaps.vert">
       <Filter>shaders</Filter>
     </None>
+    <None Include="shaders\depth.vert">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\shadow.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\shadow.vert">
+      <Filter>shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
