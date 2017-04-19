@@ -1054,6 +1054,21 @@ Example_ShadowMaps::Example_ShadowMaps() {
 	shadowShader_->Link();
 
 	depthTexture_ = new RenderTexture(RenderDepthTexture, 512, 384);
+	
+	shader_->Load(ShaderTypeVertex, "shaders/basic_shadow.vert");
+	shader_->Load(ShaderTypeFragment, "shaders/basic_shadow.frag");
+	shader_->Link();
+
+	camera_->Reset(glm::vec3(-20, 5, -15/*4, 0, 19*/), glm::vec3(0), glm::vec3(0, 1, 0));
+	glm::mat4 m(1);
+	shader_->SetUniform("M", &m);
+	shader_->SetUniform("V", &camera_->GetViewMatrix());
+
+	m = camera_->GetProjMatrix() * camera_->GetViewMatrix() * m;
+	shader_->SetUniform("MVP", &m);
+
+	glm::vec3 LightInvDirection_worldspace(0.5f, 2, 2);
+	shader_->SetUniform("LightInvDirection_worldspace", &LightInvDirection_worldspace);
 }
 
 Example_ShadowMaps::~Example_ShadowMaps() {
@@ -1074,14 +1089,36 @@ void Example_ShadowMaps::GetEnvRequirement(AppEnv& env) {
 }
 
 void Example_ShadowMaps::Update(float deltaTime) {
-	depthShader_->Use();
-	depthTexture_->Use();
+	ShadowMapPass();
+	RenderPass();
+	RenderShadowMap();
+}
 
-	glm::vec3 lightPosition(0.5f, 2, 2);
+void Example_ShadowMaps::ShadowMapPass() {
+	depthTexture_->Use();
+	glViewport(0, 0, 512, 384);
+
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	depthShader_->Use();
+
+	glm::vec3 LightInvDirection_worldspace(0.5f, 2, 2);
 
 	glm::mat4 proj = glm::ortho<float>(-10, 10, -10, 10, -10, 20);
-	glm::mat4 view = glm::lookAt(lightPosition, glm::vec3(0), glm::vec3(0, 1, 0));
+	glm::mat4 view = glm::lookAt(LightInvDirection_worldspace, glm::vec3(0), glm::vec3(0, 1, 0));
 	glm::mat4 depthMVP = proj * view * glm::mat4(1);
+
+	glm::mat4 basis(
+		glm::vec4(0.5f, 0, 0, 0), 
+		glm::vec4(0, 0.5f, 0, 0), 
+		glm::vec4(0, 0, 0.5f, 0), 
+		glm::vec4(0.5f, 0.5f, 0.5f, 1)
+	);
+
+	shadowMVP_ = basis * depthMVP;
 
 	depthShader_->SetUniform("depthMVP", &depthMVP);
 
@@ -1093,13 +1130,48 @@ void Example_ShadowMaps::Update(float deltaTime) {
 	glDrawElements(GL_TRIANGLES, indices_.size(), GL_UNSIGNED_INT, nullptr);
 
 	glDisableVertexAttribArray(0);
+}
 
+void Example_ShadowMaps::RenderPass() {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	int height = 96;
-	//glViewport(0, 384 - height, 128, height);
-
+	glViewport(0, 0, 512, 384);
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+
+	shader_->Use();
+	shader_->SetUniform("ShadowMVP", &shadowMVP_);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, depthTexture_->GetTexture());
+	shader_->SetUniform("shadowSampler", 0);
+
+	glActiveTexture(GL_TEXTURE1);
+	texture_->Use();
+	shader_->SetUniform("textureSampler", 1);
+
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_[0]);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+	glEnableVertexAttribArray(1);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_[1]);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+	glEnableVertexAttribArray(2);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_[2]);
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo_[3]);
+	glDrawElements(GL_TRIANGLES, indices_.size(), GL_UNSIGNED_INT, nullptr);
+
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+	glDisableVertexAttribArray(2);
+}
+
+void Example_ShadowMaps::RenderShadowMap() {
+	int height = 96;
+	glViewport(0, 384 - height, 128, height);
 
 	shadowShader_->Use();
 

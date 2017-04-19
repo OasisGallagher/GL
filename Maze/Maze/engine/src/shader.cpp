@@ -205,7 +205,7 @@ bool Shader::LoadShader(ShaderType shaderType, const char* source) {
 		return true;
 	}
 
-	Debug::LogError(shaderNameMap[shaderType] + std::string(" ") + message);
+	Assert(false, shaderNameMap[shaderType] + std::string(" ") + message);
 	return false;
 }
 

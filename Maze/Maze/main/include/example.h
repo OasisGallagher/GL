@@ -213,12 +213,21 @@ public:
 
 public:
 	virtual void Update(float deltaTime);
+
+	void RenderPass();
+
+	void RenderShadowMap();
+
+	void ShadowMapPass();
+
 	virtual void GetEnvRequirement(AppEnv& env);
 
 private:
 	GLuint vao_;
 	GLuint vbo_[5];
 	std::vector<unsigned> indices_;
+
+	glm::mat4 shadowMVP_;
 
 	Texture* texture_;
 	ModelInfo* modelInfo_;

@@ -7,5 +7,6 @@ in vec2 UV;
 uniform sampler2D sampler;
 
 void main() {
-	color = texture(sampler, UV);
+	float r = texture(sampler, UV).r;
+	color = vec4(r, r, r, 1);
 }
