@@ -8,7 +8,7 @@ int main() {
 		return -1;
 	}
 
-	Example* example = new Example_ShadowMaps;
+	Example* example = new Example_Billboards;
 	app.SetExample(example);
 
 	app.EnterMainLoop();

@@ -214,5 +214,11 @@
     <None Include="shaders\basic_shadow.vert">
       <Filter>shaders</Filter>
     </None>
+    <None Include="shaders\billboard.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\billboard.vert">
+      <Filter>shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
