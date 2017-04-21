@@ -52,8 +52,9 @@ void main() {
 	float cosAlpha = clamp(dot(E, R), 0, 1);
 #endif
 
+	float bias = 0.005 * tan(acos(cosTheta)); 
 	float shadowFactor = 1.f;
-	if (ShadowCoord.z > 0.05 + texture(shadowSampler, ShadowCoord.xy).x) {
+	if (ShadowCoord.z > bias + texture(shadowSampler, ShadowCoord.xy).x) {
 		shadowFactor = 0.5f;
 	}
 	

@@ -1032,7 +1032,7 @@ Example_ShadowMaps::Example_ShadowMaps() {
 	texture_->Load("textures/room_uvmap.dds");
 
 	modelInfo_ = new ModelInfo;
-	ModelLoader::Load("models/room2.obj", *modelInfo_);
+	ModelLoader::Load("models/room_thickwalls.obj", *modelInfo_);
 	VBOIndexer::Index(*modelInfo_, indices_, *modelInfo_);
 
 	glGenVertexArrays(1, &vao_);
@@ -1072,12 +1072,6 @@ Example_ShadowMaps::Example_ShadowMaps() {
 	shader_->Link();
 
 	camera_->Reset(glm::vec3(-20, 5, -15/*4, 0, 19*/), glm::vec3(0), glm::vec3(0, 1, 0));
-	glm::mat4 m(1);
-	shader_->SetUniform("M", &m);
-	shader_->SetUniform("V", &camera_->GetViewMatrix());
-
-	m = camera_->GetProjMatrix() * camera_->GetViewMatrix() * m;
-	shader_->SetUniform("MVP", &m);
 
 	glm::vec3 LightInvDirection_worldspace(0.5f, 2, 2);
 	shader_->SetUniform("LightInvDirection_worldspace", &LightInvDirection_worldspace);
@@ -1101,6 +1095,7 @@ void Example_ShadowMaps::GetEnvRequirement(AppEnv& env) {
 }
 
 void Example_ShadowMaps::Update(float deltaTime) {
+	Example::Update(deltaTime);
 	ShadowMapPass();
 	RenderPass();
 	RenderShadowMap();
@@ -1150,6 +1145,13 @@ void Example_ShadowMaps::RenderPass() {
 	glViewport(0, 0, 512, 384);
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
+	glm::mat4 m(1);
+	shader_->SetUniform("M", &m);
+	shader_->SetUniform("V", &camera_->GetViewMatrix());
+
+	m = camera_->GetProjMatrix() * camera_->GetViewMatrix() * m;
+	shader_->SetUniform("MVP", &m);
+
 	shader_->Use();
 	shader_->SetUniform("ShadowMVP", &shadowMVP_);
 
@@ -1182,8 +1184,7 @@ void Example_ShadowMaps::RenderPass() {
 }
 
 void Example_ShadowMaps::RenderShadowMap() {
-	int height = 96;
-	glViewport(0, 384 - height, 128, height);
+	glViewport(0, 0, 128, 96);
 
 	shadowShader_->Use();
 
