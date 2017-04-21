@@ -8,7 +8,7 @@ int main() {
 		return -1;
 	}
 
-	Example* example = new Example_Billboards;
+	Example* example = new Example_Particle;
 	app.SetExample(example);
 
 	app.EnterMainLoop();

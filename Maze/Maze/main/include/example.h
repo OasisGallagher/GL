@@ -169,7 +169,6 @@ private:
 	GLuint tangentVbo_, bitangentVbo_;
 };
 
-
 class Example_RenderToTexture : public Example {
 public:
 	Example_RenderToTexture();
@@ -216,14 +215,12 @@ public:
 
 public:
 	virtual void Update(float deltaTime);
-
-	void RenderPass();
-
-	void RenderShadowMap();
-
-	void ShadowMapPass();
-
 	virtual void GetEnvRequirement(AppEnv& env);
+
+private:
+	void RenderPass();
+	void ShadowMapPass();
+	void RenderShadowMap();
 
 private:
 	GLuint vao_;
@@ -254,4 +251,49 @@ private:
 	Texture* texture_;
 
 	GLuint vao_, vbo_[1];
+};
+
+struct Particle {
+	glm::vec3 position, speed;
+	GLubyte r, g, b, a;
+	float size, angle, weight;
+	float life;
+	float cameraDistance2;
+
+	bool operator < (const Particle& other) const {
+		return cameraDistance2 > other.cameraDistance2;
+	}
+};
+
+class Example_Particle : public Example {
+public:
+	Example_Particle();
+	~Example_Particle();
+
+public:
+	virtual void Update(float deltaTime);
+	virtual void GetEnvRequirement(AppEnv& env);
+
+private:
+	int FindUnusedParticle();
+
+	void SortParticles();
+	void RenderParticles();
+
+	void UpdateParticles(float deltaTime);
+	void CreateNewParticles(float deltaTime);
+
+private:
+	Texture* texture_;
+
+	Particle* particles_;
+
+	int lastUsedParticle_ = 0;
+	int activeParticleCount_ = 0;
+
+	GLuint vao_;
+	GLuint vbo_[3];
+
+	GLubyte* colorBuffer_;
+	GLfloat* positionBuffer_;
 };

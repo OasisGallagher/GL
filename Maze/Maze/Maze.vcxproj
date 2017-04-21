@@ -63,6 +63,8 @@
     <None Include="shaders\model_loading.vert" />
     <None Include="shaders\normal_mapping.frag" />
     <None Include="shaders\normal_mapping.vert" />
+    <None Include="shaders\particle.frag" />
+    <None Include="shaders\particle.vert" />
     <None Include="shaders\render_to_texture.frag" />
     <None Include="shaders\render_to_texture.vert" />
     <None Include="shaders\shadow.frag" />
