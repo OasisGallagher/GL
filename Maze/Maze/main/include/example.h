@@ -22,7 +22,7 @@ public:
 
 public:
 	virtual void GetEnvRequirement(AppEnv& env);
-	virtual void Update(float deltaTime) = 0;
+	virtual void Update(float deltaTime);
 
 protected:
 	Input* input_;
