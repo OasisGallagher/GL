@@ -24,6 +24,9 @@ public:
 	virtual void GetEnvRequirement(AppEnv& env);
 	virtual void Update(float deltaTime);
 
+private:
+	void UpdateCamera(float deltaTime);
+
 protected:
 	Input* input_;
 	Camera* camera_;
@@ -236,4 +239,19 @@ private:
 	Shader* shadowShader_;
 
 	RenderTexture* depthTexture_;
+};
+
+class Example_Billboards : public Example {
+public:
+	Example_Billboards();
+	~Example_Billboards();
+
+public:
+	virtual void Update(float deltaTime);
+	virtual void GetEnvRequirement(AppEnv& env);
+
+private:
+	Texture* texture_;
+
+	GLuint vao_, vbo_[1];
 };

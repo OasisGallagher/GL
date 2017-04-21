@@ -49,6 +49,8 @@
     <None Include="shaders\basic.vert" />
     <None Include="shaders\basic_shadow.frag" />
     <None Include="shaders\basic_shadow.vert" />
+    <None Include="shaders\billboard.frag" />
+    <None Include="shaders\billboard.vert" />
     <None Include="shaders\colored.frag" />
     <None Include="shaders\colored.vert" />
     <None Include="shaders\coord.frag" />
