@@ -8,7 +8,7 @@ int main() {
 		return -1;
 	}
 
-	Example* example = new Example_Particle;
+	Example* example = new Example_AntTweakBar;
 	app.SetExample(example);
 
 	app.EnterMainLoop();

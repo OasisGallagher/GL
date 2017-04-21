@@ -297,3 +297,12 @@ private:
 	GLubyte* colorBuffer_;
 	GLfloat* positionBuffer_;
 };
+
+class Example_AntTweakBar : public Example {
+public:
+	Example_AntTweakBar();
+	~Example_AntTweakBar();
+
+public:
+	virtual void Update(float deltaTime);
+};
