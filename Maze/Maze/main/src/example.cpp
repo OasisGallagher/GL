@@ -1484,7 +1484,7 @@ Example_AntTweakBar::Example_AntTweakBar() {
 	TwBar* EulerGUI = TwNewBar("Euler settings");
 	TwBar* QuaternionGUI = TwNewBar("Quaternion settings");
 	TwSetParam(EulerGUI, nullptr, "refresh", TW_PARAM_CSTRING, 1, "0.1");
-	TwSetParam(QuaternionGUI, nullptr, "position", TW_PARAM_CSTRING, 1, "808 16");
+	TwSetParam(QuaternionGUI, nullptr, "position", TW_PARAM_CSTRING, 1, "300 16");
 
 	glm::vec3 orientation;
 	TwAddVarRW(EulerGUI, "Euler X", TW_TYPE_FLOAT, &orientation.x, "step=0.1");
