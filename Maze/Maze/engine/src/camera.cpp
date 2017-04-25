@@ -53,6 +53,10 @@ void Camera::Fly(float length) {
 	pos_ += up_ * length;
 }
 
+const glm::vec3& Camera::GetPosition() {
+	return pos_;
+}
+
 const glm::mat4& Camera::GetProjMatrix() {
 	return proj_;
 }

@@ -17,6 +17,7 @@ struct ModelInfo {
 class ModelLoader {
 public:
 	static bool Load(const std::string& path, ModelInfo& info);
+	static bool Load2(const std::string& path, ModelInfo& info);
 
 private:
 	static bool LoadBlenderObj(const std::string& path, ModelInfo& info);

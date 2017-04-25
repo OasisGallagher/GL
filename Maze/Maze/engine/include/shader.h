@@ -7,6 +7,7 @@
 
 enum ShaderType {
 	ShaderTypeVertex,
+	ShaderTypeGeometry,
 	ShaderTypeFragment,
 	ShaderTypeCount,
 };

@@ -1,9 +1,12 @@
 #include <map>
+#include <fstream>
+
+#include <assimp/scene.h>
+#include <assimp/importer.hpp>
+#include <assimp/postprocess.h>
 
 #include "debug.h"
 #include "loader.h"
-
-#include <fstream>
 
 #include "debug.h"
 
@@ -43,6 +46,40 @@ bool ModelLoader::Load(const std::string& path, ModelInfo& info){
 	}
 
 	Debug::LogError("invalid postfix " + path.substr(i) + ".");
+	return false;
+}
+
+bool ModelLoader::Load2(const std::string& path, ModelInfo& info) {
+	/*Assimp::Importer importer;
+	const aiScene* scene = importer.ReadFile(path.c_str(), 0);
+
+	if (scene == nullptr) {
+		Debug::LogError(importer.GetErrorString());
+		return false;
+	}
+
+	const aiMesh* mesh = scene->mMeshes[0];
+	info.vertices.reserve(mesh->mNumVertices);
+	for (unsigned i = 0; i < mesh->mNumVertices; ++i) {
+		aiVector3D UVW = mesh->mTextureCoords[0][i];
+		info.uvs.push_back(glm::vec2(UVW.x, UVW.y));
+	}
+
+	info.normals.reserve(mesh->mNumVertices);
+	for (unsigned int i = 0; i < mesh->mNumVertices; i++){
+		aiVector3D n = mesh->mNormals[i];
+		info.normals.push_back(glm::vec3(n.x, n.y, n.z));
+	}
+	*/
+	// Fill face indices
+// 	info.indices.reserve(3 * mesh->mNumFaces);
+// 	for (unsigned int i = 0; i < mesh->mNumFaces; i++){
+// 		// Assume the model has only triangles.
+// 		info.indices.push_back(mesh->mFaces[i].mIndices[0]);
+// 		indices.push_back(mesh->mFaces[i].mIndices[1]);
+// 		indices.push_back(mesh->mFaces[i].mIndices[2]);
+// 	}
+
 	return false;
 }
 
@@ -103,7 +140,10 @@ bool ModelLoader::LoadBlenderObj(const std::string& path, ModelInfo& info) {
 		unsigned ni = normalIndices[i];
 
 		info.vertices.push_back(vertices[vi - 1]);
-		info.uvs.push_back(uvs[ui - 1]);
+		if (ui - 1 < uvs.size()) {
+			info.uvs.push_back(uvs[ui - 1]);
+		}
+
 		info.normals.push_back(normals[ni - 1]);
 	}
 

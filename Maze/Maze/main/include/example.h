@@ -10,6 +10,7 @@
 class Input;
 class Shader;
 class Camera;
+class SkyBox;
 class Text2D;
 class Texture;
 struct ModelInfo;
@@ -253,6 +254,20 @@ private:
 	GLuint vao_, vbo_[1];
 };
 
+class Example_Billboards2 : public Example {
+public:
+	Example_Billboards2();
+	~Example_Billboards2();
+
+public:
+	virtual void Update(float deltaTime);
+
+private:
+	Texture* texture_;
+	GLuint vao_;
+	GLuint vbo_[2];
+};
+
 struct Particle {
 	glm::vec3 position, speed;
 	GLubyte r, g, b, a;
@@ -305,4 +320,16 @@ public:
 
 public:
 	virtual void Update(float deltaTime);
+};
+
+class Example_SkyBox : public Example {
+public:
+	Example_SkyBox();
+	~Example_SkyBox();
+
+public:
+	virtual void Update(float deltaTime);
+
+private:
+	SkyBox* skyBox_;
 };

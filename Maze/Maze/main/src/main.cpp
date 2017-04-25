@@ -8,7 +8,7 @@ int main() {
 		return -1;
 	}
 
-	Example* example = new Example_AntTweakBar;
+	Example* example = new Example_SkyBox;
 	app.SetExample(example);
 
 	app.EnterMainLoop();

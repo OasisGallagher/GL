@@ -2,6 +2,15 @@
 #include "texture.h"
 #include "utilities.h"
 
+static const GLenum cubeMapTypes[6] = {
+	GL_TEXTURE_CUBE_MAP_POSITIVE_X,
+	GL_TEXTURE_CUBE_MAP_NEGATIVE_X,
+	GL_TEXTURE_CUBE_MAP_POSITIVE_Y,
+	GL_TEXTURE_CUBE_MAP_NEGATIVE_Y,
+	GL_TEXTURE_CUBE_MAP_POSITIVE_Z,
+	GL_TEXTURE_CUBE_MAP_NEGATIVE_Z
+};
+
 Texture::Texture() : textureID_(0) {
 }
 
@@ -68,7 +77,6 @@ bool Texture::LoadDDS(const std::string& path) {
 	}
 
 	return false;
-	
 }
 
 bool Texture::UseTexture() {
@@ -265,6 +273,68 @@ bool Texture::GetDDSData(const std::string& path, TextureData& td) {
 	td.mipMapCount = mipMapCount;
 
 	return true;
+}
+
+CubemapTexture::CubemapTexture() : textureID_(0) {
+}
+
+CubemapTexture::~CubemapTexture() {
+	Destroy();
+}
+
+bool CubemapTexture::Load(const std::string& posx, const std::string& negx,
+	const std::string& posy, const std::string& negy,
+	const std::string& posz, const std::string& negz) {
+	fileNames_[0] = posx;
+	fileNames_[1] = negx;
+	fileNames_[2] = posy;
+	fileNames_[3] = negy;
+	fileNames_[4] = posz;
+	fileNames_[5] = negz;
+
+	GLuint textureID = CreateCubeTexture();
+	if (textureID != 0) {
+		Destroy();
+		textureID_ = textureID;
+		return true;
+	}
+
+	return false;
+}
+
+GLuint CubemapTexture::CreateCubeTexture() {
+	GLuint textureID;
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+
+	for (int i = 0; i < COUNT_OF(cubeMapTypes); ++i) {
+		TextureData data;
+		if (!Texture::GetBmpData(fileNames_[i], data)) {
+			return 0;
+		}
+
+		glTexImage2D(cubeMapTypes[i], 0, GL_RGB, 
+			data.width, data.height, 0, data.format, GL_UNSIGNED_BYTE, &data.pixels[0]);
+
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+	}
+
+	return textureID;
+}
+
+void CubemapTexture::Use() {
+	glBindTexture(GL_TEXTURE_CUBE_MAP, textureID_);
+}
+
+void CubemapTexture::Destroy() {
+	if (textureID_ != 0) {
+		glDeleteTextures(1, &textureID_);
+		textureID_ = 0;
+	}
 }
 
 RenderTexture::RenderTexture(RenderTarget target, GLint width, GLint height) {

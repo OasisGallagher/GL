@@ -16,6 +16,7 @@
     <ClCompile Include="engine\src\input.cpp" />
     <ClCompile Include="engine\src\loader.cpp" />
     <ClCompile Include="engine\src\shader.cpp" />
+    <ClCompile Include="engine\src\skybox.cpp" />
     <ClCompile Include="engine\src\text2d.cpp" />
     <ClCompile Include="engine\src\texture.cpp" />
     <ClCompile Include="global\src\debug.cpp" />
@@ -32,6 +33,7 @@
     <ClInclude Include="engine\include\input.h" />
     <ClInclude Include="engine\include\loader.h" />
     <ClInclude Include="engine\include\shader.h" />
+    <ClInclude Include="engine\include\skybox.h" />
     <ClInclude Include="engine\include\texture.h" />
     <ClInclude Include="engine\include\text2d.h" />
     <ClInclude Include="global\include\debug.h" />
@@ -73,6 +75,8 @@
     <None Include="shaders\simple.vert" />
     <None Include="shaders\simple_transform.frag" />
     <None Include="shaders\simple_transform.vert" />
+    <None Include="shaders\skybox.frag" />
+    <None Include="shaders\skybox.vert" />
     <None Include="shaders\spotlight.frag" />
     <None Include="shaders\text2d.frag" />
     <None Include="shaders\text2d.vert" />
@@ -113,7 +117,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>main/include;engine/include;global/include;external/glew-1.9.0/include;external/glm-0.9.7.1/;external/ant-tweak-bar/include;external/glfw-3.1.2/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>main/include;external/assimp-3.0.1270/include;engine/include;global/include;external/glew-1.9.0/include;external/glm-0.9.7.1/;external/ant-tweak-bar/include;external/glfw-3.1.2/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>PLATFORM_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>

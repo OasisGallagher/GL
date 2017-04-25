@@ -10,6 +10,7 @@
 #include "loader.h"
 #include "text2d.h"
 #include "camera.h"
+#include "skybox.h"
 #include "texture.h"
 #include "example.h"
 #include "utilities.h"
@@ -1273,6 +1274,23 @@ void Example_Billboards::Update(float deltaTime) {
 	glDisableVertexAttribArray(0);
 }
 
+Example_Billboards2::Example_Billboards2() {
+	texture_ = new Texture;
+
+	glGenVertexArrays(1, &vao_);
+	glBindVertexArray(vao_);
+
+	glGenBuffers(COUNT_OF(vbo_), vbo_);
+
+	texture_->Load("textures/monster.bmp");
+	
+	shader_->Load(ShaderTypeVertex, "shaders/billboard2.vert");
+}
+
+Example_Billboards2::~Example_Billboards2() {
+	delete texture_;
+}
+
 Example_Particle::Example_Particle() {
 	particles_ = new Particle[maxParticleCount];
 	memset(particles_, 0, sizeof(Particle) * maxParticleCount);
@@ -1517,4 +1535,25 @@ void Example_AntTweakBar::Update(float deltaTime) {
 	Example::Update(deltaTime);
 
 	TwDraw();
+}
+
+Example_SkyBox::Example_SkyBox() {
+	SkyBoxInitParameter p;
+	p.camera = camera_;
+	p.posx = "textures/sp3right.bmp";
+	p.negx = "textures/sp3left.bmp";
+	p.posy = "textures/sp3top.bmp";
+	p.negy = "textures/sp3bot.bmp";
+	p.posz = "textures/sp3front.bmp";
+	p.negz = "textures/sp3back.bmp";
+	skyBox_ = new SkyBox(p);
+}
+
+Example_SkyBox::~Example_SkyBox() {
+	delete skyBox_;
+}
+
+void Example_SkyBox::Update(float deltaTime) {
+	Example::Update(deltaTime);
+	skyBox_->Render();
 }

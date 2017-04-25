@@ -5,11 +5,13 @@
 
 static GLenum shaderTypeMap[] = {
 	GL_VERTEX_SHADER,
+	GL_GEOMETRY_SHADER,
 	GL_FRAGMENT_SHADER,
 };
 
 static const char* shaderNameMap[] = {
 	"VertexShader",
+	"GeometryShader",
 	"FragmentShader",
 };
 

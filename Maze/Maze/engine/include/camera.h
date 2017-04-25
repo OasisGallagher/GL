@@ -19,6 +19,7 @@ public:
 	void Fly(float length);
 
 public:
+	const glm::vec3& GetPosition();
 	const glm::mat4& GetProjMatrix();
 	const glm::mat4& GetViewMatrix();
 

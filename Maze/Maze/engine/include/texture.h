@@ -24,6 +24,10 @@ public:
 	bool Use();
 	bool Load(const std::string& path);
 
+public:
+	static bool GetBmpData(const std::string& path, TextureData& td);
+	static bool GetDDSData(const std::string& path, TextureData& td);
+
 private:
 	bool LoadBmp(const std::string& path);
 	bool LoadDDS(const std::string& path);
@@ -33,12 +37,31 @@ private:
 
 	void Destroy();
 
-	bool GetBmpData(const std::string& path, TextureData& td);
-	bool GetDDSData(const std::string& path, TextureData& td);
-
 	bool UseTexture();
 private:
 	GLuint textureID_;
+};
+
+class CubemapTexture {
+public:
+	CubemapTexture();
+	~CubemapTexture();
+
+public:
+	bool Load(const std::string& posx, const std::string& negx,
+		const std::string& posy, const std::string& negy,
+		const std::string& posz, const std::string& negz
+	);
+
+	void Use();
+
+private:
+	void Destroy();
+	GLuint CreateCubeTexture();
+
+private:
+	GLuint textureID_;
+	std::string fileNames_[6];
 };
 
 enum RenderTarget {
