@@ -266,6 +266,9 @@ private:
 	Texture* texture_;
 	GLuint vao_;
 	GLuint vbo_[2];
+
+	static const int rowNumber = 10;
+	static const int colNumber = 10;
 };
 
 struct Particle {

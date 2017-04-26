@@ -238,5 +238,14 @@
     <None Include="shaders\skybox.frag">
       <Filter>shaders</Filter>
     </None>
+    <None Include="shaders\billboard2.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\billboard2.geom">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\billboard2.vert">
+      <Filter>shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

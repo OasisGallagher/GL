@@ -2,6 +2,8 @@
 #include "texture.h"
 #include "utilities.h"
 
+#include "Magick++.h"
+
 static const GLenum cubeMapTypes[6] = {
 	GL_TEXTURE_CUBE_MAP_POSITIVE_X,
 	GL_TEXTURE_CUBE_MAP_NEGATIVE_X,
@@ -43,8 +45,34 @@ bool Texture::Load(const std::string& path) {
 		return LoadDDS(path);
 	}
 
-	Debug::LogError("invalid postfix " + path.substr(i) + ".");
-	return false;
+	return LoadCommon(path);
+}
+
+bool Texture::LoadCommon(const std::string& path) {
+	Magick::Image image;
+	Magick::Blob blob;
+	try{
+		image.read(path.c_str());
+		image.write(&blob, "RGBA");
+	}
+	catch (Magick::Error& err) {
+		Debug::LogError("failed to load " + path + ": " + err.what());
+		return false;
+	}
+
+	GLuint textureID;
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.columns(), image.rows(), 0, GL_RGBA, GL_UNSIGNED_BYTE, blob.data());
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	if (textureID_ != 0) {
+		Destroy();
+	}
+
+	textureID_ = textureID;
+	return true;
 }
 
 bool Texture::LoadBmp(const std::string& path) {
@@ -308,13 +336,19 @@ GLuint CubemapTexture::CreateCubeTexture() {
 	glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
 
 	for (int i = 0; i < COUNT_OF(cubeMapTypes); ++i) {
-		TextureData data;
-		if (!Texture::GetBmpData(fileNames_[i], data)) {
+		Magick::Image image;
+		Magick::Blob blob;
+		try{
+			image.read(fileNames_[i].c_str());
+			image.write(&blob, "RGBA");
+		}
+		catch (Magick::Error& err) {
+			Debug::LogError("failed to load texture " + fileNames_[i] + ": " + err.what());
 			return 0;
 		}
 
-		glTexImage2D(cubeMapTypes[i], 0, GL_RGB, 
-			data.width, data.height, 0, data.format, GL_UNSIGNED_BYTE, &data.pixels[0]);
+		glTexImage2D(cubeMapTypes[i], 0, GL_RGBA, 
+			image.columns(), image.rows(), 0, GL_RGBA, GL_UNSIGNED_BYTE, blob.data());
 
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);

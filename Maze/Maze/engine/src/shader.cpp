@@ -42,7 +42,9 @@ bool Shader::Load(ShaderType shaderType, const std::string& path) {
 
 bool Shader::Link() {
 	for (int i = 0; i < ShaderTypeCount; ++i) {
-		Assert(shaderObjs_[i], Utility::Format("invalid shader, type = %d.", i));
+		if (i != ShaderTypeGeometry) {
+			Assert(shaderObjs_[i], Utility::Format("invalid shader, type = %d.", i));
+		}
 	}
 
 	return LinkShader();

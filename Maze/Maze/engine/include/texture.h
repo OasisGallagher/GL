@@ -24,13 +24,13 @@ public:
 	bool Use();
 	bool Load(const std::string& path);
 
-public:
-	static bool GetBmpData(const std::string& path, TextureData& td);
-	static bool GetDDSData(const std::string& path, TextureData& td);
-
 private:
 	bool LoadBmp(const std::string& path);
 	bool LoadDDS(const std::string& path);
+	bool LoadCommon(const std::string& path);
+
+	bool GetBmpData(const std::string& path, TextureData& td);
+	bool GetDDSData(const std::string& path, TextureData& td);
 
 	GLuint CreateFromBmp(const TextureData& td);
 	GLuint CreateFromDDS(const TextureData& td);
