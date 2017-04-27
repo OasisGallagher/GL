@@ -1591,3 +1591,137 @@ void Example_SkyBox::Update(float deltaTime) {
 	Example::Update(deltaTime);
 	skyBox_->Render();
 }
+
+class ParticleSystem {
+	struct Particle {
+		int type;
+		glm::vec3 position;
+		glm::vec3 velocity;
+		float lifeTime;
+	};
+
+public:
+	ParticleSystem();
+	~ParticleSystem();
+
+public:
+	bool Init(const glm::vec3& position);
+	void Render(float deltaTime, const glm::mat4& VP, const glm::vec3& cameraPosition);
+
+private:
+	void UpdateParticles(float deltaTime);
+	void RenderParticles(const glm::mat4& VP, const glm::vec3& cameraPosition);
+
+private:
+	bool isFirst_;
+	unsigned currentVB_;
+	unsigned currentTFB_;
+	GLuint particleBuffer_[2];
+	GLuint transformFeedback_[2];
+
+	float time_;
+
+	Shader* updateShader_;
+	Shader* billboardShader_;
+
+	Texture* texture_;
+
+	static const int kMaxParticles = 1000;
+};
+
+ParticleSystem::ParticleSystem() {
+	time_ = 0;
+
+	currentVB_ = 0;
+	currentTFB_ = 1;
+
+	isFirst_ = true;
+}
+
+bool ParticleSystem::Init(const glm::vec3& position) {
+	Particle particles[kMaxParticles];
+	memset(particles, 0, sizeof(particles));
+
+	// The remaining particles will be created at render time.
+	particles[0].type = 0;
+	particles[0].position = position;
+	particles[0].velocity = glm::vec3(0, 0.0001f, 0);
+	particles[0].lifeTime = 0;
+
+	// We are going to use two transform feedback buffers and toggle between them 
+	// (drawing into one while using the other as input and vice verse).
+	glGenTransformFeedbacks(COUNT_OF(transformFeedback_), transformFeedback_);
+	glGenBuffers(COUNT_OF(particleBuffer_), particleBuffer_);
+
+	for (int i = 0; i < COUNT_OF(transformFeedback_); ++i) {
+		glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, transformFeedback_[i]);
+		glBindBuffer(GL_ARRAY_BUFFER, particleBuffer_[i]);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(particles), particles, GL_DYNAMIC_DRAW);
+
+		// This makes this buffer a transform feedback buffer and places it as index zero.
+		// We can have the primitives redirected into more than one buffer by binding several buffers at different indices. 
+		glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, particleBuffer_[i]);
+
+		// Now we have two transform feedback objects with corresponding buffer objects that
+		// can serve both as vertex buffers as well as transform feedback buffers.
+	}
+
+	updateShader_ = new Shader;
+	billboardShader_ = new Shader;
+	// init shaders...
+
+	texture_ = new Texture;
+	texture_->Load("textures/fireworks_red.jpg");
+	// init textures...
+
+	return true;
+}
+
+void ParticleSystem::Render(float deltaTime, const glm::mat4& VP, const glm::vec3& cameraPosition) {
+	time_ += deltaTime;
+
+	UpdateParticles(deltaTime);
+	RenderParticles(VP, cameraPosition);
+
+	currentVB_ = currentTFB_;
+	currentTFB_ = (1 + currentTFB_) & 0x1;
+}
+
+void ParticleSystem::UpdateParticles(float deltaTime) {
+	updateShader_->Use();
+	updateShader_->SetUniform("time", time_);
+	updateShader_->SetUniform("deltaTime", deltaTime);
+
+	// Tells the pipeline to discard all primitives before they reach the rasterizer(but after the 
+	// optional transform feedback stage).
+	glEnable(GL_RASTERIZER_DISCARD);
+
+	// 'currentVB_' is used as an index (either 0 or 1) into the array of VBs and we bind the buffer 
+	// in that slot as a vertex buffer (for input).
+	glBindBuffer(GL_ARRAY_BUFFER, particleBuffer_[currentVB_]);
+	glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, transformFeedback_[currentTFB_]);
+
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+	glEnableVertexAttribArray(2);
+	glEnableVertexAttribArray(3);
+
+	// stride:
+	// Specifies the byte offset between consecutive generic vertex attributes.
+	// If stride is 0, the generic vertex attributes are understood to be tightly packed in the array. The initial value is 0.
+	glVertexAttribPointer(0, 1, GL_FLOAT, GL_FALSE, sizeof(Particle), 0);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Particle), (const void*)4);
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Particle), (const void*)16);
+	glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, sizeof(Particle), (const void*)28);
+
+	// glBeginTransformFeedback() makes transform feedback active. 
+	// All the draw calls after that, and until glEndTransformFeedback() is called,
+	// redirect their output to the transform feedback buffer according to the currently bound transform feedback object.
+	// The way transform feedback works is that only complete primitives (i.e. lists) can be written into the buffer.
+	glBeginTransformFeedback(GL_POINTS);
+
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+	glDisableVertexAttribArray(2);
+	glDisableVertexAttribArray(3);
+}

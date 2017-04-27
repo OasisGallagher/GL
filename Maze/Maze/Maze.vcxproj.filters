@@ -131,6 +131,9 @@
     <ClInclude Include="engine\include\skybox.h">
       <Filter>engine\include</Filter>
     </ClInclude>
+    <ClInclude Include="engine\include\mesh.h">
+      <Filter>engine\include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\simple.frag">

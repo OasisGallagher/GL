@@ -32,6 +32,7 @@
     <ClInclude Include="engine\include\camera.h" />
     <ClInclude Include="engine\include\input.h" />
     <ClInclude Include="engine\include\loader.h" />
+    <ClInclude Include="engine\include\mesh.h" />
     <ClInclude Include="engine\include\shader.h" />
     <ClInclude Include="engine\include\skybox.h" />
     <ClInclude Include="engine\include\texture.h" />
