@@ -89,3 +89,20 @@ private:
 	GLuint depthBuffer_;
 	GLuint targetTexture_;
 };
+
+class RandomTexture {
+public:
+	RandomTexture();
+	~RandomTexture();
+
+public:
+	bool Load(unsigned size);
+	void Use();
+
+private:
+	GLuint LoadRandomTexture(unsigned size);
+	void Destroy();
+
+private:
+	GLuint textureID_;
+};

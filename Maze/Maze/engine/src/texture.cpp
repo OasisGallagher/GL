@@ -1,3 +1,5 @@
+#include <glm/glm.hpp>
+
 #include "debug.h"
 #include "texture.h"
 #include "utilities.h"
@@ -439,4 +441,61 @@ void RenderTexture::CreateDepthTexture(GLint width, GLint height) {
 
 	GLenum buffers[] = { GL_NONE };
 	glDrawBuffers(COUNT_OF(buffers), buffers);
+}
+
+RandomTexture::RandomTexture() {
+	textureID_ = 0;
+}
+
+RandomTexture::~RandomTexture() {
+}
+
+void RandomTexture::Destroy() {
+	if (textureID_ != 0) {
+		glDeleteTextures(1, &textureID_);
+		textureID_ = 0;
+	}
+}
+
+bool RandomTexture::Load(unsigned size) {
+	GLuint textureID = LoadRandomTexture(size);
+	if (textureID != 0) {
+		Destroy();
+		textureID_ = textureID;
+		return true;
+	}
+
+	return false;
+}
+
+void RandomTexture::Use() {
+	Assert(textureID_ != 0, "invalid texture.");
+	glBindTexture(GL_TEXTURE_1D, textureID_);
+}
+
+GLuint RandomTexture::LoadRandomTexture(unsigned size) {
+	glm::vec3* data = new glm::vec3[size];
+	for (unsigned i = 0; i < size; ++i) {
+		data[i].x = (float)rand() / RAND_MAX;
+		data[i].y = (float)rand() / RAND_MAX;
+		data[i].z = (float)rand() / RAND_MAX;
+	}
+
+	GLuint textureID = 0;
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_1D, textureID);
+
+	// It is a 1D texture with the GL_RGB internal format and floating point data type. 
+	// This means that every element is a vector of 3 floating point values.
+	glTexImage1D(GL_TEXTURE_1D, 0, GL_RGB, size, 0, GL_RGB, GL_FLOAT, data);
+	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	// This allows us to use any texture coordinate to access the texture. 
+	// If the texture coordinate is more than 1.0 it is simply wrapped around so it always retrieves a valid value.
+	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+
+	delete[] data;
+
+	return textureID;
 }

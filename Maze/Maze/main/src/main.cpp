@@ -8,7 +8,7 @@ int main() {
 		return -1;
 	}
 
-	Example* example = new Example_SkyBox;
+	Example* example = new Example_ParticleSystemUsingTransformFeedback;
 	app.SetExample(example);
 
 	app.EnterMainLoop();

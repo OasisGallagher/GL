@@ -15,6 +15,7 @@ class Text2D;
 class Texture;
 struct ModelInfo;
 class RenderTexture;
+class ParticleSystem;
 
 class Example {
 public:
@@ -335,4 +336,16 @@ public:
 
 private:
 	SkyBox* skyBox_;
+};
+
+class Example_ParticleSystemUsingTransformFeedback : public Example {
+public:
+	Example_ParticleSystemUsingTransformFeedback();
+	~Example_ParticleSystemUsingTransformFeedback();
+
+public:
+	virtual void Update(float deltaTime);
+
+private:
+	ParticleSystem* ps_;
 };
