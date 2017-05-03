@@ -10,10 +10,12 @@
 class Input;
 class Shader;
 class Camera;
+class SkyBox;
 class Text2D;
 class Texture;
 struct ModelInfo;
 class RenderTexture;
+class ParticleSystem;
 
 class Example {
 public:
@@ -253,6 +255,23 @@ private:
 	GLuint vao_, vbo_[1];
 };
 
+class Example_Billboards2 : public Example {
+public:
+	Example_Billboards2();
+	~Example_Billboards2();
+
+public:
+	virtual void Update(float deltaTime);
+
+private:
+	Texture* texture_;
+	GLuint vao_;
+	GLuint vbo_[2];
+
+	static const int rowNumber = 10;
+	static const int colNumber = 10;
+};
+
 struct Particle {
 	glm::vec3 position, speed;
 	GLubyte r, g, b, a;
@@ -305,4 +324,28 @@ public:
 
 public:
 	virtual void Update(float deltaTime);
+};
+
+class Example_SkyBox : public Example {
+public:
+	Example_SkyBox();
+	~Example_SkyBox();
+
+public:
+	virtual void Update(float deltaTime);
+
+private:
+	SkyBox* skyBox_;
+};
+
+class Example_ParticleSystemUsingTransformFeedback : public Example {
+public:
+	Example_ParticleSystemUsingTransformFeedback();
+	~Example_ParticleSystemUsingTransformFeedback();
+
+public:
+	virtual void Update(float deltaTime);
+
+private:
+	ParticleSystem* ps_;
 };

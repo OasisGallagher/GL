@@ -1,6 +1,19 @@
+#include <glm/glm.hpp>
+
 #include "debug.h"
 #include "texture.h"
 #include "utilities.h"
+
+#include "Magick++.h"
+
+static const GLenum cubeMapTypes[6] = {
+	GL_TEXTURE_CUBE_MAP_POSITIVE_X,
+	GL_TEXTURE_CUBE_MAP_NEGATIVE_X,
+	GL_TEXTURE_CUBE_MAP_POSITIVE_Y,
+	GL_TEXTURE_CUBE_MAP_NEGATIVE_Y,
+	GL_TEXTURE_CUBE_MAP_POSITIVE_Z,
+	GL_TEXTURE_CUBE_MAP_NEGATIVE_Z
+};
 
 Texture::Texture() : textureID_(0) {
 }
@@ -34,8 +47,34 @@ bool Texture::Load(const std::string& path) {
 		return LoadDDS(path);
 	}
 
-	Debug::LogError("invalid postfix " + path.substr(i) + ".");
-	return false;
+	return LoadCommon(path);
+}
+
+bool Texture::LoadCommon(const std::string& path) {
+	Magick::Image image;
+	Magick::Blob blob;
+	try{
+		image.read(path.c_str());
+		image.write(&blob, "RGBA");
+	}
+	catch (Magick::Error& err) {
+		Debug::LogError("failed to load " + path + ": " + err.what());
+		return false;
+	}
+
+	GLuint textureID;
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.columns(), image.rows(), 0, GL_RGBA, GL_UNSIGNED_BYTE, blob.data());
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	if (textureID_ != 0) {
+		Destroy();
+	}
+
+	textureID_ = textureID;
+	return true;
 }
 
 bool Texture::LoadBmp(const std::string& path) {
@@ -68,7 +107,6 @@ bool Texture::LoadDDS(const std::string& path) {
 	}
 
 	return false;
-	
 }
 
 bool Texture::UseTexture() {
@@ -267,6 +305,74 @@ bool Texture::GetDDSData(const std::string& path, TextureData& td) {
 	return true;
 }
 
+CubemapTexture::CubemapTexture() : textureID_(0) {
+}
+
+CubemapTexture::~CubemapTexture() {
+	Destroy();
+}
+
+bool CubemapTexture::Load(const std::string& posx, const std::string& negx,
+	const std::string& posy, const std::string& negy,
+	const std::string& posz, const std::string& negz) {
+	fileNames_[0] = posx;
+	fileNames_[1] = negx;
+	fileNames_[2] = posy;
+	fileNames_[3] = negy;
+	fileNames_[4] = posz;
+	fileNames_[5] = negz;
+
+	GLuint textureID = CreateCubeTexture();
+	if (textureID != 0) {
+		Destroy();
+		textureID_ = textureID;
+		return true;
+	}
+
+	return false;
+}
+
+GLuint CubemapTexture::CreateCubeTexture() {
+	GLuint textureID;
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+
+	for (int i = 0; i < COUNT_OF(cubeMapTypes); ++i) {
+		Magick::Image image;
+		Magick::Blob blob;
+		try{
+			image.read(fileNames_[i].c_str());
+			image.write(&blob, "RGBA");
+		}
+		catch (Magick::Error& err) {
+			Debug::LogError("failed to load texture " + fileNames_[i] + ": " + err.what());
+			return 0;
+		}
+
+		glTexImage2D(cubeMapTypes[i], 0, GL_RGBA, 
+			image.columns(), image.rows(), 0, GL_RGBA, GL_UNSIGNED_BYTE, blob.data());
+
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+	}
+
+	return textureID;
+}
+
+void CubemapTexture::Use() {
+	glBindTexture(GL_TEXTURE_CUBE_MAP, textureID_);
+}
+
+void CubemapTexture::Destroy() {
+	if (textureID_ != 0) {
+		glDeleteTextures(1, &textureID_);
+		textureID_ = 0;
+	}
+}
+
 RenderTexture::RenderTexture(RenderTarget target, GLint width, GLint height) {
 	glGenFramebuffers(1, &fbo_);
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo_);
@@ -335,4 +441,61 @@ void RenderTexture::CreateDepthTexture(GLint width, GLint height) {
 
 	GLenum buffers[] = { GL_NONE };
 	glDrawBuffers(COUNT_OF(buffers), buffers);
+}
+
+RandomTexture::RandomTexture() {
+	textureID_ = 0;
+}
+
+RandomTexture::~RandomTexture() {
+}
+
+void RandomTexture::Destroy() {
+	if (textureID_ != 0) {
+		glDeleteTextures(1, &textureID_);
+		textureID_ = 0;
+	}
+}
+
+bool RandomTexture::Load(unsigned size) {
+	GLuint textureID = LoadRandomTexture(size);
+	if (textureID != 0) {
+		Destroy();
+		textureID_ = textureID;
+		return true;
+	}
+
+	return false;
+}
+
+void RandomTexture::Use() {
+	Assert(textureID_ != 0, "invalid texture.");
+	glBindTexture(GL_TEXTURE_1D, textureID_);
+}
+
+GLuint RandomTexture::LoadRandomTexture(unsigned size) {
+	glm::vec3* data = new glm::vec3[size];
+	for (unsigned i = 0; i < size; ++i) {
+		data[i].x = (float)rand() / RAND_MAX;
+		data[i].y = (float)rand() / RAND_MAX;
+		data[i].z = (float)rand() / RAND_MAX;
+	}
+
+	GLuint textureID = 0;
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_1D, textureID);
+
+	// It is a 1D texture with the GL_RGB internal format and floating point data type. 
+	// This means that every element is a vector of 3 floating point values.
+	glTexImage1D(GL_TEXTURE_1D, 0, GL_RGB, size, 0, GL_RGB, GL_FLOAT, data);
+	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	// This allows us to use any texture coordinate to access the texture. 
+	// If the texture coordinate is more than 1.0 it is simply wrapped around so it always retrieves a valid value.
+	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+
+	delete[] data;
+
+	return textureID;
 }

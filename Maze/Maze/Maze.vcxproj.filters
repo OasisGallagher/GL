@@ -75,6 +75,12 @@
     <ClCompile Include="engine\src\text2d.cpp">
       <Filter>engine\src</Filter>
     </ClCompile>
+    <ClCompile Include="engine\src\skybox.cpp">
+      <Filter>engine\src</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\src\particle_system.cpp">
+      <Filter>engine\src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="engine\include\shader.h">
@@ -123,6 +129,15 @@
       <Filter>engine\include</Filter>
     </ClInclude>
     <ClInclude Include="engine\include\text2d.h">
+      <Filter>engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\include\skybox.h">
+      <Filter>engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\include\mesh.h">
+      <Filter>engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\include\particle_system.h">
       <Filter>engine\include</Filter>
     </ClInclude>
   </ItemGroup>
@@ -224,6 +239,30 @@
       <Filter>shaders</Filter>
     </None>
     <None Include="shaders\particle.vert">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\skybox.vert">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\skybox.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\billboard2.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\billboard2.geom">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\billboard2.vert">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\particle_system_update.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\particle_system_update.geom">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\particle_system_update.vert">
       <Filter>shaders</Filter>
     </None>
   </ItemGroup>

@@ -15,7 +15,9 @@
     <ClCompile Include="engine\src\camera.cpp" />
     <ClCompile Include="engine\src\input.cpp" />
     <ClCompile Include="engine\src\loader.cpp" />
+    <ClCompile Include="engine\src\particle_system.cpp" />
     <ClCompile Include="engine\src\shader.cpp" />
+    <ClCompile Include="engine\src\skybox.cpp" />
     <ClCompile Include="engine\src\text2d.cpp" />
     <ClCompile Include="engine\src\texture.cpp" />
     <ClCompile Include="global\src\debug.cpp" />
@@ -31,7 +33,10 @@
     <ClInclude Include="engine\include\camera.h" />
     <ClInclude Include="engine\include\input.h" />
     <ClInclude Include="engine\include\loader.h" />
+    <ClInclude Include="engine\include\mesh.h" />
+    <ClInclude Include="engine\include\particle_system.h" />
     <ClInclude Include="engine\include\shader.h" />
+    <ClInclude Include="engine\include\skybox.h" />
     <ClInclude Include="engine\include\texture.h" />
     <ClInclude Include="engine\include\text2d.h" />
     <ClInclude Include="global\include\debug.h" />
@@ -51,6 +56,9 @@
     <None Include="shaders\basic_shadow.vert" />
     <None Include="shaders\billboard.frag" />
     <None Include="shaders\billboard.vert" />
+    <None Include="shaders\billboard2.frag" />
+    <None Include="shaders\billboard2.geom" />
+    <None Include="shaders\billboard2.vert" />
     <None Include="shaders\colored.frag" />
     <None Include="shaders\colored.vert" />
     <None Include="shaders\coord.frag" />
@@ -65,6 +73,9 @@
     <None Include="shaders\normal_mapping.vert" />
     <None Include="shaders\particle.frag" />
     <None Include="shaders\particle.vert" />
+    <None Include="shaders\particle_system_update.frag" />
+    <None Include="shaders\particle_system_update.geom" />
+    <None Include="shaders\particle_system_update.vert" />
     <None Include="shaders\render_to_texture.frag" />
     <None Include="shaders\render_to_texture.vert" />
     <None Include="shaders\shadow.frag" />
@@ -73,6 +84,8 @@
     <None Include="shaders\simple.vert" />
     <None Include="shaders\simple_transform.frag" />
     <None Include="shaders\simple_transform.vert" />
+    <None Include="shaders\skybox.frag" />
+    <None Include="shaders\skybox.vert" />
     <None Include="shaders\spotlight.frag" />
     <None Include="shaders\text2d.frag" />
     <None Include="shaders\text2d.vert" />
@@ -113,13 +126,13 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>main/include;engine/include;global/include;external/glew-1.9.0/include;external/glm-0.9.7.1/;external/ant-tweak-bar/include;external/glfw-3.1.2/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>main/include;external/image-magick-6/include;external/assimp-3.0.1270/include;engine/include;global/include;external/glew-1.9.0/include;external/glm-0.9.7.1/;external/ant-tweak-bar/include;external/glfw-3.1.2/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>PLATFORM_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;external/glew-1.9.0/bin/glew32.lib;external/glfw-3.1.2/bin/glfw3.lib;external/ant-tweak-bar/bin/AntTweakBar.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;external/glew-1.9.0/bin/glew32.lib;external/glfw-3.1.2/bin/glfw3.lib;external/ant-tweak-bar/bin/AntTweakBar.lib;external/image-magick-6/bin/CORE_DB_Magick++_.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
       <AdditionalOptions>/NODEFAULTLIB:msvcrt.lib %(AdditionalOptions)</AdditionalOptions>

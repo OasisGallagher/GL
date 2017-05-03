@@ -10,9 +10,11 @@
 #include "loader.h"
 #include "text2d.h"
 #include "camera.h"
+#include "skybox.h"
 #include "texture.h"
 #include "example.h"
 #include "utilities.h"
+#include "particle_system.h"
 
 extern App app;
 static const float defaultAspect = 4.f / 3.f;
@@ -1273,6 +1275,57 @@ void Example_Billboards::Update(float deltaTime) {
 	glDisableVertexAttribArray(0);
 }
 
+Example_Billboards2::Example_Billboards2() {
+	texture_ = new Texture;
+	texture_->Load("textures/monster.png");
+
+	glGenVertexArrays(1, &vao_);
+	glBindVertexArray(vao_);
+
+	glGenBuffers(COUNT_OF(vbo_), vbo_);
+	
+	shader_->Load(ShaderTypeVertex, "shaders/billboard2.vert");
+	shader_->Load(ShaderTypeGeometry, "shaders/billboard2.geom");
+	shader_->Load(ShaderTypeFragment, "shaders/billboard2.frag");
+	shader_->Link();
+	
+	glm::vec3 positions[rowNumber * colNumber];
+	for (int i = 0; i < rowNumber; ++i) {
+		for (int j = 0; j < colNumber; ++j) {
+			positions[i * colNumber + j] = glm::vec3(j, 0, i);
+		}
+	}
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_[0]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(positions), &positions, GL_STATIC_DRAW);
+}
+
+Example_Billboards2::~Example_Billboards2() {
+	delete texture_;
+
+	glDeleteVertexArrays(1, &vao_);
+	glDeleteBuffers(COUNT_OF(vbo_), vbo_);
+}
+
+void Example_Billboards2::Update(float deltaTime) {
+	Example::Update(deltaTime);
+
+	shader_->Use();
+
+	glActiveTexture(GL_TEXTURE0);
+	texture_->Use();
+	shader_->SetUniform("textureSampler", 0);
+	shader_->SetUniform("cameraPosition", &camera_->GetPosition());
+	glm::mat4 VP = camera_->GetProjMatrix() * camera_->GetViewMatrix();
+	shader_->SetUniform("VP", &VP);
+
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_[0]);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+	glDrawArrays(GL_POINTS, 0, rowNumber * colNumber);
+	glDisableVertexAttribArray(0);
+}
+
 Example_Particle::Example_Particle() {
 	particles_ = new Particle[maxParticleCount];
 	memset(particles_, 0, sizeof(Particle) * maxParticleCount);
@@ -1517,4 +1570,42 @@ void Example_AntTweakBar::Update(float deltaTime) {
 	Example::Update(deltaTime);
 
 	TwDraw();
+}
+
+Example_SkyBox::Example_SkyBox() {
+	SkyBoxInitParameter p;
+	p.camera = camera_;
+	p.posx = "textures/sp3right.jpg";
+	p.negx = "textures/sp3left.jpg";
+	p.posy = "textures/sp3top.jpg";
+	p.negy = "textures/sp3bot.jpg";
+	p.posz = "textures/sp3front.jpg";
+	p.negz = "textures/sp3back.jpg";
+	skyBox_ = new SkyBox(p);
+}
+
+Example_SkyBox::~Example_SkyBox() {
+	delete skyBox_;
+}
+
+void Example_SkyBox::Update(float deltaTime) {
+	Example::Update(deltaTime);
+	skyBox_->Render();
+}
+
+Example_ParticleSystemUsingTransformFeedback::Example_ParticleSystemUsingTransformFeedback() {
+	ps_ = new ParticleSystem;
+
+	camera_->Reset(glm::vec3(4, 3, 3), glm::vec3(0), glm::vec3(0, 1, 0));
+	ps_->Init(glm::vec3(0, 0, -5));
+}
+
+Example_ParticleSystemUsingTransformFeedback::~Example_ParticleSystemUsingTransformFeedback() {
+	delete ps_;
+}
+
+void Example_ParticleSystemUsingTransformFeedback::Update(float deltaTime) {
+	Example::Update(deltaTime);
+	glm::mat4 VP = camera_->GetProjMatrix() * camera_->GetViewMatrix();
+	ps_->Render(deltaTime, VP, camera_->GetPosition());
 }

@@ -27,18 +27,41 @@ public:
 private:
 	bool LoadBmp(const std::string& path);
 	bool LoadDDS(const std::string& path);
+	bool LoadCommon(const std::string& path);
+
+	bool GetBmpData(const std::string& path, TextureData& td);
+	bool GetDDSData(const std::string& path, TextureData& td);
 
 	GLuint CreateFromBmp(const TextureData& td);
 	GLuint CreateFromDDS(const TextureData& td);
 
 	void Destroy();
 
-	bool GetBmpData(const std::string& path, TextureData& td);
-	bool GetDDSData(const std::string& path, TextureData& td);
-
 	bool UseTexture();
 private:
 	GLuint textureID_;
+};
+
+class CubemapTexture {
+public:
+	CubemapTexture();
+	~CubemapTexture();
+
+public:
+	bool Load(const std::string& posx, const std::string& negx,
+		const std::string& posy, const std::string& negy,
+		const std::string& posz, const std::string& negz
+	);
+
+	void Use();
+
+private:
+	void Destroy();
+	GLuint CreateCubeTexture();
+
+private:
+	GLuint textureID_;
+	std::string fileNames_[6];
 };
 
 enum RenderTarget {
@@ -65,4 +88,21 @@ private:
 
 	GLuint depthBuffer_;
 	GLuint targetTexture_;
+};
+
+class RandomTexture {
+public:
+	RandomTexture();
+	~RandomTexture();
+
+public:
+	bool Load(unsigned size);
+	void Use();
+
+private:
+	GLuint LoadRandomTexture(unsigned size);
+	void Destroy();
+
+private:
+	GLuint textureID_;
 };
