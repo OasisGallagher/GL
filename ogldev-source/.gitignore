@@ -19,7 +19,7 @@
 *.cache
 *.idb
 Makefile-Release.mk
-*.obj
+#*.obj
 
 *.log
 
