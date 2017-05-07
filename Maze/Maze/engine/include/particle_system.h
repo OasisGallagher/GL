@@ -33,6 +33,7 @@ private:
 	bool isFirst_;
 	unsigned currentVB_;
 	unsigned currentTFB_;
+	GLuint vao_;
 	GLuint particleBuffer_[2];
 	GLuint transformFeedback_[2];
 

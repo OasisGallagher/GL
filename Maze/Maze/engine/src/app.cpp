@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 
 #include "app.h"
+#include "defs.h"
 #include "input.h"
 #include "debug.h"
 #include "example.h"
@@ -31,7 +32,7 @@ void APIENTRY DebugOutputCallback(GLenum source, GLenum type, GLuint id, GLenum 
 
 	text += message;
 
-	//Assert(severity != GL_DEBUG_SEVERITY_HIGH_ARB, text);
+	Assert(severity != GL_DEBUG_SEVERITY_HIGH_ARB, text);
 
 	if (severity == GL_DEBUG_SEVERITY_HIGH_ARB) {
 		Debug::LogError(text);
@@ -68,7 +69,7 @@ bool App::Initialize() {
 	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, 1);
 
 	// Open a window and create its OpenGL context
-	window_ = glfwCreateWindow(512, 384, "Maze", nullptr, nullptr);
+	window_ = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Maze", nullptr, nullptr);
 	if (window_ == NULL){
 		Debug::LogError("failed to open GLFW window.");
 		glfwTerminate();
@@ -156,5 +157,5 @@ void App::EnterMainLoop() {
 }
 
 void App::Destroy() {
-	glfwTerminate();
+	//glfwTerminate();
 }

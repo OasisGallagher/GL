@@ -79,7 +79,7 @@ char* ReadBinaryFile(const char* pFileName, int& size)
     // wip for tutorial51
     assert(0);
 
-    return true;
+    return nullptr;
 }
 
 #else

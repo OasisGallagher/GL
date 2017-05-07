@@ -99,7 +99,8 @@ static OGLDEV_MOUSE GLUTMouseToOGLDEVMouse(uint Button)
     case GLUT_MIDDLE_BUTTON:
             return OGLDEV_MOUSE_BUTTON_MIDDLE;
     default:
-            OGLDEV_ERROR0("Unimplemented GLUT mouse button");
+			return OGLDEV_MOUSE_BUTTON_LEFT;
+            //OGLDEV_ERROR0("Unimplemented GLUT mouse button");
     }
 
     return OGLDEV_MOUSE_UNDEFINED;

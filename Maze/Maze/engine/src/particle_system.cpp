@@ -13,6 +13,7 @@ ParticleSystem::ParticleSystem() {
 }
 
 ParticleSystem::~ParticleSystem() {
+	glDeleteVertexArrays(1, &vao_);
 	glDeleteBuffers(COUNT_OF(particleBuffer_), particleBuffer_);
 	glDeleteTransformFeedbacks(COUNT_OF(transformFeedback_), transformFeedback_);
 
@@ -36,6 +37,10 @@ bool ParticleSystem::Init(const glm::vec3& position) {
 	// We are going to use two transform feedback buffers and toggle between them 
 	// (drawing into one while using the other as input and vice verse).
 	glGenTransformFeedbacks(COUNT_OF(transformFeedback_), transformFeedback_);
+
+	glGenVertexArrays(1, &vao_);
+	glBindVertexArray(vao_);
+
 	glGenBuffers(COUNT_OF(particleBuffer_), particleBuffer_);
 
 	for (int i = 0; i < COUNT_OF(transformFeedback_); ++i) {
@@ -98,9 +103,9 @@ void ParticleSystem::InitUpdateShader() {
 
 	updateShader_->Link();
 
-	glActiveTexture(GL_TEXTURE1);
-	randomTexture_->Use();
-	updateShader_->SetUniform("randomTexture", 1);
+	//glActiveTexture(GL_TEXTURE1);
+	//randomTexture_->Use();
+	//updateShader_->SetUniform("randomTexture", 1);
 
 	updateShader_->SetUniform("launcherLifeTime", 0.1f);
 	updateShader_->SetUniform("shellLifeTime", 10.f);
@@ -114,6 +119,8 @@ void ParticleSystem::InitBillboardShader() {
 	billboardShader_->Load(ShaderTypeFragment, "shaders/billboard2.frag");
 
 	billboardShader_->Link();
+
+	billboardShader_->SetUniform("discardOption", 1);
 }
 
 void ParticleSystem::UpdateParticles(float deltaTime) {
@@ -184,6 +191,10 @@ void ParticleSystem::RenderParticles(const glm::mat4& VP, const glm::vec3& camer
 	glActiveTexture(GL_TEXTURE0);
 	texture_->Use();
 	billboardShader_->SetUniform("textureSampler", 0);
+
+	glActiveTexture(GL_TEXTURE1);
+	randomTexture_->Use();
+	updateShader_->SetUniform("randomTexture", 1);
 
 	glDisable(GL_RASTERIZER_DISCARD);
 

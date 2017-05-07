@@ -5,7 +5,7 @@ layout(triangle_strip, max_vertices = 4) out;
 
 uniform mat4 VP;
 uniform vec3 cameraPosition;
-uniform float size = 0.1;
+uniform float size = 0.01;
 
 out vec2 UV;
 

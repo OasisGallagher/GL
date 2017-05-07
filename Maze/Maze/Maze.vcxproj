@@ -15,6 +15,7 @@
     <ClCompile Include="engine\src\camera.cpp" />
     <ClCompile Include="engine\src\input.cpp" />
     <ClCompile Include="engine\src\loader.cpp" />
+    <ClCompile Include="engine\src\mesh.cpp" />
     <ClCompile Include="engine\src\particle_system.cpp" />
     <ClCompile Include="engine\src\shader.cpp" />
     <ClCompile Include="engine\src\skybox.cpp" />
@@ -40,6 +41,7 @@
     <ClInclude Include="engine\include\texture.h" />
     <ClInclude Include="engine\include\text2d.h" />
     <ClInclude Include="global\include\debug.h" />
+    <ClInclude Include="global\include\defs.h" />
     <ClInclude Include="global\include\mathf.h" />
     <ClInclude Include="global\include\os.h" />
     <ClInclude Include="global\include\os_linux.h" />
@@ -126,13 +128,13 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>main/include;external/image-magick-6/include;external/assimp-3.0.1270/include;engine/include;global/include;external/glew-1.9.0/include;external/glm-0.9.7.1/;external/ant-tweak-bar/include;external/glfw-3.1.2/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>main/include;external/image-magick-6/include;external/assimp-3.0/include;engine/include;global/include;external/glew-1.9.0/include;external/glm-0.9.7.1/;external/ant-tweak-bar/include;external/glfw-3.1.2/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>PLATFORM_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;external/glew-1.9.0/bin/glew32.lib;external/glfw-3.1.2/bin/glfw3.lib;external/ant-tweak-bar/bin/AntTweakBar.lib;external/image-magick-6/bin/CORE_DB_Magick++_.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;external/glew-1.9.0/bin/glew32.lib;external/glfw-3.1.2/bin/glfw3.lib;external/ant-tweak-bar/bin/AntTweakBar.lib;external/image-magick-6/bin/CORE_DB_Magick++_.lib;external/assimp-3.0/bin/assimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
       <AdditionalOptions>/NODEFAULTLIB:msvcrt.lib %(AdditionalOptions)</AdditionalOptions>

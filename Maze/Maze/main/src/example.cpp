@@ -4,6 +4,8 @@
 #define GLFW_CDECL
 #include <AntTweakBar.h>
 
+#include "defs.h"
+#include "mesh.h"
 #include "mathf.h"
 #include "input.h"
 #include "shader.h"
@@ -498,6 +500,7 @@ void Example_KeyboardAndMouse::Update(float deltaTime) {
 }
 
 Example_ModelLoading::Example_ModelLoading() {
+	mesh_ = new Mesh;
 	texture_ = new Texture;
 	info_ = new ModelInfo;
 
@@ -511,8 +514,10 @@ Example_ModelLoading::Example_ModelLoading() {
 	glGenVertexArrays(1, &vao_);
 	glBindVertexArray(vao_);
 
-	ModelLoader::Load("models/suzanne.obj", *info_);
+	mesh_->Load("models/suzanne.obj");
+	//ModelLoader::Load("models/suzanne.obj", *info_);
 
+	/*
 	glGenBuffers(COUNT_OF(vbo_), vbo_);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo_[0]);
@@ -520,6 +525,7 @@ Example_ModelLoading::Example_ModelLoading() {
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo_[1]);
 	glBufferData(GL_ARRAY_BUFFER, info_->uvs.size() * sizeof(glm::vec2), &info_->uvs[0], GL_STATIC_DRAW);
+	*/
 
 	glActiveTexture(GL_TEXTURE0);
 	texture_->Use();
@@ -533,12 +539,15 @@ Example_ModelLoading::Example_ModelLoading() {
 Example_ModelLoading::~Example_ModelLoading() {
 	delete texture_;
 	delete info_;
+	delete mesh_;
 
 	glDeleteVertexArrays(1, &vao_);
 	glDeleteBuffers(COUNT_OF(vbo_), vbo_);
 }
 
 void Example_ModelLoading::Update(float deltaTime) {
+	mesh_->Render();
+	/*
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo_[0]);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
@@ -551,6 +560,7 @@ void Example_ModelLoading::Update(float deltaTime) {
 
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
+	*/
 }
 
 Example_BasicShading::Example_BasicShading() {
@@ -906,7 +916,7 @@ Example_RenderToTexture::Example_RenderToTexture() {
 	glBindBuffer(GL_ARRAY_BUFFER, vbo_[2]);
 	glBufferData(GL_ARRAY_BUFFER, modelInfo_->normals.size() * sizeof(glm::vec3), &modelInfo_->normals[0], GL_STATIC_DRAW);
 	
-	renderTexture_ = new RenderTexture(RenderTexture2D, 512, 384);
+	renderTexture_ = new RenderTexture(RenderTexture2D, WINDOW_WIDTH, WINDOW_HEIGHT);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo_[3]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(quadData), quadData, GL_STATIC_DRAW);
@@ -950,8 +960,8 @@ void Example_RenderToTexture::Update(float deltaTime) {
 
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 	
-	int width = 512 / 2, height = 384 / 2;
-	glViewport((512 - width) / 2, (384 - height) / 2, width, height);
+	int width = WINDOW_WIDTH / 2, height = WINDOW_HEIGHT / 2;
+	glViewport((WINDOW_WIDTH - width) / 2, (WINDOW_HEIGHT - height) / 2, width, height);
 
 	shader2_->Use();
 
@@ -1070,7 +1080,7 @@ Example_ShadowMaps::Example_ShadowMaps() {
 	shadowShader_->Load(ShaderTypeFragment, "shaders/shadow.frag");
 	shadowShader_->Link();
 
-	depthTexture_ = new RenderTexture(RenderDepthTexture, 512, 384);
+	depthTexture_ = new RenderTexture(RenderDepthTexture, WINDOW_WIDTH, WINDOW_HEIGHT);
 	
 	shader_->Load(ShaderTypeVertex, "shaders/basic_shadow.vert");
 	shader_->Load(ShaderTypeFragment, "shaders/basic_shadow.frag");
@@ -1108,7 +1118,7 @@ void Example_ShadowMaps::Update(float deltaTime) {
 
 void Example_ShadowMaps::ShadowMapPass() {
 	depthTexture_->Use();
-	glViewport(0, 0, 512, 384);
+	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
@@ -1147,7 +1157,7 @@ void Example_ShadowMaps::ShadowMapPass() {
 void Example_ShadowMaps::RenderPass() {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	glViewport(0, 0, 512, 384);
+	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
 	glm::mat4 m(1);
@@ -1532,7 +1542,7 @@ void Example_Particle::CreateNewParticles(float deltaTime) {
 
 Example_AntTweakBar::Example_AntTweakBar() {
 	TwInit(TW_OPENGL_CORE, nullptr);
-	TwWindowSize(512, 384);
+	TwWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 
 	TwBar* EulerGUI = TwNewBar("Euler settings");
 	TwBar* QuaternionGUI = TwNewBar("Quaternion settings");
@@ -1596,12 +1606,17 @@ void Example_SkyBox::Update(float deltaTime) {
 Example_ParticleSystemUsingTransformFeedback::Example_ParticleSystemUsingTransformFeedback() {
 	ps_ = new ParticleSystem;
 
-	camera_->Reset(glm::vec3(4, 3, 3), glm::vec3(0), glm::vec3(0, 1, 0));
-	ps_->Init(glm::vec3(0, 0, -5));
+	camera_->Reset(glm::vec3(0, 0.4f, -5.f), glm::vec3(0, 0.2f, 1.f), glm::vec3(0, 1, 0));
+	ps_->Init(glm::vec3(0, 1, 1.f));
 }
 
 Example_ParticleSystemUsingTransformFeedback::~Example_ParticleSystemUsingTransformFeedback() {
 	delete ps_;
+}
+
+void Example_ParticleSystemUsingTransformFeedback::GetEnvRequirement(AppEnv& env) {
+	Example::GetEnvRequirement(env);
+	env.blend = true;
 }
 
 void Example_ParticleSystemUsingTransformFeedback::Update(float deltaTime) {

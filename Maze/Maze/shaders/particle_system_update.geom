@@ -21,7 +21,7 @@ uniform float secondaryShellLifeTime;
 
 vec3 GetRandomDirection(float coord) {
 	vec3 dir = texture(randomTexture, coord).xyz;
-	dir - vec3(0.5);
+	dir -= vec3(0.5, 0.5, 0.5);
 	return dir;
 }
 
@@ -37,7 +37,7 @@ void main() {
 			position1 = position0[0];
 			vec3 dir = GetRandomDirection(time);
 			dir.y = max(dir.y, 0.5);
-			velocity1 = normalize(dir) / 20.0;
+			velocity1 = normalize(dir) / 20.f;
 			age1 = 0;
 			EmitVertex();
 			EndPrimitive();
@@ -52,10 +52,8 @@ void main() {
 		EndPrimitive();
 	}
 	else {
-		float t1 = age0[0];
-		float t2 = age;
 		vec3 deltaPosition = deltaTime * velocity0[0];
-		vec3 deltaVelocity = deltaTime * vec3(0, -9.81, 0);
+		vec3 deltaVelocity = vec3(deltaTime) * vec3(0, -9.81, 0);
 
 		if(type0[0] == TYPE_SHELL) {
 			if (age < shellLifeTime) {
@@ -70,8 +68,8 @@ void main() {
 				for(int i = 0; i < 10; ++i) {
 					type1 = TYPE_SECONDARY_SHELL;
 					position1 = position0[0];
-					vec3 dir = GetRandomDirection(deltaTime + i);	
-					velocity1 = normalize(dir) / 20.0;
+					vec3 dir = GetRandomDirection(deltaTime + i / 1000.f);	
+					velocity1 = normalize(dir) / 20.f;
 					age1 = 0;
 					EmitVertex();
 					EndPrimitive();

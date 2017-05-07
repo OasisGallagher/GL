@@ -7,6 +7,7 @@
 
 #include "app.h"
 
+class Mesh;
 class Input;
 class Shader;
 class Camera;
@@ -111,6 +112,7 @@ public:
 	virtual void Update(float deltaTime);
 
 private:
+	Mesh* mesh_;
 	ModelInfo* info_;
 	Texture* texture_;
 	GLuint vao_, vbo_[2];
@@ -345,6 +347,7 @@ public:
 
 public:
 	virtual void Update(float deltaTime);
+	virtual void GetEnvRequirement(AppEnv& env);
 
 private:
 	ParticleSystem* ps_;
