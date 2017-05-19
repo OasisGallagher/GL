@@ -352,3 +352,20 @@ public:
 private:
 	ParticleSystem* ps_;
 };
+
+class Example_BasicTessellation : public Example {
+public:
+	Example_BasicTessellation();
+	~Example_BasicTessellation();
+
+public:
+	virtual void Update(float deltaTime);
+	virtual void GetEnvRequirement(AppEnv& env);
+
+private:
+	Mesh* mesh_;
+	Shader* shader_;
+
+	Texture* colorMap_;
+	Texture* displacementMap_;
+};

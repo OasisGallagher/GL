@@ -89,6 +89,10 @@
     <None Include="shaders\skybox.frag" />
     <None Include="shaders\skybox.vert" />
     <None Include="shaders\spotlight.frag" />
+    <None Include="shaders\tessellation.frag" />
+    <None Include="shaders\tessellation.tesc" />
+    <None Include="shaders\tessellation.tese" />
+    <None Include="shaders\tessellation.vert" />
     <None Include="shaders\text2d.frag" />
     <None Include="shaders\text2d.vert" />
     <None Include="shaders\texture.frag" />

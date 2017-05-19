@@ -5,12 +5,16 @@
 
 static GLenum shaderTypeMap[] = {
 	GL_VERTEX_SHADER,
+	GL_TESS_CONTROL_SHADER,
+	GL_TESS_EVALUATION_SHADER,
 	GL_GEOMETRY_SHADER,
 	GL_FRAGMENT_SHADER,
 };
 
 static const char* shaderNameMap[] = {
 	"VertexShader",
+	"TessellationControlShader",
+	"TessellationEvaluationShader",
 	"GeometryShader",
 	"FragmentShader",
 };
@@ -42,7 +46,7 @@ bool Shader::Load(ShaderType shaderType, const std::string& path) {
 
 bool Shader::Link() {
 	for (int i = 0; i < ShaderTypeCount; ++i) {
-		if (i != ShaderTypeGeometry) {
+		if (i == ShaderTypeVertex || i == ShaderTypeFragment) {
 			Assert(shaderObjs_[i], Utility::Format("invalid %s.", shaderNameMap[i]));
 		}
 	}

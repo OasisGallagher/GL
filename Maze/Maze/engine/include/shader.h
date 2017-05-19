@@ -7,6 +7,8 @@
 
 enum ShaderType {
 	ShaderTypeVertex,
+	ShaderTypeTessellationControl,
+	ShaderTypeTessellationEvaluation,
 	ShaderTypeGeometry,
 	ShaderTypeFragment,
 	ShaderTypeCount,

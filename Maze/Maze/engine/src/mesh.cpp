@@ -143,7 +143,7 @@ bool Mesh::InitMaterials(const aiScene* scene, const std::string& path) {
 	return std::find(textures_.begin(), textures_.end(), nullptr) == textures_.end();
 }
 
-void Mesh::Render() {
+void Mesh::Render(GLenum mode) {
 	glBindVertexArray(vao_);
 
 	glEnableVertexAttribArray(0);
@@ -166,7 +166,7 @@ void Mesh::Render() {
 			textures_[i]->Use();
 		}
 		*/
-		glDrawElements(GL_TRIANGLES, entries_[i].numIndices, GL_UNSIGNED_INT, nullptr);
+		glDrawElements(mode, entries_[i].numIndices, GL_UNSIGNED_INT, nullptr);
 	}
 
 	glDisableVertexAttribArray(0);

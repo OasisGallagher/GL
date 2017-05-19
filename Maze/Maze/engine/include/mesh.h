@@ -33,7 +33,7 @@ public:
 
 public:
 	bool Load(const std::string& path);
-	void Render();
+	void Render(GLenum mode = GL_TRIANGLES);
 
 private:
 	bool InitFromScene(const aiScene* scene, const std::string& path);

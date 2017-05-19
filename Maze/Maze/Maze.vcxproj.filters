@@ -271,5 +271,17 @@
     <None Include="shaders\particle_system_update.vert">
       <Filter>shaders</Filter>
     </None>
+    <None Include="shaders\tessellation.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\tessellation.tesc">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\tessellation.tese">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\tessellation.vert">
+      <Filter>shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

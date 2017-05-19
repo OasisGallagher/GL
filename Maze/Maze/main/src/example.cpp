@@ -19,19 +19,22 @@
 #include "particle_system.h"
 
 extern App app;
-static const float defaultAspect = 4.f / 3.f;
-static const float moveSpeed = 3.f;
 
-static const int maxParticleCount = 10000;
-static const int maxParticlePerFrame = int(0.016 * maxParticleCount);
+namespace Globals {
+	static const float defaultAspect = 4.f / 3.f;
+	static const float moveSpeed = 3.f;
 
-static const GLfloat quadData[] = {
-	-1.0f, -1.0f, 0.0f,
-	1.0f, -1.0f, 0.0f,
-	-1.0f, 1.0f, 0.0f,
-	-1.0f, 1.0f, 0.0f,
-	1.0f, -1.0f, 0.0f,
-	1.0f, 1.0f, 0.0f,
+	static const int maxParticleCount = 10000;
+	static const int maxParticlePerFrame = int(0.016 * maxParticleCount);
+
+	static const GLfloat quadData[] = {
+		-1.0f, -1.0f, 0.0f,
+		1.0f, -1.0f, 0.0f,
+		-1.0f, 1.0f, 0.0f,
+		-1.0f, 1.0f, 0.0f,
+		1.0f, -1.0f, 0.0f,
+		1.0f, 1.0f, 0.0f,
+	};
 };
 
 Example::Example() {
@@ -59,19 +62,19 @@ void Example::GetEnvRequirement(AppEnv& env) {
 
 void Example::UpdateCamera(float deltaTime) {
 	if (input_->IsKeyDown(KeyCodeForward)) {
-		camera_->Walk(-deltaTime * moveSpeed);
+		camera_->Walk(-deltaTime * Globals::moveSpeed);
 	}
 
 	if (input_->IsKeyDown(KeyCodeBackward)) {
-		camera_->Walk(deltaTime * moveSpeed);
+		camera_->Walk(deltaTime * Globals::moveSpeed);
 	}
 
 	if (input_->IsKeyDown(KeyCodeLeft)) {
-		camera_->Strafe(-deltaTime * moveSpeed);
+		camera_->Strafe(-deltaTime * Globals::moveSpeed);
 	}
 
 	if (input_->IsKeyDown(KeyCodeRight)) {
-		camera_->Strafe(deltaTime * moveSpeed);
+		camera_->Strafe(deltaTime * Globals::moveSpeed);
 	}
 
 	if (input_->IsKeyDown(KeyCodePitchClockwise)) {
@@ -137,7 +140,7 @@ Example_RedTriangle::~Example_RedTriangle() {
 }
 
 Example_Matrices::Example_Matrices() {
-	glm::mat4 proj = glm::perspective(45.f, defaultAspect, 0.1f, 100.f);
+	glm::mat4 proj = glm::perspective(45.f, Globals::defaultAspect, 0.1f, 100.f);
 	glm::mat4 view = glm::lookAt(glm::vec3(4, 3, 3), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
 	glm::mat4 model = glm::mat4(1.f);
 	mvp_ = proj * view * model;
@@ -189,7 +192,7 @@ Example_ColoredCube::Example_ColoredCube() {
 	glGenVertexArrays(1, &vao_);
 	glBindVertexArray(vao_);
 
-	glm::mat4 proj = glm::perspective(45.f, defaultAspect, 0.1f, 100.f);
+	glm::mat4 proj = glm::perspective(45.f, Globals::defaultAspect, 0.1f, 100.f);
 	glm::mat4 view = glm::lookAt(glm::vec3(4, 3, 3), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
 	glm::mat4 model = glm::mat4(1.f);
 	glm::mat4 mvp = proj * view * model;
@@ -919,7 +922,7 @@ Example_RenderToTexture::Example_RenderToTexture() {
 	renderTexture_ = new RenderTexture(RenderTexture2D, WINDOW_WIDTH, WINDOW_HEIGHT);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo_[3]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(quadData), quadData, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Globals::quadData), Globals::quadData, GL_STATIC_DRAW);
 }
 
 Example_RenderToTexture::~Example_RenderToTexture() {
@@ -1068,7 +1071,7 @@ Example_ShadowMaps::Example_ShadowMaps() {
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_.size() * sizeof(unsigned), &indices_[0], GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo_[4]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(quadData), quadData, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Globals::quadData), Globals::quadData, GL_STATIC_DRAW);
 
 	depthShader_ = new Shader;
 	depthShader_->Load(ShaderTypeVertex, "shaders/depth.vert");
@@ -1337,16 +1340,16 @@ void Example_Billboards2::Update(float deltaTime) {
 }
 
 Example_Particle::Example_Particle() {
-	particles_ = new Particle[maxParticleCount];
-	memset(particles_, 0, sizeof(Particle) * maxParticleCount);
+	particles_ = new Particle[Globals::maxParticleCount];
+	memset(particles_, 0, sizeof(Particle) * Globals::maxParticleCount);
 
-	colorBuffer_ = new GLubyte[maxParticleCount * 4];
-	memset(colorBuffer_, 0, sizeof(GLubyte) * maxParticleCount * 4);
+	colorBuffer_ = new GLubyte[Globals::maxParticleCount * 4];
+	memset(colorBuffer_, 0, sizeof(GLubyte) * Globals::maxParticleCount * 4);
 
-	positionBuffer_ = new GLfloat[maxParticleCount * 4];
-	memset(positionBuffer_, 0, sizeof(GLfloat) * maxParticleCount * 4);
+	positionBuffer_ = new GLfloat[Globals::maxParticleCount * 4];
+	memset(positionBuffer_, 0, sizeof(GLfloat) * Globals::maxParticleCount * 4);
 
-	for (int i = 0; i < maxParticleCount; ++i) {
+	for (int i = 0; i < Globals::maxParticleCount; ++i) {
 		particles_[i].life = -1;
 		particles_[i].cameraDistance2 = -1;
 	}
@@ -1376,10 +1379,10 @@ Example_Particle::Example_Particle() {
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexBuffer), vertexBuffer, GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo_[1]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 4 * maxParticleCount, nullptr, GL_STREAM_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 4 * Globals::maxParticleCount, nullptr, GL_STREAM_DRAW);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo_[2]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(GLubyte) * 4 * maxParticleCount, nullptr, GL_STREAM_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(GLubyte) * 4 * Globals::maxParticleCount, nullptr, GL_STREAM_DRAW);
 }
 
 Example_Particle::~Example_Particle() {
@@ -1392,7 +1395,7 @@ Example_Particle::~Example_Particle() {
 }
 
 int Example_Particle::FindUnusedParticle() {
-	for (int i = lastUsedParticle_; i < maxParticleCount; ++i) {
+	for (int i = lastUsedParticle_; i < Globals::maxParticleCount; ++i) {
 		if (particles_[i].life < 0) {
 			lastUsedParticle_ = i;
 			return i;
@@ -1430,7 +1433,7 @@ void Example_Particle::UpdateParticles(float deltaTime) {
 	glm::vec3 cameraPosition(glm::inverse(view)[3]);
 
 	int index = 0;
-	for (int i = 0; i < maxParticleCount; ++i) {
+	for (int i = 0; i < Globals::maxParticleCount; ++i) {
 		Particle& p = particles_[i];
 		if (p.life < 0) {
 			continue;
@@ -1465,10 +1468,10 @@ void Example_Particle::RenderParticles() {
 	shader_->Use();
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo_[1]);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, maxParticleCount * sizeof(GLfloat) * 4, positionBuffer_);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, Globals::maxParticleCount * sizeof(GLfloat) * 4, positionBuffer_);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo_[2]);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, maxParticleCount * sizeof(GLubyte) * 4, colorBuffer_);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, Globals::maxParticleCount * sizeof(GLubyte) * 4, colorBuffer_);
 
 	glActiveTexture(GL_TEXTURE0);
 	texture_->Use();
@@ -1509,11 +1512,11 @@ void Example_Particle::RenderParticles() {
 }
 
 void Example_Particle::SortParticles() {
-	std::sort(particles_, particles_ + maxParticleCount);
+	std::sort(particles_, particles_ + Globals::maxParticleCount);
 }
 
 void Example_Particle::CreateNewParticles(float deltaTime) {
-	int count = glm::min(int(deltaTime * maxParticleCount), maxParticlePerFrame);
+	int count = glm::min(int(deltaTime * Globals::maxParticleCount), Globals::maxParticlePerFrame);
 	for (int i = 0; i < count; ++i) {
 		int index = FindUnusedParticle();
 		Particle& p = particles_[index];
@@ -1623,4 +1626,51 @@ void Example_ParticleSystemUsingTransformFeedback::Update(float deltaTime) {
 	Example::Update(deltaTime);
 	glm::mat4 VP = camera_->GetProjMatrix() * camera_->GetViewMatrix();
 	ps_->Render(deltaTime, VP, camera_->GetPosition());
+}
+
+Example_BasicTessellation::Example_BasicTessellation() {
+	shader_ = new Shader;
+	shader_->Load(ShaderTypeVertex, "tessellation.vert");
+	shader_->Load(ShaderTypeTessellationControl, "tessellation.tesc");
+	shader_->Load(ShaderTypeTessellationEvaluation, "tessellation.tese");
+	shader_->Load(ShaderTypeFragment, "tessellation.frag");
+
+	displacementMap_ = new Texture;
+	displacementMap_->Load("heightmap.jpg");
+
+	colorMap_ = new Texture;
+	colorMap_->Load("diffuse.jpg");
+
+	mesh_ = new Mesh;
+	mesh_->Load("quad2.obj");
+	mesh_->Render(GL_PATCHES);
+}
+
+Example_BasicTessellation::~Example_BasicTessellation() {
+
+}
+
+void Example_BasicTessellation::Update(float deltaTime) {
+	shader_->Use();
+
+	shader_->SetUniform("cameraPosition", &camera_->GetPosition());
+	const glm::mat4 m = glm::mat4(1);
+	const glm::mat4 vp = camera_->GetProjMatrix() * camera_->GetViewMatrix();
+
+	shader_->SetUniform("M", &m);
+	shader_->SetUniform("VP", &vp);
+
+	glActiveTexture(GL_TEXTURE0);
+	displacementMap_->Use();
+	shader_->SetUniform("displacementMap", 0);
+
+	glActiveTexture(GL_TEXTURE1);
+	colorMap_->Use();
+	shader_->SetUniform("colorMap", 1);
+
+	shader_->SetUniform("displacementFactor", 1.f);
+}
+
+void Example_BasicTessellation::GetEnvRequirement(AppEnv& env) {
+
 }
