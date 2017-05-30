@@ -149,14 +149,14 @@ void Mesh::Render(GLenum mode) {
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);
-	glEnableVertexAttribArray(3);
+	//glEnableVertexAttribArray(3);
 
 	for (unsigned i = 0; i < entries_.size(); ++i) {
 		glBindBuffer(GL_ARRAY_BUFFER, entries_[i].vb);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(MeshVertex), 0);
 		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(MeshVertex), (const void*)12);
 		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(MeshVertex), (const void*)20);
-		glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(MeshVertex), (const void*)32);
+		//glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(MeshVertex), (const void*)32);
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, entries_[i].ib);
 		/*
@@ -172,5 +172,5 @@ void Mesh::Render(GLenum mode) {
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(2);
-	glDisableVertexAttribArray(3);
+	//glDisableVertexAttribArray(3);
 }

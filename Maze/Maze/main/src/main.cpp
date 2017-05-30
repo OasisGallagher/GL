@@ -8,7 +8,7 @@ int main() {
 		return -1;
 	}
 
-	Example* example = new Example_ParticleSystemUsingTransformFeedback;
+	Example* example = new Example_BasicTessellation;
 	app.SetExample(example);
 
 	app.EnterMainLoop();

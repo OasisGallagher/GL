@@ -11,7 +11,6 @@ out vec2 TexCoord_tesc;
 out vec3 Normal_tesc;
 
 void main() {
-
 	WorldPos_tesc = (M * vec4(Position_vert, 1)).xyz;
 	TexCoord_tesc = TexCoord_vert;
 	Normal_tesc = (M * vec4(Normal_vert, 1)).xyz;

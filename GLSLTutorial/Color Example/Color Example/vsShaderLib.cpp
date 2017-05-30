@@ -129,7 +129,7 @@ VSShaderLib::prepareProgram() {
 void 
 VSShaderLib::setProgramOutput(int index, std::string name) {
 
-	glBindFragDataLocation(pProgram, index, name.c_str());
+	//glBindFragDataLocation(pProgram, index, name.c_str());
 }
 
 
