@@ -8,6 +8,8 @@ template <class _CountofType, size_t _SizeOfArray>
 char(*__countof_helper(_CountofType(&_Array)[_SizeOfArray]))[_SizeOfArray];
 #define COUNT_OF(_Array) (sizeof(*__countof_helper(_Array)) + 0)
 
+#define UNUSED(_Var) (void)_Var
+
 class Utility {
 public:
 	static int MakeDword(int low, int high);

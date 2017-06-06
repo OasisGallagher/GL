@@ -98,8 +98,8 @@ void Mesh::InitMesh(unsigned index, const aiMesh* mesh) {
 		v.uv.y = texCoord->y;
 
 		v.normal.x = normal->x;
-		v.normal.y = normal->x;
-		v.normal.z = normal->x;
+		v.normal.y = normal->y;
+		v.normal.z = normal->z;
 
 		v.tangent.x = tangent->x;
 		v.tangent.y = tangent->y;

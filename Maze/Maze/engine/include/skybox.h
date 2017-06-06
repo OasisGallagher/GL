@@ -2,6 +2,8 @@
 #include <string>
 #include <gl/glew.h>
 
+#include "loader.h"
+
 class Shader;
 class Camera;
 struct ModelInfo;

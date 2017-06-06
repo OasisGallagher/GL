@@ -10,6 +10,8 @@
 
 #include "debug.h"
 
+#define HAS_NORMAL_INDEX
+
 bool TextLoader::Load(const std::string& file, std::string& text) {
 	std::ifstream ifs(file, std::ios::in);
 	if (!ifs) {
@@ -119,12 +121,20 @@ bool ModelLoader::LoadBlenderObj(const std::string& path, ModelInfo& info) {
 			normals.push_back(normal);
 		}
 		else if (strcmp(header, "f") == 0) {
+#ifdef HAS_NORMAL_INDEX
 			fscanf(file, "%d/%d/%d %d/%d/%d %d/%d/%d\n",
 				&vertexIndex[0], &uvIndex[0], &normalIndex[0],
 				&vertexIndex[1], &uvIndex[1], &normalIndex[1],
 				&vertexIndex[2], &uvIndex[2], &normalIndex[2]
 				);
+#else
 
+			fscanf(file, "%d/%d %d/%d %d/%d\n",
+				   &vertexIndex[0], &uvIndex[0], //&normalIndex[0],
+				   &vertexIndex[1], &uvIndex[1], //&normalIndex[1],
+				   &vertexIndex[2], &uvIndex[2]//, &normalIndex[2]
+				   );
+#endif // HAS_NORMAL_INDEX
 			vertexIndices.insert(vertexIndices.end(), vertexIndex, vertexIndex + 3);
 			uvIndices.insert(uvIndices.end(), uvIndex, uvIndex + 3);
 			normalIndices.insert(normalIndices.end(), normalIndex, normalIndex + 3);
@@ -144,7 +154,9 @@ bool ModelLoader::LoadBlenderObj(const std::string& path, ModelInfo& info) {
 			info.uvs.push_back(uvs[ui - 1]);
 		}
 
-		info.normals.push_back(normals[ni - 1]);
+		if (ui - 1 < normals.size()) {
+			info.normals.push_back(normals[ni - 1]);
+		}
 	}
 
 	return true;

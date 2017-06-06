@@ -26,7 +26,6 @@
     <ClCompile Include="global\src\os_linux.cpp" />
     <ClCompile Include="global\src\os_windows.cpp" />
     <ClCompile Include="global\src\utilities.cpp" />
-    <ClCompile Include="main\src\example.cpp" />
     <ClCompile Include="main\src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -50,6 +49,25 @@
     <ClInclude Include="global\include\reference_countable.h" />
     <ClInclude Include="global\include\utilities.h" />
     <ClInclude Include="main\include\example.h" />
+    <ClInclude Include="main\include\example_ant_tweek_bar.h" />
+    <ClInclude Include="main\include\example_basic_shading.h" />
+    <ClInclude Include="main\include\example_basic_tessellation.h" />
+    <ClInclude Include="main\include\example_billboard.h" />
+    <ClInclude Include="main\include\example_billboard2.h" />
+    <ClInclude Include="main\include\example_colored_cube.h" />
+    <ClInclude Include="main\include\example_keyboard_and_mouse.h" />
+    <ClInclude Include="main\include\example_light_maps.h" />
+    <ClInclude Include="main\include\example_matrices.h" />
+    <ClInclude Include="main\include\example_model_loading.h" />
+    <ClInclude Include="main\include\example_normal_mapping.h" />
+    <ClInclude Include="main\include\example_particle.h" />
+    <ClInclude Include="main\include\example_particle_system_using_transform_feedback.h" />
+    <ClInclude Include="main\include\example_red_triangle.h" />
+    <ClInclude Include="main\include\example_render_to_texture.h" />
+    <ClInclude Include="main\include\example_shadow_maps.h" />
+    <ClInclude Include="main\include\example_skybox.h" />
+    <ClInclude Include="main\include\example_textured_cube.h" />
+    <ClInclude Include="main\include\example_vbo_indexing.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\basic.frag" />

@@ -43,6 +43,7 @@ private:
 
 private:
 	GLuint vao_;
+
 	std::vector<MeshEntry> entries_;
 	std::vector<Texture*> textures_;
 };

@@ -191,6 +191,13 @@ bool Shader::LinkShader() {
 		return false;
 	}
 
+	glValidateProgram(program_);
+	glGetProgramiv(program_, GL_VALIDATE_STATUS, &status);
+	if (status != GL_TRUE) {
+		Debug::LogError("failed to validate shader.");
+		return false;
+	}
+
 	AddAllUniforms();
 	AddAllBlocks();
 	return true;

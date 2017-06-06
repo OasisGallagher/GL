@@ -9,6 +9,10 @@
 #include "example.h"
 
 void APIENTRY DebugOutputCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, GLvoid* userParam) {
+	// Shader.
+	if (source == GL_DEBUG_SOURCE_SHADER_COMPILER_ARB) {
+		return;
+	}
 
 	std::string text = "OpenGL Debug Output message:\n";
 

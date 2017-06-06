@@ -34,6 +34,11 @@ bool ParticleSystem::Init(const glm::vec3& position) {
 	particles[0].velocity = glm::vec3(0, 0.0001f, 0);
 	particles[0].lifeTime = 0;
 
+	// OpenGL enforces a general limitation that the same resource cannot be bound 
+	// for both input and output in the same draw call.This means that if we want to
+	// update the particles in a vertex buffer we actually need two transform feedback 
+	// buffers and toggle between them.
+
 	// We are going to use two transform feedback buffers and toggle between them 
 	// (drawing into one while using the other as input and vice verse).
 	glGenTransformFeedbacks(COUNT_OF(transformFeedback_), transformFeedback_);
@@ -202,6 +207,8 @@ void ParticleSystem::RenderParticles(const glm::mat4& VP, const glm::vec3& camer
 	// That object has m_particleBuffer[m_currTFB] as the attached vertex buffer. 
 	// We now bind this buffer to provide the input vertices for rendering.
 	glBindBuffer(GL_ARRAY_BUFFER, particleBuffer_[currentTFB_]);
+	GLfloat* buffer = (GLfloat*)glMapBuffer(GL_ARRAY_BUFFER, GL_READ_ONLY);
+	glUnmapBuffer(GL_ARRAY_BUFFER);
 
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Particle), (const void*)4);
