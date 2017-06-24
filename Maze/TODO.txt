@@ -6,3 +6,6 @@ Example_VBOIndexing:
 
 Example_ShadowMaps:
 	未深入.
+
+Example_DeferedShading:
+	渲染PointLight之后, 如果不关闭CULL_FACE, 方向光不起作用?

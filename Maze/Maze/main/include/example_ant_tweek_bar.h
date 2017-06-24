@@ -7,7 +7,7 @@ class Example_AntTweakBar : public Example {
 public:
 	Example_AntTweakBar() {
 		TwInit(TW_OPENGL_CORE, nullptr);
-		TwWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+		TwWindowSize(Globals::kWindowWidth, Globals::kWindowHeight);
 
 		TwBar* EulerGUI = TwNewBar("Euler settings");
 		TwBar* QuaternionGUI = TwNewBar("Quaternion settings");

@@ -9,7 +9,7 @@ public:
 		coordShader_->Load(ShaderTypeFragment, "shaders/coord.frag");
 		coordShader_->Link();
 
-		camera_->Reset(glm::vec3(0, 0, 5), glm::vec3(0), glm::vec3(0, 1, 0));
+		camera_->Reset(glm::vec3(0, 0, 5), glm::vec3(0));
 
 		glGenVertexArrays(1, &vao_);
 

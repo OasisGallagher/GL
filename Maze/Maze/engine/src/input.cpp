@@ -3,7 +3,7 @@
 #include "input.h"
 
 GLFWInput::GLFWInput(GLFWwindow* window) : window_(window) {
-	glfwSetScrollCallback(window_, OnMouseWheel);
+	//glfwSetScrollCallback(window_);
 }
 
 bool GLFWInput::IsKeyDown(KeyCode key) {
@@ -36,9 +36,20 @@ bool GLFWInput::IsKeyDown(KeyCode key) {
 	return false;
 }
 
-float GLFWInput::GetMouseWheel() {
-	return 0.f;
+bool GLFWInput::IsMouseButtonPressed(MouseButton button) {
+	if (button == LeftButton) {
+		return glfwGetMouseButton(window_, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
+	}
+
+	if (button == RightButton) {
+		return glfwGetMouseButton(window_, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS;
+	}
+
+	return glfwGetMouseButton(window_, GLFW_MOUSE_BUTTON_MIDDLE) == GLFW_PRESS;
 }
 
-void GLFWInput::OnMouseWheel(GLFWwindow* window, double x, double y) {
+glm::vec2 GLFWInput::GetCursorPosition() {
+	double x, y;
+	glfwGetCursorPos(window_, &x, &y);
+	return glm::vec2((float)x, (float)y);
 }

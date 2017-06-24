@@ -20,35 +20,18 @@
 
 extern App app;
 
-namespace Globals {
-	static const float defaultAspect = 4.f / 3.f;
-	static const float moveSpeed = 3.f;
-
-	static const int maxParticleCount = 10000;
-	static const int maxParticlePerFrame = int(0.016 * maxParticleCount);
-
-	static const GLfloat quadData[] = {
-		-1.0f, -1.0f, 0.0f,
-		1.0f, -1.0f, 0.0f,
-		-1.0f, 1.0f, 0.0f,
-		-1.0f, 1.0f, 0.0f,
-		1.0f, -1.0f, 0.0f,
-		1.0f, 1.0f, 0.0f,
-	};
-};
-
 class Example {
 public:
 	Example() {
 		shader_ = new Shader;
 		camera_ = new Camera;
-		input_ = new GLFWInput(app.GetWindow());
+
+		lpressed_ = rpressed_ = false;
 	}
 
 	virtual ~Example() {
 		delete shader_;
 		delete camera_;
-		delete input_;
 	}
 
 public:
@@ -65,49 +48,49 @@ public:
 
 private:
 	void UpdateCamera(float deltaTime) {
-		if (input_->IsKeyDown(KeyCodeForward)) {
-			camera_->Walk(-deltaTime * Globals::moveSpeed);
+		glm::vec2 delta(0);
+		Input* input = app.GetInput();
+		bool pressed = input->IsMouseButtonPressed(LeftButton);
+		if (pressed && (delta = GetMouseDragDelta(lpressed_)) != glm::zero<glm::vec2>()) {
+			camera_->Rotate(delta);
 		}
 
-		if (input_->IsKeyDown(KeyCodeBackward)) {
-			camera_->Walk(deltaTime * Globals::moveSpeed);
+		lpressed_ = pressed;
+
+		pressed = input->IsMouseButtonPressed(RightButton);
+		if (pressed && (delta = GetMouseDragDelta(rpressed_)) != glm::zero<glm::vec2>()) {
+			camera_->Zoom(-delta.y);
 		}
 
-		if (input_->IsKeyDown(KeyCodeLeft)) {
-			camera_->Strafe(-deltaTime * Globals::moveSpeed);
+		rpressed_ = pressed;
+
+		pressed = input->IsMouseButtonPressed(MiddleButton);
+		if (pressed && (delta = GetMouseDragDelta(mpressed_)) != glm::zero<glm::vec2>()) {
+			delta.y = -delta.y;
+			camera_->Move(-delta);
 		}
 
-		if (input_->IsKeyDown(KeyCodeRight)) {
-			camera_->Strafe(deltaTime * Globals::moveSpeed);
+		mpressed_ = pressed;
+	}
+
+	glm::vec2 GetMouseDragDelta(bool pressed0) {
+		glm::vec2 ans;
+		glm::vec2 pos = app.GetInput()->GetCursorPosition();
+
+		if (pressed0 && mouse_ != pos) {
+			ans = pos - mouse_;
+			ans.y = -ans.y;
 		}
 
-		if (input_->IsKeyDown(KeyCodePitchClockwise)) {
-			camera_->Pitch(deltaTime * Mathf::PI / 50);
-		}
+		mouse_ = pos;
 
-		if (input_->IsKeyDown(KeyCodePitchAnticlockwise)) {
-			camera_->Pitch(-deltaTime * Mathf::PI / 50);
-		}
-
-		if (input_->IsKeyDown(KeyCodeYawClockwise)) {
-			camera_->Yaw(deltaTime * Mathf::PI / 50);
-		}
-
-		if (input_->IsKeyDown(KeyCodeYawAnticlockwise)) {
-			camera_->Yaw(-deltaTime * Mathf::PI / 50);
-		}
-
-		if (input_->IsKeyDown(KeyCodeRollClockwise)) {
-			camera_->Roll(deltaTime * Mathf::PI / 50);
-		}
-
-		if (input_->IsKeyDown(KeyCodeRollAnticlockwise)) {
-			camera_->Roll(-deltaTime * Mathf::PI / 50);
-		}
+		return ans;
 	}
 
 protected:
-	Input* input_;
 	Camera* camera_;
 	Shader* shader_;
+
+	glm::vec2 mouse_;
+	bool lpressed_, rpressed_, mpressed_;
 };

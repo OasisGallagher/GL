@@ -2,6 +2,7 @@
 
 #include <glm/glm.hpp>
 
+class Input;
 class Example;
 struct GLFWwindow;
 
@@ -18,15 +19,17 @@ public:
 	void Destroy();
 
 public:
-	GLFWwindow* GetWindow() { return window_; }
-	void GetWindowSize(int& width, int& height);
+	Input* GetInput();
+	GLFWwindow* GetWindow();
 
+	void GetWindowSize(int& width, int& height);
 	void SetExample(Example* example);
 	void EnterMainLoop();
 
 private:
 	AppEnv env_;
 
+	Input* input_;
 	GLFWwindow* window_;
 	Example* example_;
 };

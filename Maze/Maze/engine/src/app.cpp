@@ -49,6 +49,9 @@ void APIENTRY DebugOutputCallback(GLenum source, GLenum type, GLuint id, GLenum 
 	}
 }
 
+void OnWindowSizeCallback(GLFWwindow* window, int width, int height) {
+}
+
 bool App::Initialize() {
 	// Initialise GLFW
 	if (!glfwInit())
@@ -57,7 +60,7 @@ bool App::Initialize() {
 		return false;
 	}
 
-	glfwWindowHint(GLFW_SAMPLES, 4);
+	//glfwWindowHint(GLFW_SAMPLES, 1);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
@@ -73,13 +76,14 @@ bool App::Initialize() {
 	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, 1);
 
 	// Open a window and create its OpenGL context
-	window_ = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Maze", nullptr, nullptr);
+	window_ = glfwCreateWindow(Globals::kWindowWidth, Globals::kWindowHeight, "Maze", nullptr, nullptr);
 	if (window_ == NULL){
 		Debug::LogError("failed to open GLFW window.");
 		glfwTerminate();
 		return false;
 	}
 
+	glfwSetWindowSizeCallback(window_, OnWindowSizeCallback);
 	glfwMakeContextCurrent(window_);
 
 	// Initialize GLEW
@@ -97,6 +101,8 @@ bool App::Initialize() {
 
 	// Ensure we can capture the escape key being pressed below
 	glfwSetInputMode(window_, GLFW_STICKY_KEYS, GL_TRUE);
+
+	input_ = new GLFWInput(window_);
 
 	return true;
 }
@@ -162,4 +168,12 @@ void App::EnterMainLoop() {
 
 void App::Destroy() {
 	//glfwTerminate();
+}
+
+Input* App::GetInput() {
+	return input_;
+}
+
+GLFWwindow* App::GetWindow() {
+	return window_;
 }

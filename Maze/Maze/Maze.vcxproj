@@ -55,6 +55,7 @@
     <ClInclude Include="main\include\example_billboard.h" />
     <ClInclude Include="main\include\example_billboard2.h" />
     <ClInclude Include="main\include\example_colored_cube.h" />
+    <ClInclude Include="main\include\example_defered_shading.h" />
     <ClInclude Include="main\include\example_keyboard_and_mouse.h" />
     <ClInclude Include="main\include\example_light_maps.h" />
     <ClInclude Include="main\include\example_matrices.h" />
@@ -65,6 +66,7 @@
     <ClInclude Include="main\include\example_red_triangle.h" />
     <ClInclude Include="main\include\example_render_to_texture.h" />
     <ClInclude Include="main\include\example_shadow_maps.h" />
+    <ClInclude Include="main\include\example_skeletal_animation_with_assimp.h" />
     <ClInclude Include="main\include\example_skybox.h" />
     <ClInclude Include="main\include\example_textured_cube.h" />
     <ClInclude Include="main\include\example_vbo_indexing.h" />
@@ -83,14 +85,21 @@
     <None Include="shaders\colored.vert" />
     <None Include="shaders\coord.frag" />
     <None Include="shaders\coord.vert" />
+    <None Include="shaders\deferred_dir_light.frag" />
+    <None Include="shaders\deferred_light.vert" />
+    <None Include="shaders\deferred_point_light.frag" />
     <None Include="shaders\depth.frag" />
     <None Include="shaders\depth.vert" />
+    <None Include="shaders\gbuffer.frag" />
+    <None Include="shaders\gbuffer.vert" />
     <None Include="shaders\lightmaps.frag" />
     <None Include="shaders\lightmaps.vert" />
     <None Include="shaders\model_loading.frag" />
     <None Include="shaders\model_loading.vert" />
     <None Include="shaders\normal_mapping.frag" />
     <None Include="shaders\normal_mapping.vert" />
+    <None Include="shaders\null.frag" />
+    <None Include="shaders\null.vert" />
     <None Include="shaders\particle.frag" />
     <None Include="shaders\particle.vert" />
     <None Include="shaders\particle_system_update.frag" />
@@ -104,6 +113,8 @@
     <None Include="shaders\simple.vert" />
     <None Include="shaders\simple_transform.frag" />
     <None Include="shaders\simple_transform.vert" />
+    <None Include="shaders\skinning.frag" />
+    <None Include="shaders\skinning.vert" />
     <None Include="shaders\skybox.frag" />
     <None Include="shaders\skybox.vert" />
     <None Include="shaders\spotlight.frag" />

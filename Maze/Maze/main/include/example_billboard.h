@@ -27,7 +27,7 @@ public:
 		shader_->Load(ShaderTypeFragment, "shaders/billboard.frag");
 		shader_->Link();
 
-		camera_->Reset(glm::vec3(0, 0, 4), glm::vec3(0), glm::vec3(0, 1, 0));
+		camera_->Reset(glm::vec3(0, 0, 4), glm::vec3(0));
 	}
 
 	~Example_Billboards() {

@@ -7,7 +7,7 @@ public:
 	Example_ParticleSystemUsingTransformFeedback() {
 		ps_ = new ParticleSystem;
 
-		camera_->Reset(glm::vec3(0, 0.4f, -5.f), glm::vec3(0, 0.2f, 1.f), glm::vec3(0, 1, 0));
+		camera_->Reset(glm::vec3(0, 0.4f, -5.f), glm::vec3(0, 0.2f, 1.f));
 		ps_->Init(glm::vec3(0, 1, 1.f));
 	}
 

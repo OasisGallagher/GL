@@ -18,7 +18,7 @@ public:
 		glGenVertexArrays(1, &vao_);
 		glBindVertexArray(vao_);
 
-		mesh_->Load("models/cylinder.obj");
+		mesh_->Load("models/box.obj");
 		//ModelLoader::Load("models/suzanne.obj", *info_);
 
 		/*
@@ -31,11 +31,11 @@ public:
 		glBufferData(GL_ARRAY_BUFFER, info_->uvs.size() * sizeof(glm::vec2), &info_->uvs[0], GL_STATIC_DRAW);
 		*/
 
-		glActiveTexture(GL_TEXTURE0);
-		texture_->Use();
+		//glActiveTexture(GL_TEXTURE0);
+		//texture_->Use();
 		shader_->SetUniform("sampler", 0);
 
-		camera_->Reset(glm::vec3(0, 0, 12), glm::vec3(0), glm::vec3(0, 1, 0));
+		camera_->Reset(glm::vec3(0, 2, 3), glm::vec3(0));
 		glm::mat4 mvp = camera_->GetProjMatrix() * camera_->GetViewMatrix();
 		shader_->SetUniform("MVP", &mvp);
 	}
@@ -51,6 +51,7 @@ public:
 
 public:
 	virtual void Update(float deltaTime) {
+		Example::Update(deltaTime);
 		mesh_->Render();
 		/*
 		glEnableVertexAttribArray(0);

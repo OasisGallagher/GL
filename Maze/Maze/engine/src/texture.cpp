@@ -416,8 +416,8 @@ void RenderTexture::CreateTexture2D(GLint width, GLint height) {
 	glGenRenderbuffers(1, &depthBuffer_);
 	glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer_);
 	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
-
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuffer_);
+
 	glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, targetTexture_, 0);
 
 	GLenum buffers[] = { GL_COLOR_ATTACHMENT0 };

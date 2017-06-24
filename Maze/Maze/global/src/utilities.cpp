@@ -33,6 +33,23 @@ bool Utility::IsBlankText(const char* text, const char** pos) {
 	return true;
 }
 
+std::string Utility::GetDirectoryPath(const std::string& path) {
+	std::string dir;
+	unsigned slash = path.find_last_of("/");
+
+	if (slash == std::string::npos) {
+		dir = ".";
+	}
+	else if (slash == 0) {
+		dir = "/";
+	}
+	else {
+		dir = path.substr(0, slash);
+	}
+
+	return dir;
+}
+
 int Utility::ParseInteger(const std::string& text) {
 	int answer = INT_MIN;
 	bool status = ParseInteger(text, &answer);

@@ -3,7 +3,7 @@
 class Example_Matrices : public Example {
 public:
 	Example_Matrices() {
-		glm::mat4 proj = glm::perspective(45.f, Globals::defaultAspect, 0.1f, 100.f);
+		glm::mat4 proj = glm::perspective(45.f, (float)Globals::kWindowWidth / Globals::kWindowHeight, 0.1f, 100.f);
 		glm::mat4 view = glm::lookAt(glm::vec3(4, 3, 3), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
 		glm::mat4 model = glm::mat4(1.f);
 		mvp_ = proj * view * model;

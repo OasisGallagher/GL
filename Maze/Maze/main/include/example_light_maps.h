@@ -11,7 +11,7 @@ public:
 		shader_->Link();
 		shader_->Use();
 
-		camera_->Reset(glm::vec3(-20, 5, -15), glm::vec3(0), glm::vec3(0, 1, 0));
+		camera_->Reset(glm::vec3(-20, 5, -15), glm::vec3(0));
 		const glm::mat4& view = camera_->GetViewMatrix();
 		const glm::mat4& proj = camera_->GetProjMatrix();
 		glm::mat4 MVP = proj * view * glm::mat4(1);

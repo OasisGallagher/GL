@@ -55,7 +55,7 @@ public:
 		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexVbo_);
 		//glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_.size() * sizeof(unsigned), &indices_[0], GL_STATIC_DRAW);
 
-		camera_->Reset(glm::vec3(6, 4, 1), glm::vec3(0), glm::vec3(0, 1, 0));
+		camera_->Reset(glm::vec3(6, 4, 1), glm::vec3(0));
 		const glm::mat4& proj = camera_->GetProjMatrix();
 		const glm::mat4& view = camera_->GetViewMatrix();
 		glm::mat4 mvp = proj * view;

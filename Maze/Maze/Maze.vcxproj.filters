@@ -200,6 +200,12 @@
     <ClInclude Include="main\include\example_vbo_indexing.h">
       <Filter>main\include</Filter>
     </ClInclude>
+    <ClInclude Include="main\include\example_defered_shading.h">
+      <Filter>main\include</Filter>
+    </ClInclude>
+    <ClInclude Include="main\include\example_skeletal_animation_with_assimp.h">
+      <Filter>main\include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\simple.frag">
@@ -337,5 +343,28 @@
     <None Include="shaders\tessellation.vert">
       <Filter>shaders</Filter>
     </None>
+    <None Include="shaders\gbuffer.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\gbuffer.vert">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\deferred_dir_light.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\deferred_light.vert">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\deferred_point_light.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\null.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\null.vert">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\skinning.frag" />
+    <None Include="shaders\skinning.vert" />
   </ItemGroup>
 </Project>

@@ -8,6 +8,8 @@ template <class _CountofType, size_t _SizeOfArray>
 char(*__countof_helper(_CountofType(&_Array)[_SizeOfArray]))[_SizeOfArray];
 #define COUNT_OF(_Array) (sizeof(*__countof_helper(_Array)) + 0)
 
+#define PADDING(_Size) char __unused[_Size]
+
 #define UNUSED(_Var) (void)_Var
 
 class Utility {
@@ -16,9 +18,13 @@ public:
 	static int Loword(int dword);
 	static int Highword(int dword);
 
+	static bool Approximately(float x, float y = 0.f);
+
 	static bool IsTerminal(const std::string& token);
 
 	static bool IsBlankText(const char* text, const char** pos = nullptr);
+
+	static std::string GetDirectoryPath(const std::string& path);
 
 	// 只解析简单的正整数.
 	static int ParseInteger(const std::string& text);
@@ -49,6 +55,11 @@ private:
 
 inline int Utility::Loword(int dword) {
 	return dword & 0xffff;
+}
+
+inline bool Utility::Approximately(float x, float y) {
+	const float E = 0.000001f;
+	return fabs(x - y) < E;
 }
 
 inline int Utility::Highword(int dword) {

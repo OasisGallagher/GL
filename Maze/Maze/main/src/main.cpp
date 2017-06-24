@@ -16,9 +16,11 @@
 #include "example_basic_shading.h"
 #include "example_ant_tweek_bar.h"
 #include "example_normal_mapping.h"
+#include "example_defered_shading.h"
 #include "example_render_to_texture.h"
 #include "example_basic_tessellation.h"
 #include "example_keyboard_and_mouse.h"
+#include "example_skeletal_animation_with_assimp.h"
 #include "example_particle_system_using_transform_feedback.h"
 
 App app;
@@ -28,7 +30,7 @@ int main() {
 		return -1;
 	}
 
-	Example* example = nullptr;// new Example_BasicTessellation;
+	Example* example = new Example_SkeletalAnimationWithAssimp;
 	app.SetExample(example);
 
 	app.EnterMainLoop();

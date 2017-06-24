@@ -64,6 +64,7 @@ public:
 
 private:
 	bool LinkShader();
+	void ClearShaders();
 	bool LoadShader(ShaderType shaderType, const char* source);
 
 	void AddAllBlocks();
@@ -73,6 +74,7 @@ private:
 	GLuint GetUniformSize(GLint uniformType, GLint uniformSize, GLint uniformOffset, GLint uniformMatrixStride, GLint uniformArrayStride);
 
 	bool GetErrorMessage(GLuint shaderObj, std::string& answer);
+	GLuint GenerateBindingIndex() const;
 
 private:
 	Uniforms uniforms_;
@@ -80,7 +82,4 @@ private:
 
 	GLuint program_;
 	GLuint shaderObjs_[ShaderTypeCount];
-
-private:
-	static GLuint blockCount;
 };

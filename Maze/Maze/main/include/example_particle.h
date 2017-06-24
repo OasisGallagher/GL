@@ -20,21 +20,21 @@ struct Particle {
 class Example_Particle : public Example {
 public:
 	Example_Particle() {
-		particles_ = new Particle[Globals::maxParticleCount];
-		memset(particles_, 0, sizeof(Particle)* Globals::maxParticleCount);
+		particles_ = new Particle[Globals::kMaxParticleCount];
+		memset(particles_, 0, sizeof(Particle)* Globals::kMaxParticleCount);
 
-		colorBuffer_ = new GLubyte[Globals::maxParticleCount * 4];
-		memset(colorBuffer_, 0, sizeof(GLubyte)* Globals::maxParticleCount * 4);
+		colorBuffer_ = new GLubyte[Globals::kMaxParticleCount * 4];
+		memset(colorBuffer_, 0, sizeof(GLubyte)* Globals::kMaxParticleCount * 4);
 
-		positionBuffer_ = new GLfloat[Globals::maxParticleCount * 4];
-		memset(positionBuffer_, 0, sizeof(GLfloat)* Globals::maxParticleCount * 4);
+		positionBuffer_ = new GLfloat[Globals::kMaxParticleCount * 4];
+		memset(positionBuffer_, 0, sizeof(GLfloat)* Globals::kMaxParticleCount * 4);
 
-		for (int i = 0; i < Globals::maxParticleCount; ++i) {
+		for (int i = 0; i < Globals::kMaxParticleCount; ++i) {
 			particles_[i].life = -1;
 			particles_[i].cameraDistance2 = -1;
 		}
 
-		camera_->Reset(glm::vec3(0, 0, 20), glm::vec3(0), glm::vec3(0, 1.f, 0));
+		camera_->Reset(glm::vec3(0, 0, 20), glm::vec3(0));
 
 		texture_ = new Texture;
 		texture_->Load("textures/particle.dds");
@@ -59,10 +59,10 @@ public:
 		glBufferData(GL_ARRAY_BUFFER, sizeof(vertexBuffer), vertexBuffer, GL_STATIC_DRAW);
 
 		glBindBuffer(GL_ARRAY_BUFFER, vbo_[1]);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)* 4 * Globals::maxParticleCount, nullptr, GL_STREAM_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)* 4 * Globals::kMaxParticleCount, nullptr, GL_STREAM_DRAW);
 
 		glBindBuffer(GL_ARRAY_BUFFER, vbo_[2]);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(GLubyte)* 4 * Globals::maxParticleCount, nullptr, GL_STREAM_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(GLubyte)* 4 * Globals::kMaxParticleCount, nullptr, GL_STREAM_DRAW);
 	}
 
 	~Example_Particle() {
@@ -91,7 +91,7 @@ public:
 
 private:
 	int FindUnusedParticle() {
-		for (int i = lastUsedParticle_; i < Globals::maxParticleCount; ++i) {
+		for (int i = lastUsedParticle_; i < Globals::kMaxParticleCount; ++i) {
 			if (particles_[i].life < 0) {
 				lastUsedParticle_ = i;
 				return i;
@@ -109,17 +109,17 @@ private:
 	}
 
 	void SortParticles() {
-		std::sort(particles_, particles_ + Globals::maxParticleCount);
+		std::sort(particles_, particles_ + Globals::kMaxParticleCount);
 	}
 
 	void RenderParticles() {
 		shader_->Use();
 
 		glBindBuffer(GL_ARRAY_BUFFER, vbo_[1]);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, Globals::maxParticleCount * sizeof(GLfloat)* 4, positionBuffer_);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, Globals::kMaxParticleCount * sizeof(GLfloat)* 4, positionBuffer_);
 
 		glBindBuffer(GL_ARRAY_BUFFER, vbo_[2]);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, Globals::maxParticleCount * sizeof(GLubyte)* 4, colorBuffer_);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, Globals::kMaxParticleCount * sizeof(GLubyte)* 4, colorBuffer_);
 
 		glActiveTexture(GL_TEXTURE0);
 		texture_->Use();
@@ -166,7 +166,7 @@ private:
 		glm::vec3 cameraPosition(glm::inverse(view)[3]);
 
 		int index = 0;
-		for (int i = 0; i < Globals::maxParticleCount; ++i) {
+		for (int i = 0; i < Globals::kMaxParticleCount; ++i) {
 			Particle& p = particles_[i];
 			if (p.life < 0) {
 				continue;
@@ -198,7 +198,7 @@ private:
 	}
 
 	void CreateNewParticles(float deltaTime) {
-		int count = glm::min(int(deltaTime * Globals::maxParticleCount), Globals::maxParticlePerFrame);
+		int count = glm::min(int(deltaTime * Globals::kMaxParticleCount), Globals::kMaxParticlePerFrame);
 		for (int i = 0; i < count; ++i) {
 			int index = FindUnusedParticle();
 			Particle& p = particles_[index];

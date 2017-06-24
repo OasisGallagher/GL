@@ -30,7 +30,7 @@ public:
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_.size() * sizeof(unsigned), &indices_[0], GL_STATIC_DRAW);
 
 		glBindBuffer(GL_ARRAY_BUFFER, vbo_[4]);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(Globals::quadData), Globals::quadData, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(Globals::kQuadCoordinates), Globals::kQuadCoordinates, GL_STATIC_DRAW);
 
 		depthShader_ = new Shader;
 		depthShader_->Load(ShaderTypeVertex, "shaders/depth.vert");
@@ -42,13 +42,13 @@ public:
 		shadowShader_->Load(ShaderTypeFragment, "shaders/shadow.frag");
 		shadowShader_->Link();
 
-		depthTexture_ = new RenderTexture(RenderDepthTexture, WINDOW_WIDTH, WINDOW_HEIGHT);
+		depthTexture_ = new RenderTexture(RenderDepthTexture, Globals::kWindowWidth, Globals::kWindowHeight);
 
 		shader_->Load(ShaderTypeVertex, "shaders/basic_shadow.vert");
 		shader_->Load(ShaderTypeFragment, "shaders/basic_shadow.frag");
 		shader_->Link();
 
-		camera_->Reset(glm::vec3(-20, 5, -15/*4, 0, 19*/), glm::vec3(0), glm::vec3(0, 1, 0));
+		camera_->Reset(glm::vec3(-20, 5, -15/*4, 0, 19*/), glm::vec3(0));
 
 		glm::vec3 LightInvDirection_worldspace(0.5f, 2, 2);
 		shader_->SetUniform("LightInvDirection_worldspace", &LightInvDirection_worldspace);
@@ -83,7 +83,7 @@ private:
 	void RenderPass() {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-		glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+		glViewport(0, 0, Globals::kWindowWidth, Globals::kWindowHeight);
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
 		glm::mat4 m(1);
@@ -126,7 +126,7 @@ private:
 
 	void ShadowMapPass() {
 		depthTexture_->Use();
-		glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+		glViewport(0, 0, Globals::kWindowWidth, Globals::kWindowHeight);
 
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);

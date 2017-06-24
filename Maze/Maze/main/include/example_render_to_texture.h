@@ -18,7 +18,7 @@ public:
 		texture_->Use();
 		shader_->SetUniform("textureSampler", 0);
 
-		camera_->Reset(glm::vec3(6, 0, 6), glm::vec3(0), glm::vec3(0, 1, 0));
+		camera_->Reset(glm::vec3(6, 0, 6), glm::vec3(0));
 		glm::mat4 m = glm::mat4(1.f);
 		const glm::mat4& view = camera_->GetViewMatrix();
 		const glm::mat4& proj = camera_->GetProjMatrix();
@@ -54,10 +54,10 @@ public:
 		glBindBuffer(GL_ARRAY_BUFFER, vbo_[2]);
 		glBufferData(GL_ARRAY_BUFFER, modelInfo_->normals.size() * sizeof(glm::vec3), &modelInfo_->normals[0], GL_STATIC_DRAW);
 
-		renderTexture_ = new RenderTexture(RenderTexture2D, WINDOW_WIDTH, WINDOW_HEIGHT);
+		renderTexture_ = new RenderTexture(RenderTexture2D, Globals::kWindowWidth, Globals::kWindowHeight);
 
 		glBindBuffer(GL_ARRAY_BUFFER, vbo_[3]);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(Globals::quadData), Globals::quadData, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(Globals::kQuadCoordinates), Globals::kQuadCoordinates, GL_STATIC_DRAW);
 	}
 
 	~Example_RenderToTexture() {
@@ -99,8 +99,8 @@ public:
 
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
-		int width = WINDOW_WIDTH / 2, height = WINDOW_HEIGHT / 2;
-		glViewport((WINDOW_WIDTH - width) / 2, (WINDOW_HEIGHT - height) / 2, width, height);
+		int width = Globals::kWindowWidth / 2, height = Globals::kWindowHeight / 2;
+		glViewport((Globals::kWindowWidth - width) / 2, (Globals::kWindowHeight - height) / 2, width, height);
 
 		shader2_->Use();
 

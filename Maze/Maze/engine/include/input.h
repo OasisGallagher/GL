@@ -15,10 +15,17 @@ enum KeyCode {
 	KeyCodeRollAnticlockwise,
 };
 
+enum MouseButton {
+	LeftButton,
+	RightButton,
+	MiddleButton,
+};
+
 class Input {
 public:
 	virtual bool IsKeyDown(KeyCode key) = 0;
-	virtual float GetMouseWheel() = 0;
+	virtual bool IsMouseButtonPressed(MouseButton button) = 0;
+	virtual glm::vec2 GetCursorPosition() = 0;
 };
 
 struct GLFWwindow;
@@ -29,10 +36,8 @@ public:
 
 public:
 	virtual bool IsKeyDown(KeyCode key);
-	virtual float GetMouseWheel();
-
-private:
-	static void OnMouseWheel(GLFWwindow* window, double x, double y);
+	virtual bool IsMouseButtonPressed(MouseButton button);
+	virtual glm::vec2 GetCursorPosition();
 
 private:
 	GLFWwindow* window_;

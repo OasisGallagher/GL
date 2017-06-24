@@ -19,8 +19,6 @@ static const char* shaderNameMap[] = {
 	"FragmentShader",
 };
 
-GLuint Shader::blockCount = 1;
-
 Shader::Shader() {
 	program_ = glCreateProgram();
 	std::fill(shaderObjs_, shaderObjs_ + ShaderTypeCount, 0);
@@ -28,11 +26,7 @@ Shader::Shader() {
 
 Shader::~Shader() {
 	glDeleteProgram(program_);
-	for (int i = 0; i < ShaderTypeCount; ++i) {
-		if (shaderObjs_[i] != 0) {
-			glDeleteShader(shaderObjs_[i]);
-		}
-	}
+	ClearShaders();
 }
 
 bool Shader::Load(ShaderType shaderType, const std::string& path) {
@@ -78,6 +72,11 @@ bool Shader::GetErrorMessage(GLuint shaderObj, std::string& answer) {
 	return false;
 }
 
+GLuint Shader::GenerateBindingIndex() const {
+	static GLuint bindingIndex = 1;
+	return bindingIndex++;
+}
+
 void Shader::AddAllBlocks() {
 	blocks_.clear();
 
@@ -109,8 +108,9 @@ void Shader::AddAllBlocks() {
 		glBindBuffer(GL_UNIFORM_BUFFER, buffer);
 		glBufferData(GL_UNIFORM_BUFFER, dataSize, NULL, GL_DYNAMIC_DRAW);
 
-		glUniformBlockBinding(program_, i, blockCount);
-		glBindBufferRange(GL_UNIFORM_BUFFER, blockCount, buffer, 0, dataSize);
+		GLuint bindingIndex = GenerateBindingIndex();
+		glUniformBlockBinding(program_, i, bindingIndex);
+		glBindBufferRange(GL_UNIFORM_BUFFER, bindingIndex, buffer, 0, dataSize);
 
 		glGetActiveUniformBlockiv(program_, i, GL_UNIFORM_BLOCK_ACTIVE_UNIFORMS, &uniformCount);
 
@@ -145,7 +145,7 @@ void Shader::AddAllBlocks() {
 		}
 
 		block->size = dataSize;
-		block->binding = blockCount++;
+		block->binding = bindingIndex++;
 		block->buffer = buffer;
 	}
 }
@@ -163,18 +163,25 @@ void Shader::AddAllUniforms() {
 	char* name = new char[maxLength];
 	for (int i = 0; i < count; ++i) {
 		glGetActiveUniform(program_, i, maxLength, &length, &size, &type, name);
-		
+
 		location = glGetUniformLocation(program_, name);
-		glGetActiveUniformsiv(program_, 1, &location, GL_UNIFORM_ARRAY_STRIDE, &stride);
+
 		// -1 indicates that is not an active uniform, although it may be present in a
-		// uniform block
-		if (location != GL_INVALID_INDEX) {
-			Uniform* uniform = uniforms_[name];
-			uniform->type = type;
-			uniform->location = location;
-			uniform->size = size;
-			uniform->stride = stride;
+		// uniform block.
+		if (location == GL_INVALID_INDEX) {
+			continue;
 		}
+
+		stride = -1;
+
+		// 当shader中有uniform array时, 报GL_INVALID_OPERATION.
+		//glGetActiveUniformsiv(program_, 1, &location, GL_UNIFORM_ARRAY_STRIDE, &stride);
+
+		Uniform* uniform = uniforms_[name];
+		uniform->type = type;
+		uniform->location = location;
+		uniform->size = size;
+		uniform->stride = stride;
 	}
 
 	delete[] name;
@@ -198,9 +205,22 @@ bool Shader::LinkShader() {
 		return false;
 	}
 
+	// http://www.lighthouse3d.com/tutorials/glsl-tutorial/uniform-blocks/
 	AddAllUniforms();
 	AddAllBlocks();
+
+	ClearShaders();
+
 	return true;
+}
+
+void Shader::ClearShaders() {
+	for (int i = 0; i < ShaderTypeCount; ++i) {
+		if (shaderObjs_[i] != 0) {
+			glDeleteShader(shaderObjs_[i]);
+			shaderObjs_[i] = 0;
+		}
+	}
 }
 
 bool Shader::LoadShader(ShaderType shaderType, const char* source) {

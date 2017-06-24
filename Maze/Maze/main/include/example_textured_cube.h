@@ -101,22 +101,18 @@ public:
 		shader_->Load(ShaderTypeFragment, "shaders/texture.frag");
 		shader_->Link();
 
-		camera_->Reset(glm::vec3(4, 3, 3), glm::vec3(0), glm::vec3(0, 1, 0));
-
-		glm::mat4 model = glm::mat4(1.f);
-		mvp_ = camera_->GetProjMatrix() * camera_->GetViewMatrix() * model;
-		shader_->SetBlockUniform("Matrices", "MVP", &mvp_);
+		camera_->Reset(glm::vec3(0, 0, 3), glm::vec3(0));
 
 		texture0_->Load("textures/uvtemplate.dds");
 		texture1_->Load("textures/uvtemplate.bmp");
 
 		glActiveTexture(GL_TEXTURE0);
 		texture0_->Use();
-		shader_->SetUniform("textureSamplerDDS", 0);
+		//shader_->SetUniform("textureSamplerDDS", 0);
 
 		glActiveTexture(GL_TEXTURE1);
 		texture1_->Use();
-		shader_->SetUniform("textureSamplerBmp", 1);
+		//shader_->SetUniform("textureSamplerBmp", 1);
 	}
 
 	~Example_TexturedCube() {
@@ -129,7 +125,14 @@ public:
 
 public:
 	virtual void Update(float deltaTime) {
+		Example::Update(deltaTime);
+
 		shader_->Use();
+		
+		glm::mat4 model(1);
+		model = glm::translate(model, glm::vec3(0, 0, -12));
+		mvp_ = camera_->GetProjMatrix() * camera_->GetViewMatrix() * model;
+		shader_->SetBlock("Matrices", &mvp_);
 
 		glEnableVertexAttribArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, vbo_[0]);

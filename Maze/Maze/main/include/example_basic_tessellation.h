@@ -22,7 +22,7 @@ public:
 
 		shader_->Link();
 
-		camera_->Reset(glm::vec3(0.f, 1.f, -5.f), glm::vec3(0.f, -0.2f, 1.f), glm::vec3(0, 1, 0));
+		camera_->Reset(glm::vec3(0.f, 1.f, -5.f), glm::vec3(0.f, -0.2f, 1.f));
 	}
 
 	~Example_BasicTessellation() {

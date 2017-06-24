@@ -36,7 +36,7 @@ public:
 		texture_->Use();
 		shader_->SetUniform("textureSampler", 0);
 
-		camera_->Reset(glm::vec3(6, 0, 6), glm::vec3(0), glm::vec3(0, 1, 0));
+		camera_->Reset(glm::vec3(6, 0, 6), glm::vec3(0));
 		glm::mat4 m = glm::mat4(1.f);
 		const glm::mat4& view = camera_->GetViewMatrix();
 		const glm::mat4& proj = camera_->GetProjMatrix();
