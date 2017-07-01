@@ -1,13 +1,17 @@
 #version 330
 
-uniform float time;
-uniform sampler2D textureSampler;
+in Data {
+	vec2 uv;
+} dataIn;
 
-layout(location = 0) out vec3 fragColor;
+out vec4 fragColor;
 
-in vec2 UV;
+uniform sampler2D colorMap;
+uniform sampler2D motionBlurMap;
+uniform sampler2D prevTexture;
 
 vec3 blur() {
+	vec2 UV = dataIn.uv;
 	vec3 color = vec3(0);
 
 	float kernel[] = {
@@ -16,7 +20,7 @@ vec3 blur() {
 		1 / 16.f, 2 / 16.f, 1 / 16.f
 	};
 
-	ivec2 size = textureSize(textureSampler, 0);
+	ivec2 size = textureSize(colorMap, 0);
 	vec2 offset = 1.f / vec2(300.f); //size;
 
 	vec2 offsets[9] = vec2[](
@@ -34,7 +38,7 @@ vec3 blur() {
 	vec3 sampleTex[9];
 
 	for(int i = 0; i < 9; ++i) {
-		sampleTex[i] = texture(textureSampler, UV + offsets[i]).rgb;
+		sampleTex[i] = texture(colorMap, UV + offsets[i]).rgb;
 	}
 
 	for(int i = 0; i < 9; ++i) {
@@ -44,13 +48,36 @@ vec3 blur() {
 	return color;
 }
 
-uniform bool test = true;
+uniform bool test = false;
+
 void main() {
-	if (test) {
-		fragColor = blur();//texture(textureSampler, UV).rgb;
+	vec2 motion = texture(motionBlurMap, dataIn.uv).xy;
+
+	vec2 uv = dataIn.uv;
+	vec4 color = texture(colorMap, uv);
+
+	uv += motion;
+
+	const int numSamples = 5;
+	for(int i = 1; i < numSamples; ++i, uv += motion) {
+		color += texture(colorMap, uv);
+	}
+
+	color /= numSamples;
+	color.a = 1;
+
+	if(test) {
+		vec4 prev = texture(prevTexture, dataIn.uv);
+		vec4 current = texture(colorMap, dataIn.uv);
+		if (prev == current) {
+			fragColor = vec4(0);//1, 0, 0, 1);
+		}
+		else {
+			fragColor = abs(current - prev); //vec4(0, 1, 0, 1);
+		}
+		fragColor = mix(prev, current, 0.1);
 	}
 	else {
-		vec2 delta = 0.005 * vec2(sin(time + 512.0 * UV.x), cos(time + 384.0 * UV.y));
-		fragColor = texture(textureSampler, UV + delta).rgb;
+		fragColor = color;
 	}
 }

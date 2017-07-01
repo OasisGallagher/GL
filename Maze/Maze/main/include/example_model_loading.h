@@ -18,7 +18,7 @@ public:
 		glGenVertexArrays(1, &vao_);
 		glBindVertexArray(vao_);
 
-		mesh_->Load("models/box.obj");
+		mesh_->Load("models/suzanne.obj");
 		//ModelLoader::Load("models/suzanne.obj", *info_);
 
 		/*
@@ -36,8 +36,6 @@ public:
 		shader_->SetUniform("sampler", 0);
 
 		camera_->Reset(glm::vec3(0, 2, 3), glm::vec3(0));
-		glm::mat4 mvp = camera_->GetProjMatrix() * camera_->GetViewMatrix();
-		shader_->SetUniform("MVP", &mvp);
 	}
 
 	~Example_ModelLoading() {
@@ -52,6 +50,10 @@ public:
 public:
 	virtual void Update(float deltaTime) {
 		Example::Update(deltaTime);
+		
+		glm::mat4 mvp = camera_->GetProjMatrix() * camera_->GetViewMatrix();
+		shader_->SetUniform("MVP", &mvp);
+
 		mesh_->Render();
 		/*
 		glEnableVertexAttribArray(0);

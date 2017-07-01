@@ -19,23 +19,14 @@ public:
 		shader_->SetUniform("textureSampler", 0);
 
 		camera_->Reset(glm::vec3(6, 0, 6), glm::vec3(0));
-		glm::mat4 m = glm::mat4(1.f);
-		const glm::mat4& view = camera_->GetViewMatrix();
-		const glm::mat4& proj = camera_->GetProjMatrix();
-
-		glm::mat4 mvp = proj * view * m;
-
-		shader_->SetUniform("M", &m);
-		shader_->SetUniform("V", &view);
-		shader_->SetUniform("MVP", &mvp);
-
-		glm::vec3 lightPos(4, 0, 4);
-		shader_->SetUniform("LightPosition_worldspace", &lightPos);
 
 		shader2_ = new Shader;
 		shader2_->Load(ShaderTypeVertex, "shaders/render_to_texture.vert");
 		shader2_->Load(ShaderTypeFragment, "shaders/render_to_texture.frag");
 		shader2_->Link();
+
+		glm::vec3 lightPos(4, 0, 4);
+		shader_->SetUniform("LightPosition_worldspace", &lightPos);
 
 		modelInfo_ = new ModelInfo;
 		ModelLoader::Load("models/suzanne.obj", *modelInfo_);
@@ -70,6 +61,18 @@ public:
 
 public:
 	virtual void Update(float deltaTime) {
+		Example::Update(deltaTime);
+		
+		glm::mat4 m = glm::mat4(1.f);
+		const glm::mat4& view = camera_->GetViewMatrix();
+		const glm::mat4& proj = camera_->GetProjMatrix();
+
+		glm::mat4 mvp = proj * view * m;
+
+		shader_->SetUniform("M", &m);
+		shader_->SetUniform("V", &view);
+		shader_->SetUniform("MVP", &mvp);
+
 		elapsed_ += deltaTime;
 
 		renderTexture_->Use();
@@ -99,8 +102,8 @@ public:
 
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
-		int width = Globals::kWindowWidth / 2, height = Globals::kWindowHeight / 2;
-		glViewport((Globals::kWindowWidth - width) / 2, (Globals::kWindowHeight - height) / 2, width, height);
+		//int width = Globals::kWindowWidth / 2, height = Globals::kWindowHeight / 2;
+		//glViewport((Globals::kWindowWidth - width) / 2, (Globals::kWindowHeight - height) / 2, width, height);
 
 		shader2_->Use();
 

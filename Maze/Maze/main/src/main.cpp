@@ -8,6 +8,7 @@
 #include "example_light_maps.h"
 #include "example_billboard2.h"
 #include "example_shadow_maps.h"
+#include "example_motion_blur.h"
 #include "example_colored_cube.h"
 #include "example_red_triangle.h"
 #include "example_vbo_indexing.h"
@@ -30,7 +31,7 @@ int main() {
 		return -1;
 	}
 
-	Example* example = new Example_SkeletalAnimationWithAssimp;
+	Example* example = new Example_MotionBlur;
 	app.SetExample(example);
 
 	app.EnterMainLoop();

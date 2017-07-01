@@ -8,8 +8,8 @@
 #include "utilities.h"
 
 Camera::Camera() {
-	float fov = glm::pi<float>() / 3, aspect = (float)Globals::kWindowWidth / Globals::kWindowHeight, near = 1.f, far = 100.f;
-	proj_ = glm::perspective(fov, aspect, near, far);
+	float aspect = (float)Globals::kWindowWidth / Globals::kWindowHeight;
+	proj_ = glm::perspective(Globals::kFieldOfView, aspect, Globals::kNearPlane, Globals::kFarPlane);
 
 	zspeed_ = 0.05f;
 	mspeed_ = 0.05f;
@@ -75,6 +75,8 @@ const glm::mat4& Camera::GetProjMatrix() {
 }
 
 const glm::mat4& Camera::GetViewMatrix() {
+	//return view_ = glm::lookAt(pos_, center_, glm::vec3(0, 1, 0));
+
 	glm::vec3 fwd(
 		sinf(theta_) * cosf(phi_),
 		cosf(theta_),
