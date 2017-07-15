@@ -17,6 +17,7 @@
     <ClCompile Include="engine\src\loader.cpp" />
     <ClCompile Include="engine\src\mesh.cpp" />
     <ClCompile Include="engine\src\particle_system.cpp" />
+    <ClCompile Include="engine\src\render_target.cpp" />
     <ClCompile Include="engine\src\shader.cpp" />
     <ClCompile Include="engine\src\skybox.cpp" />
     <ClCompile Include="engine\src\text2d.cpp" />
@@ -35,11 +36,12 @@
     <ClInclude Include="engine\include\loader.h" />
     <ClInclude Include="engine\include\mesh.h" />
     <ClInclude Include="engine\include\particle_system.h" />
+    <ClInclude Include="engine\include\render_state.h" />
+    <ClInclude Include="engine\include\render_target.h" />
     <ClInclude Include="engine\include\shader.h" />
     <ClInclude Include="engine\include\skybox.h" />
     <ClInclude Include="engine\include\texture.h" />
     <ClInclude Include="engine\include\text2d.h" />
-    <ClInclude Include="engine\include\time.h" />
     <ClInclude Include="global\include\debug.h" />
     <ClInclude Include="global\include\defs.h" />
     <ClInclude Include="global\include\mathf.h" />
@@ -83,6 +85,10 @@
     <None Include="shaders\billboard2.frag" />
     <None Include="shaders\billboard2.geom" />
     <None Include="shaders\billboard2.vert" />
+    <None Include="shaders\blit.frag" />
+    <None Include="shaders\blit.vert" />
+    <None Include="shaders\blur.frag" />
+    <None Include="shaders\blur.vert" />
     <None Include="shaders\colored.frag" />
     <None Include="shaders\colored.vert" />
     <None Include="shaders\coord.frag" />
@@ -94,9 +100,12 @@
     <None Include="shaders\depth.vert" />
     <None Include="shaders\gbuffer.frag" />
     <None Include="shaders\gbuffer.vert" />
+    <None Include="shaders\hdr.frag" />
+    <None Include="shaders\hdr.vert" />
     <None Include="shaders\lightmaps.frag" />
     <None Include="shaders\lightmaps.vert" />
     <None Include="shaders\model_loading.frag" />
+    <None Include="shaders\model_loading.shader" />
     <None Include="shaders\model_loading.vert" />
     <None Include="shaders\motion_blur.frag" />
     <None Include="shaders\motion_blur.vert" />

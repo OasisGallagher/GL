@@ -81,6 +81,7 @@
     <ClCompile Include="engine\src\mesh.cpp">
       <Filter>engine\src</Filter>
     </ClCompile>
+    <ClCompile Include="engine\src\render_target.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="engine\include\shader.h">
@@ -207,7 +208,8 @@
       <Filter>main\include</Filter>
     </ClInclude>
     <ClInclude Include="main\include\example_motion_blur.h" />
-    <ClInclude Include="engine\include\time.h" />
+    <ClInclude Include="engine\include\render_target.h" />
+    <ClInclude Include="engine\include\render_state.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\simple.frag">
@@ -372,5 +374,12 @@
     <None Include="shaders\motion_blur.vert" />
     <None Include="shaders\motion_blur_render.frag" />
     <None Include="shaders\motion_blur_render.vert" />
+    <None Include="shaders\hdr.frag" />
+    <None Include="shaders\hdr.vert" />
+    <None Include="shaders\blur.frag" />
+    <None Include="shaders\blur.vert" />
+    <None Include="shaders\blit.frag" />
+    <None Include="shaders\blit.vert" />
+    <None Include="shaders\model_loading.shader" />
   </ItemGroup>
 </Project>

@@ -5,8 +5,8 @@
 class TextLoader {
 public:
 	static bool Load(const std::string& file, std::string& text);
+	static bool Load(const std::string& file, std::vector<std::string>& lines);
 };
-
 
 struct ModelInfo {
 	std::vector<glm::vec3> vertices;

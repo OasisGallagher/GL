@@ -1,39 +1,39 @@
 #include <gl/glfw3.h>
 
+#include "debug.h"
 #include "input.h"
+#include "utilities.h"
+
+static int GLFWKeyCodes[] = {
+	GLFW_KEY_SPACE,
+	GLFW_KEY_W,
+	GLFW_KEY_S,
+	GLFW_KEY_A,
+	GLFW_KEY_D
+};
 
 GLFWInput::GLFWInput(GLFWwindow* window) : window_(window) {
 	//glfwSetScrollCallback(window_);
+	Assert(COUNT_OF(GLFWKeyCodes) == KeyCodeCount, "invalid GLFWKeyCodes");
+	memset(keyPress_, 0, sizeof(keyPress_));
+}
+
+void GLFWInput::Update() {
+	for (int i = 0; i < COUNT_OF(keyPress_); ++i) {
+		keyPress_[0][i] = keyPress_[1][i];
+	}
+
+	for (int i = 0; i < COUNT_OF(GLFWKeyCodes); ++i) {
+		keyPress_[1][i] = glfwGetKey(window_, GLFWKeyCodes[i]) == GLFW_PRESS;
+	}
+}
+
+bool GLFWInput::IsKeyUp(KeyCode key) {
+	return keyPress_[0][key] && !keyPress_[1][key];
 }
 
 bool GLFWInput::IsKeyDown(KeyCode key) {
-	switch (key) {
-	case KeyCodeForward:
-		return glfwGetKey(window_, GLFW_KEY_W) == GLFW_PRESS;
-
-	case KeyCodeBackward:
-		return glfwGetKey(window_, GLFW_KEY_S) == GLFW_PRESS;
-
-	case KeyCodeLeft:
-		return glfwGetKey(window_, GLFW_KEY_A) == GLFW_PRESS;
-
-	case KeyCodeRight:
-		return glfwGetKey(window_, GLFW_KEY_D) == GLFW_PRESS;
-
-	case KeyCodePitchClockwise:
-		return glfwGetKey(window_, GLFW_KEY_UP) == GLFW_PRESS;
-
-	case KeyCodePitchAnticlockwise:
-		return glfwGetKey(window_, GLFW_KEY_DOWN) == GLFW_PRESS;
-
-	case KeyCodeRollClockwise:
-		return glfwGetKey(window_, GLFW_KEY_LEFT) == GLFW_PRESS;
-
-	case KeyCodeRollAnticlockwise:
-		return glfwGetKey(window_, GLFW_KEY_RIGHT) == GLFW_PRESS;
-	}
-
-	return false;
+	return keyPress_[1][key];
 }
 
 bool GLFWInput::IsMouseButtonPressed(MouseButton button) {

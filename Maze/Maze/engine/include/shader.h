@@ -1,5 +1,5 @@
 #pragma once
-#include <map>
+#include <vector>
 #include <string>
 #include <gl/glew.h>
 
@@ -47,6 +47,7 @@ public:
 	~Shader();
 
 public:
+	bool Load(const std::string& path);
 	bool Load(ShaderType shaderType, const std::string& path);
 	bool Link();
 	bool Use();
@@ -82,4 +83,29 @@ private:
 
 	GLuint program_;
 	GLuint shaderObjs_[ShaderTypeCount];
+};
+
+class ShaderXLoader {
+public:
+	bool Load(const std::string& path, std::string* answer);
+
+private:
+	void Clear();
+	bool ParseShaderSource(std::vector<std::string>& lines);
+	bool ReadShaderSource(std::vector<std::string> &lines);
+
+	bool ParsePreprocesser(const std::string& preprocesser);
+
+	bool IncludePreprocesser(std::string &parameter);
+
+	bool ShaderPreprocesser(std::string parameter);
+
+	bool ParseStatelessPreprocesser(const std::string& cmd, const std::string& parameter);
+	ShaderType ParseShaderType(const std::string& line);
+
+private:
+	ShaderType type_;
+	std::string* answer_;
+	std::string globals_;
+	std::string source_;
 };

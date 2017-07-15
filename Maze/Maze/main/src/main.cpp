@@ -31,7 +31,7 @@ int main() {
 		return -1;
 	}
 
-	Example* example = new Example_MotionBlur;
+	Example* example = new Example_ModelLoading;
 	app.SetExample(example);
 
 	app.EnterMainLoop();

@@ -373,7 +373,7 @@ void CubemapTexture::Destroy() {
 	}
 }
 
-RenderTexture::RenderTexture(RenderTarget target, GLint width, GLint height) {
+RenderTexture::RenderTexture(RenderTargetType target, GLint width, GLint height) {
 	glGenFramebuffers(1, &fbo_);
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo_);
 
@@ -394,7 +394,7 @@ GLuint RenderTexture::GetTexture() const {
 	return targetTexture_;
 }
 
-void RenderTexture::Create(RenderTarget target, GLint width, GLint height) {
+void RenderTexture::Create(RenderTargetType target, GLint width, GLint height) {
 	if (target == RenderTexture2D) {
 		CreateTexture2D(width, height);
 	}

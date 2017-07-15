@@ -64,14 +64,14 @@ private:
 	std::string fileNames_[6];
 };
 
-enum RenderTarget {
+enum RenderTargetType {
 	RenderTexture2D,
 	RenderDepthTexture,
 };
 
 class RenderTexture {
 public:
-	RenderTexture(RenderTarget target, GLint width, GLint height);
+	RenderTexture(RenderTargetType target, GLint width, GLint height);
 	~RenderTexture();
 
 public:
@@ -79,7 +79,7 @@ public:
 	GLuint GetTexture() const;
 
 private:
-	void Create(RenderTarget target, GLint width, GLint height);
+	void Create(RenderTargetType target, GLint width, GLint height);
 	void CreateTexture2D(GLint width, GLint height);
 	void CreateDepthTexture(GLint width, GLint height);
 

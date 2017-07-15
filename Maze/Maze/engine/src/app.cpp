@@ -50,6 +50,7 @@ void APIENTRY DebugOutputCallback(GLenum source, GLenum type, GLuint id, GLenum 
 }
 
 void OnWindowSizeCallback(GLFWwindow* window, int width, int height) {
+	printf("window size = %d, %d.\n", width, height);
 }
 
 bool App::Initialize() {
@@ -158,6 +159,8 @@ void App::EnterMainLoop() {
 		}
 
 		glClear(mask);
+
+		input_->Update();
 
 		example_->Update(deltaTime);
 

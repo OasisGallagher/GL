@@ -3,21 +3,22 @@
 #include "shader.h"
 #include "utilities.h"
 
-static GLenum shaderTypeMap[] = {
-	GL_VERTEX_SHADER,
-	GL_TESS_CONTROL_SHADER,
-	GL_TESS_EVALUATION_SHADER,
-	GL_GEOMETRY_SHADER,
-	GL_FRAGMENT_SHADER,
+struct ShaderDescription {
+	GLenum glShaderType;
+	const char* name;
+	const char* tag;
 };
 
-static const char* shaderNameMap[] = {
-	"VertexShader",
-	"TessellationControlShader",
-	"TessellationEvaluationShader",
-	"GeometryShader",
-	"FragmentShader",
+static const ShaderDescription descriptions[] = {
+	GL_VERTEX_SHADER, "VertexShader", "vert",
+	GL_TESS_CONTROL_SHADER, "TessellationControlShader", "tesc",
+	GL_TESS_EVALUATION_SHADER, "TessellationEvaluationShader", "tese",
+	GL_GEOMETRY_SHADER, "GeometryShader", "geom",
+	GL_FRAGMENT_SHADER, "FragmentShader", "frag"
 };
+
+static const char* SHADER = "shader";
+static const char* INCLUDE = "include";
 
 Shader::Shader() {
 	program_ = glCreateProgram();
@@ -27,6 +28,19 @@ Shader::Shader() {
 Shader::~Shader() {
 	glDeleteProgram(program_);
 	ClearShaders();
+}
+
+bool Shader::Load(const std::string& path) {
+	ShaderXLoader loader;
+	std::string sources[ShaderTypeCount];
+	loader.Load(path, sources);
+	for (int i = 0; i < ShaderTypeCount; ++i) {
+		if (!sources[i].empty() && !LoadShader((ShaderType)i, sources[i].c_str())) {
+			return false;
+		}
+	}
+
+	return true;
 }
 
 bool Shader::Load(ShaderType shaderType, const std::string& path) {
@@ -41,7 +55,7 @@ bool Shader::Load(ShaderType shaderType, const std::string& path) {
 bool Shader::Link() {
 	for (int i = 0; i < ShaderTypeCount; ++i) {
 		if (i == ShaderTypeVertex || i == ShaderTypeFragment) {
-			Assert(shaderObjs_[i], Utility::Format("invalid %s.", shaderNameMap[i]));
+			Assert(shaderObjs_[i], Utility::Format("invalid %s.", descriptions[i].name));
 		}
 	}
 
@@ -224,7 +238,7 @@ void Shader::ClearShaders() {
 }
 
 bool Shader::LoadShader(ShaderType shaderType, const char* source) {
-	GLuint shaderObj = glCreateShader(shaderTypeMap[shaderType]);
+	GLuint shaderObj = glCreateShader(descriptions[shaderType].glShaderType);
 
 	glShaderSource(shaderObj, 1, &source, nullptr);
 	glCompileShader(shaderObj);
@@ -240,7 +254,7 @@ bool Shader::LoadShader(ShaderType shaderType, const char* source) {
 		return true;
 	}
 
-	Assert(false, shaderNameMap[shaderType] + std::string(" ") + message);
+	Assert(false, descriptions[shaderType].name + std::string(" ") + message);
 	return false;
 }
 
@@ -662,4 +676,109 @@ Shader::UniformBlock::~UniformBlock() {
 	if (buffer != 0) {
 		glDeleteBuffers(1, &buffer);
 	}
+}
+
+
+bool ShaderXLoader::Load(const std::string& path, std::string* answer) {
+	std::vector<std::string> lines;
+	if (!TextLoader::Load(path, lines)) {
+		return false;
+	}
+
+	Clear();
+
+	answer_ = answer;
+	return ParseShaderSource(lines);
+}
+
+void ShaderXLoader::Clear() {
+	type_ = ShaderTypeCount;
+	source_.clear();
+	globals_.clear();
+	answer_ = nullptr;
+}
+
+bool ShaderXLoader::ParseShaderSource(std::vector<std::string>& lines) {
+	ReadShaderSource(lines);
+
+	Assert(type_ != ShaderTypeCount, "invalid shader file");
+	answer_[type_] = globals_ + source_;
+
+	return true;
+}
+
+bool ShaderXLoader::ParsePreprocesser(const std::string& preprocesser) {
+	size_t pos = preprocesser.find(' ');
+	Assert(pos > 1, "empty preprocesser");
+	std::string cmd = preprocesser.substr(1, pos - 1);
+	std::string parameter = Utility::Trim(preprocesser.substr(pos));
+
+	if (cmd == SHADER) {
+		return ShaderPreprocesser(parameter);
+	}
+	else if (cmd == INCLUDE) {
+		return IncludePreprocesser(parameter);
+	}
+
+	source_ += preprocesser + '\n';
+	return true;
+}
+
+ShaderType ShaderXLoader::ParseShaderType(const std::string& tag) {
+	for (size_t i = 0; i < ShaderTypeCount; ++i) {
+		if (tag == descriptions[i].tag) {
+			return (ShaderType)i;
+		}
+	}
+
+	Assert(false, std::string("unkown shader tag ") + tag);
+	return ShaderTypeCount;
+}
+
+bool ShaderXLoader::ReadShaderSource(std::vector<std::string> &lines) {
+	for (size_t i = 0; i < lines.size(); ++i) {
+		const std::string& line = lines[i];
+		if (line.front() == '#' && !ParsePreprocesser(line)) {
+			return false;
+		}
+
+		if (line.front() != '#') {
+			source_ += line + '\n';
+		}
+	}
+
+	return true;
+}
+
+bool ShaderXLoader::ShaderPreprocesser(std::string parameter) {
+	ShaderType newType = ParseShaderType(parameter);
+
+	if (newType != type_) {
+		if (type_ == ShaderTypeCount) {
+			globals_ = source_;
+		}
+		else {
+			if (!answer_[type_].empty()) {
+				Debug::LogError(std::string(descriptions[type_].name) + " already exists");
+				return false;
+			}
+
+			source_ = globals_ + source_;
+			answer_[type_] = source_;
+		}
+
+		source_.clear();
+		type_ = newType;
+	}
+
+	return true;
+}
+
+bool ShaderXLoader::IncludePreprocesser(std::string &parameter) {
+	std::vector<std::string> lines;
+	if (!TextLoader::Load("shaders/" + parameter.substr(1, parameter.length() - 2), lines)) {
+		return false;
+	}
+
+	return ReadShaderSource(lines);
 }

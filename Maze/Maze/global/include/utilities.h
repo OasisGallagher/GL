@@ -10,6 +10,8 @@ char(*__countof_helper(_CountofType(&_Array)[_SizeOfArray]))[_SizeOfArray];
 
 #define PADDING(_Size) char __unused[_Size]
 
+#define JOIN(_X, _Y) ((_X) ## (_Y))
+
 #define UNUSED(_Var) (void)_Var
 
 class Utility {

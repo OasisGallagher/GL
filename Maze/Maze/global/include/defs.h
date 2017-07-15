@@ -8,7 +8,7 @@ namespace Globals {
 	static const int kWindowHeight = 768;
 
 	static const float kFieldOfView = 3.141592f / 3.f;
-
+	
 	static const float kNearPlane = 1.f;
 	static const float kFarPlane = 100.f;
 
@@ -26,6 +26,7 @@ namespace Globals {
 		UVTexture,
 		NormalTexture,
 		MotionTexture,
+		HDRTexture,
 	};
 
 	enum {
@@ -33,6 +34,7 @@ namespace Globals {
 		UVTextureIndex,
 		NormalTextureIndex,
 		MotionTextureIndex,
+		HDRTextureIndex,
 	};
 }
 

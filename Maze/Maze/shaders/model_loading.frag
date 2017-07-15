@@ -1,53 +1,62 @@
 #version 330
 
-in vec2 UV;
+in VertOut {
+	vec2 UV;
+	vec3 worldPos;
+	vec3 normal;
+} fragIn;
 
-out vec3 fragColor;
+layout(location = 0) out vec4 fragColor;
+layout(location = 1) out vec4 bloomColor;
+
+layout(std140) uniform DirectionalLight {
+	vec3 color;
+	float ambientIntensity;
+	float diffuseIntensity;
+	vec3 direction;
+} dl;
 
 uniform sampler2D sampler;
+uniform vec3 cameraPosition;
 
-uniform int option = 1;
+const float specularPower = 0.2f;
+const float materialSpecularIntensity = 4.3f;
+
+vec4 calculateLight() {
+	vec4 ambient = vec4(dl.color * dl.ambientIntensity, 1);
+	float diffuseFactor = dot(fragIn.normal, -dl.direction);
+
+	vec4 diffuseColor = vec4(0);
+	vec4 specularColor = vec4(0);
+
+	if(diffuseFactor > 0) {
+		diffuseColor = vec4(dl.color * dl.diffuseIntensity * diffuseFactor, 1);
+
+		vec3 toEye = normalize(cameraPosition - fragIn.worldPos);
+		vec3 lightReflect = normalize(reflect(dl.direction, fragIn.normal));
+
+		float specularFactor = dot(toEye, lightReflect);
+		if (specularFactor > 0) {
+			specularFactor = pow(specularFactor, specularPower);
+			specularColor = vec4(dl.color * materialSpecularIntensity * specularFactor, 1);
+		}
+	}
+
+	return diffuseColor + specularColor;
+}
 
 void main() {
-	/*if (option == 0) {
-		color = vec3(1, 0, 0);
+	vec4 diffuse = texture(sampler, vec2(fragIn.UV.s, -fragIn.UV.t));
+	
+	fragColor = diffuse * calculateLight();
+
+	vec3 vec = vec3(0.2126f, 0.7152f, 0.0722f);
+	
+	float brightness = dot(fragColor.xyz, vec);
+	if(brightness > 1.f) {
+		bloomColor = fragColor;
 	}
 	else {
-		color = texture(sampler, vec2(UV.s, -UV.t)).rgb;
-	}*/
-
-	vec3 color = vec3(0);
-
-	float kernel[] = {
-		1 / 16.f, 2 / 16.f, 1 / 16.f,
-		2 / 16.f, 4 / 16.f, 2 / 16.f,
-		1 / 16.f, 2 / 16.f, 1 / 16.f
-	};
-
-	ivec2 size = textureSize(sampler, 0);
-	vec2 offset = 1.f / vec2(300.f); //size;
-
-	vec2 offsets[9] = vec2[](
-        vec2(-offset.x,  offset.y), // top-left
-        vec2( 0.0f,    offset.y), // top-center
-        vec2( offset.x,  offset.y), // top-right
-        vec2(-offset.x,  0.0f),   // center-left
-        vec2( 0.0f,    0.0f),   // center-center
-        vec2( offset.x,  0.0f),   // center-right
-        vec2(-offset.x, -offset.y), // bottom-left
-        vec2( 0.0f,   -offset.y), // bottom-center
-        vec2( offset.x, -offset.y)  // bottom-right    
-    );
-
-	vec3 sampleTex[9];
-
-	for(int i = 0; i < 9; ++i) {
-		sampleTex[i] = texture(sampler, UV + offsets[i]).rgb;
+		//bloomColor = fragColor;// * 0.3f;
 	}
-
-	for(int i = 0; i < 9; ++i) {
-		color += sampleTex[i] * kernel[i];
-	}
-
-	fragColor = sampleTex[0];//vec3(offset, 0) ;//color;
 }
