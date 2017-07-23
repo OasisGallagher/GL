@@ -5,7 +5,7 @@
 #include "texture.h"
 
 class Shader;
-class Texture;
+class Texture2D;
 class RandomTexture;
 
 class ParticleSystem {
@@ -44,7 +44,7 @@ private:
 	Shader* updateShader_;
 	Shader* billboardShader_;
 
-	Texture* texture_;
+	Texture2D* texture_;
 	RandomTexture* randomTexture_;
 
 	static const int kMaxParticles = 1000;

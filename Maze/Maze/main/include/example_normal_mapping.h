@@ -15,13 +15,13 @@ public:
 
 		//VBOIndexer::Index(*modelInfo_, tangents, bitangents, indices_, *modelInfo_, tangents, bitangents);
 
-		normal_ = new Texture;
+		normal_ = new Texture2D;
 		normal_->Load("textures/normal.bmp");
 
-		diffuse_ = new Texture;
+		diffuse_ = new Texture2D;
 		diffuse_->Load("textures/diffuse.dds");
 
-		specular_ = new Texture;
+		specular_ = new Texture2D;
 		specular_->Load("textures/specular.dds");
 
 		shader_->Load(ShaderTypeVertex, "shaders/normal_mapping.vert");
@@ -67,16 +67,13 @@ public:
 
 		shader_->SetUniform("V", &view);
 
-		glActiveTexture(GL_TEXTURE0);
-		diffuse_->Use();
+		diffuse_->Bind(GL_TEXTURE0);
 		shader_->SetUniform("diffuseSampler", 0);
 
-		glActiveTexture(GL_TEXTURE1);
-		specular_->Use();
+		specular_->Bind(GL_TEXTURE1);
 		//shader_->SetUniform("specularSampler", 1);
 
-		glActiveTexture(GL_TEXTURE2);
-		normal_->Use();
+		normal_->Bind(GL_TEXTURE2);
 		shader_->SetUniform("normalSampler", 2);
 
 		glm::vec3 lightPosition(0, 0, 4);// 3, 8, 5);
@@ -98,7 +95,7 @@ public:
 
 public:
 	virtual void Update(float deltaTime) {
-		shader_->Use();
+		shader_->Bind();
 
 		glEnableVertexAttribArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexVbo_);
@@ -140,8 +137,8 @@ private:
 	ModelInfo* modelInfo_;
 	std::vector<unsigned> indices_;
 
-	Texture* normal_;
-	Texture* diffuse_, *specular_;
+	Texture2D* normal_;
+	Texture2D* diffuse_, *specular_;
 
 	GLuint vao_;
 	GLuint vertexVbo_, uvVbo_, indexVbo_, normalVbo_;

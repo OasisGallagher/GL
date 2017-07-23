@@ -50,7 +50,8 @@ public:
 	bool Load(const std::string& path);
 	bool Load(ShaderType shaderType, const std::string& path);
 	bool Link();
-	bool Use();
+	bool Bind();
+	void Unbind();
 
 public:
 	GLuint GetProgram() const { return program_; }
@@ -94,11 +95,9 @@ private:
 	bool ParseShaderSource(std::vector<std::string>& lines);
 	bool ReadShaderSource(std::vector<std::string> &lines);
 
-	bool ParsePreprocesser(const std::string& preprocesser);
-
-	bool IncludePreprocesser(std::string &parameter);
-
-	bool ShaderPreprocesser(std::string parameter);
+	bool Preprocess(const std::string& line);
+	bool PreprocessInclude(std::string &parameter);
+	bool PreprocessShader(std::string parameter);
 
 	bool ParseStatelessPreprocesser(const std::string& cmd, const std::string& parameter);
 	ShaderType ParseShaderType(const std::string& line);

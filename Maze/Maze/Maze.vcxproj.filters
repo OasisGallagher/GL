@@ -210,6 +210,7 @@
     <ClInclude Include="main\include\example_motion_blur.h" />
     <ClInclude Include="engine\include\render_target.h" />
     <ClInclude Include="engine\include\render_state.h" />
+    <ClInclude Include="engine\include\decal.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\simple.frag">
@@ -255,12 +256,6 @@
       <Filter>shaders</Filter>
     </None>
     <None Include="shaders\spotlight.frag">
-      <Filter>shaders</Filter>
-    </None>
-    <None Include="shaders\text2d.frag">
-      <Filter>shaders</Filter>
-    </None>
-    <None Include="shaders\text2d.vert">
       <Filter>shaders</Filter>
     </None>
     <None Include="shaders\normal_mapping.frag">
@@ -309,12 +304,6 @@
       <Filter>shaders</Filter>
     </None>
     <None Include="shaders\particle.vert">
-      <Filter>shaders</Filter>
-    </None>
-    <None Include="shaders\skybox.vert">
-      <Filter>shaders</Filter>
-    </None>
-    <None Include="shaders\skybox.frag">
       <Filter>shaders</Filter>
     </None>
     <None Include="shaders\billboard2.frag">
@@ -378,8 +367,11 @@
     <None Include="shaders\hdr.vert" />
     <None Include="shaders\blur.frag" />
     <None Include="shaders\blur.vert" />
-    <None Include="shaders\blit.frag" />
-    <None Include="shaders\blit.vert" />
     <None Include="shaders\model_loading.shader" />
+    <None Include="shaders\skybox.shader" />
+    <None Include="shaders\tex2d.shader" />
+    <None Include="shaders\text2d.shader" />
+    <None Include="shaders\reflect.shader" />
+    <None Include="shaders\refract.shader" />
   </ItemGroup>
 </Project>

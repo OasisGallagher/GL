@@ -30,6 +30,7 @@ void Debug::LogError(const std::string& text) {
 	std::cout << "[E] " << text << "\n";
 	debug << "[E] " << text << "\n";
 	OS::SetConsoleColor(White);
+	OS::Break(text.c_str());
 }
 
 std::string Debug::Now() {

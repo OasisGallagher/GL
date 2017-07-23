@@ -9,7 +9,7 @@ public:
 		shader_->Load(ShaderTypeVertex, "shaders/lightmaps.vert");
 		shader_->Load(ShaderTypeFragment, "shaders/lightmaps.frag");
 		shader_->Link();
-		shader_->Use();
+		shader_->Bind();
 
 		camera_->Reset(glm::vec3(-20, 5, -15), glm::vec3(0));
 		const glm::mat4& view = camera_->GetViewMatrix();
@@ -17,11 +17,10 @@ public:
 		glm::mat4 MVP = proj * view * glm::mat4(1);
 		shader_->SetUniform("MVP", &MVP);
 
-		texture_ = new Texture();
+		texture_ = new Texture2D();
 		texture_->Load("textures/lightmap.dds");
 
-		glActiveTexture(GL_TEXTURE0);
-		texture_->Use();
+		texture_->Bind(GL_TEXTURE0);
 		shader_->SetUniform("textureSampler", 0);
 
 		modelInfo_ = new ModelInfo;
@@ -72,6 +71,6 @@ private:
 	GLuint vao_;
 	GLuint vbo_[2];
 
-	Texture* texture_;
+	Texture2D* texture_;
 	ModelInfo* modelInfo_;
 };

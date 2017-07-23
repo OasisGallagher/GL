@@ -4,34 +4,28 @@
 
 #include "loader.h"
 
+class Mesh;
 class Shader;
 class Camera;
 struct ModelInfo;
-class CubemapTexture;
-
-struct SkyBoxInitParameter {
-	Camera* camera;
-	std::string posx; std::string negx;
-	std::string posy; std::string negy;
-	std::string posz; std::string negz;
-};
+class Texture3D;
 
 class SkyBox {
 public:
-	SkyBox(const SkyBoxInitParameter& p);
+	SkyBox(Camera* camera, std::string* textures);
 	~SkyBox();
 
 public:
 	void Render();
+	Texture3D* GetTexture();
+
+	void Rotate(const glm::mat4& rotation);
 
 private:
-	GLuint vao_;
-	GLuint vbo_[1];
-
+	Mesh* mesh_;
+	Camera* camera_;
 	Shader* shader_;
-	CubemapTexture* cubemapTexture_;
+	Texture3D* texture_;
 
-	ModelInfo* modelInfo_;
-
-	SkyBoxInitParameter p_;
+	glm::mat4 rotation_;
 };

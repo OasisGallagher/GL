@@ -1,83 +1,68 @@
 #include <glm/glm.hpp>
+#include <glm/gtx/quaternion.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "mesh.h"
 #include "camera.h"
 #include "skybox.h"
 #include "shader.h"
 #include "loader.h"
 #include "texture.h"
 #include "utilities.h"
+#include "render_state.h"
 
-SkyBox::SkyBox(const SkyBoxInitParameter& p) :p_(p) {
+SkyBox::SkyBox(Camera* camera, std::string* textures) {
+	camera_ = camera;
 	shader_ = new Shader;
-	shader_->Load(ShaderTypeVertex, "shaders/skybox.vert");
-	shader_->Load(ShaderTypeFragment, "shaders/skybox.frag");
+	shader_->Load("shaders/skybox.shader");
 	shader_->Link();
 
-	cubemapTexture_ = new CubemapTexture;
-	cubemapTexture_->Load(p.posx, p.negx, p.posy, p.negy, p.posz, p.negz);
+	texture_ = new Texture3D;
+	texture_->Load(textures);
 
-	glGenVertexArrays(1, &vao_);
-	glBindVertexArray(vao_);
-
-	glGenBuffers(COUNT_OF(vbo_), vbo_);
-
-	modelInfo_ = new ModelInfo;
-	ModelLoader::Load("models/sphere.obj", *modelInfo_);
-
-	glBindBuffer(GL_ARRAY_BUFFER, vbo_[0]);
-	glBufferData(GL_ARRAY_BUFFER, modelInfo_->vertices.size() * sizeof(glm::vec3), &modelInfo_->vertices[0], GL_STATIC_DRAW);
-
-	//glBindBuffer(GL_ARRAY_BUFFER, vbo_[1]);
-	//glBufferData(GL_ARRAY_BUFFER, modelInfo_->normals.size() * sizeof(glm::vec3), &modelInfo_->normals[0], GL_STATIC_DRAW);
+	mesh_ = new Mesh;
+	mesh_->Load("models/sphere.obj");
 }
 
 SkyBox::~SkyBox() {
+	delete mesh_;
 	delete shader_;
-	delete modelInfo_;
-	delete cubemapTexture_;
-
-	glDeleteVertexArrays(1, &vao_);
-	glDeleteBuffers(COUNT_OF(vbo_), vbo_);
+	delete texture_;
 }
 
 void SkyBox::Render() {
-	shader_->Use();
+	shader_->Bind();
+	
+	RenderState::PushCullFaceEnabled(GL_TRUE);
+	RenderState::PushCullFaceFunc(GL_FRONT);
 
-	GLint oldCullFaceMode;
-	glGetIntegerv(GL_CULL_FACE_MODE, &oldCullFaceMode);
-
-	GLint oldDepthFuncMode;
-	glGetIntegerv(GL_DEPTH_FUNC, &oldDepthFuncMode);
-
-	glCullFace(GL_FRONT);
-	glDepthFunc(GL_LEQUAL);
+	RenderState::PushDepthTestEnabled(GL_TRUE);
+	RenderState::PushDepthTestFunc(GL_LEQUAL);
 
 	glm::mat4 m(1);
-	const float scale = 0.2f;
-	m = glm::translate(m, p_.camera->GetPosition());
-	m = glm::scale(m, glm::vec3(scale, scale, scale));
+	float scale = 20.f;
+	m = glm::translate(m, camera_->GetPosition()) * glm::scale(m, glm::vec3(scale)) * rotation_;
 	
-	glm::mat4 mvp = p_.camera->GetProjMatrix() * p_.camera->GetViewMatrix() * m;
+	glm::mat4 mvp = camera_->GetProjMatrix() * camera_->GetViewMatrix() * m;
 	shader_->SetUniform("MVP", &mvp);
 
-	glActiveTexture(GL_TEXTURE0);
-	cubemapTexture_->Use();
+	texture_->Bind(GL_TEXTURE0);
 	shader_->SetUniform("textureSampler", 0);
 
-	glEnableVertexAttribArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo_[0]);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+	mesh_->Render();
 
-	//glEnableVertexAttribArray(1);
-	//glBindBuffer(GL_ARRAY_BUFFER, vbo_[1]);
-	//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+	RenderState::PopCullFaceEnabled();
+	RenderState::PopCullFaceFunc();
+	RenderState::PopDepthTestEnabled();
+	RenderState::PopDepthTestFunc();
 
-	glDrawArrays(GL_TRIANGLES, 0, modelInfo_->vertices.size());
+	texture_->Unbind();
+}
 
-	glDisableVertexAttribArray(0);
-	//glDisableVertexAttribArray(1);
+Texture3D* SkyBox::GetTexture() {
+	return texture_;
+}
 
-	glCullFace(oldCullFaceMode);
-	glDepthFunc(oldDepthFuncMode);
+void SkyBox::Rotate(const glm::mat4& rotation) {
+	rotation_ = rotation;
 }

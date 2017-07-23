@@ -1,7 +1,7 @@
 #pragma once
 #include "loader.h"
 #include "example.h"
-#include "texture.h"
+#include "render_target.h"
 
 class Example_RenderToTexture : public Example {
 public:
@@ -12,10 +12,8 @@ public:
 		shader_->Load(ShaderTypeFragment, "shaders/basic.frag");
 		shader_->Link();
 
-		texture_ = new Texture;
+		texture_ = new Texture2D;
 		texture_->Load("textures/suzanne_uvmap.dds");
-		glActiveTexture(GL_TEXTURE0);
-		texture_->Use();
 		shader_->SetUniform("textureSampler", 0);
 
 		camera_->Reset(glm::vec3(6, 0, 6), glm::vec3(0));
@@ -45,7 +43,9 @@ public:
 		glBindBuffer(GL_ARRAY_BUFFER, vbo_[2]);
 		glBufferData(GL_ARRAY_BUFFER, modelInfo_->normals.size() * sizeof(glm::vec3), &modelInfo_->normals[0], GL_STATIC_DRAW);
 
-		renderTexture_ = new RenderTexture(RenderTexture2D, Globals::kWindowWidth, Globals::kWindowHeight);
+		renderTarget_.Create(Globals::kWindowWidth, Globals::kWindowHeight);
+		renderTarget_.AddRenderTexture(GL_RGB32F, GL_NEAREST, GL_NEAREST, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
+		renderTarget_.AddDepthRenderBuffer();
 
 		glBindBuffer(GL_ARRAY_BUFFER, vbo_[3]);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(Globals::kQuadCoordinates), Globals::kQuadCoordinates, GL_STATIC_DRAW);
@@ -75,10 +75,11 @@ public:
 
 		elapsed_ += deltaTime;
 
-		renderTexture_->Use();
+		renderTarget_.Clear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+		renderTarget_.Bind(NULL, 0);
 
-		shader_->Use();
-		texture_->Use();
+		shader_->Bind();
+		texture_->Bind(GL_TEXTURE0);
 
 		glEnableVertexAttribArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, vbo_[0]);
@@ -97,6 +98,8 @@ public:
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
 		glDisableVertexAttribArray(2);
+		
+		renderTarget_.Unbind();
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -105,11 +108,11 @@ public:
 		//int width = Globals::kWindowWidth / 2, height = Globals::kWindowHeight / 2;
 		//glViewport((Globals::kWindowWidth - width) / 2, (Globals::kWindowHeight - height) / 2, width, height);
 
-		shader2_->Use();
+		shader2_->Bind();
 
 		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, renderTarget_.GetRenderTexture(0));
 
-		glBindTexture(GL_TEXTURE_2D, renderTexture_->GetTexture());
 		shader2_->SetUniform("textureSampler", 0);
 		shader2_->SetUniform("time", elapsed_);
 
@@ -124,11 +127,11 @@ public:
 
 private:
 	ModelInfo* modelInfo_;
-	Texture* texture_;
+	Texture2D* texture_;
 
 	Shader* shader2_;
 
-	RenderTexture* renderTexture_;
+	RenderTarget renderTarget_;
 
 	GLuint vao_;
 	GLuint vbo_[4];

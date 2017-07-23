@@ -7,7 +7,7 @@ public:
 	Example_ModelLoading() {
 		mesh_ = new Mesh;
 		info_ = new ModelInfo;
-		texture_ = new Texture;
+		texture_ = new Texture2D;
 
 		renderTarget_.Create(Globals::kWindowWidth, Globals::kWindowHeight);
 		blurRenderTarget_[0].Create(Globals::kWindowWidth, Globals::kWindowHeight);
@@ -90,10 +90,9 @@ public:
 		shader_->SetUniform("M", &identity);
 		shader_->SetUniform("MVP", &mvp);
 
-		glActiveTexture(Globals::ColorTexture);
-		texture_->Use();
+		texture_->Bind(Globals::ColorTexture);
 
-		shader_->Use();
+		shader_->Bind();
 
 		shader_->SetUniform("cameraPosition", &camera_->GetPosition());
 		shader_->SetUniform("specularPower", 0.2f);
@@ -102,7 +101,7 @@ public:
 		mesh_->Render();
 
 		// blur.
-		blurShader_.Use();
+		blurShader_.Bind();
 		int first = 1, horizontal = 1, amount = 10;
 		for (int i = 0; i < amount; ++i) {
 			blurRenderTarget_[horizontal].Bind(NULL, 0);
@@ -130,7 +129,7 @@ public:
 
 		hdrShader_.SetUniform("HDR", hdr_);
 		hdrShader_.SetUniform("exposure", exposure_);
-		hdrShader_.Use();
+		hdrShader_.Bind();
 
 		quad_.Render();
 	}
@@ -165,7 +164,7 @@ private:
 
 	Mesh* mesh_;
 	ModelInfo* info_;
-	Texture* texture_;
+	Texture2D* texture_;
 	GLuint vao_, vbo_[2];
 
 	RenderTarget renderTarget_;

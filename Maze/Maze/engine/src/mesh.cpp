@@ -155,7 +155,7 @@ bool Mesh::InitMaterials(const aiScene* scene, const std::string& path) {
 
 			std::string fullPath = "textures/";
 			fullPath += dpath.data;
-			textures_[i] = new Texture;
+			textures_[i] = new Texture2D;
 			if (!textures_[i]->Load(fullPath)) {
 				success = false;
 				delete textures_[i];
@@ -177,8 +177,7 @@ void Mesh::Render(GLenum mode) {
 		Assert(materilIndex < textures_.size(), "invalid materialIndex");
 
 		if (textures_[materilIndex] != nullptr) {
-			glActiveTexture(Globals::ColorTexture);
-			textures_[materilIndex]->Use();
+			textures_[materilIndex]->Bind(Globals::ColorTexture);
 		}
 
 		glDrawElementsBaseVertex(mode, entries_[i].numIndices, GL_UNSIGNED_INT,
@@ -380,7 +379,7 @@ bool SkinnedMesh::InitMaterials(const aiScene* scene, const std::string& path) {
 
 			std::string fullPath = "textures/";
 			fullPath += dpath.data;
-			textures_[i] = new Texture;
+			textures_[i] = new Texture2D;
 			if (!textures_[i]->Load(fullPath)) {
 				success = false;
 				delete textures_[i];
@@ -400,8 +399,7 @@ void SkinnedMesh::Render() {
 		Assert(materilIndex < textures_.size(), "invalid materialIndex");
 
 		if (textures_[materilIndex] != nullptr) {
-			glActiveTexture(Globals::ColorTexture);
-			textures_[materilIndex]->Use();
+			textures_[materilIndex]->Bind(Globals::ColorTexture);
 		}
 
 		glDrawElementsBaseVertex(GL_TRIANGLES, entries_[i].numIndices, GL_UNSIGNED_INT,

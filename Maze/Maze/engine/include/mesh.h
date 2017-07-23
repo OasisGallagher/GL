@@ -7,7 +7,7 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 
-class Texture;
+class Texture2D;
 
 class Mesh {
 public:
@@ -52,7 +52,7 @@ private:
 	GLuint vbos_[VBOCount];
 
 	std::vector<MeshEntry> entries_;
-	std::vector<Texture*> textures_;
+	std::vector<Texture2D*> textures_;
 };
 
 class SkinnedMesh {
@@ -139,7 +139,7 @@ private:
 	GLuint vbos_[VBOCount];
 
 	std::vector<SkinnedMeshEntry> entries_;
-	std::vector<Texture*> textures_;
+	std::vector<Texture2D*> textures_;
 
 	typedef std::map<std::string, unsigned> BoneMap;
 	BoneMap boneMap_;

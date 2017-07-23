@@ -32,6 +32,7 @@
   <ItemGroup>
     <ClInclude Include="engine\include\app.h" />
     <ClInclude Include="engine\include\camera.h" />
+    <ClInclude Include="engine\include\decal.h" />
     <ClInclude Include="engine\include\input.h" />
     <ClInclude Include="engine\include\loader.h" />
     <ClInclude Include="engine\include\mesh.h" />
@@ -85,8 +86,6 @@
     <None Include="shaders\billboard2.frag" />
     <None Include="shaders\billboard2.geom" />
     <None Include="shaders\billboard2.vert" />
-    <None Include="shaders\blit.frag" />
-    <None Include="shaders\blit.vert" />
     <None Include="shaders\blur.frag" />
     <None Include="shaders\blur.vert" />
     <None Include="shaders\colored.frag" />
@@ -120,6 +119,8 @@
     <None Include="shaders\particle_system_update.frag" />
     <None Include="shaders\particle_system_update.geom" />
     <None Include="shaders\particle_system_update.vert" />
+    <None Include="shaders\reflect.shader" />
+    <None Include="shaders\refract.shader" />
     <None Include="shaders\render_to_texture.frag" />
     <None Include="shaders\render_to_texture.vert" />
     <None Include="shaders\shadow.frag" />
@@ -130,15 +131,14 @@
     <None Include="shaders\simple_transform.vert" />
     <None Include="shaders\skinning.frag" />
     <None Include="shaders\skinning.vert" />
-    <None Include="shaders\skybox.frag" />
-    <None Include="shaders\skybox.vert" />
+    <None Include="shaders\skybox.shader" />
     <None Include="shaders\spotlight.frag" />
     <None Include="shaders\tessellation.frag" />
     <None Include="shaders\tessellation.tesc" />
     <None Include="shaders\tessellation.tese" />
     <None Include="shaders\tessellation.vert" />
-    <None Include="shaders\text2d.frag" />
-    <None Include="shaders\text2d.vert" />
+    <None Include="shaders\tex2d.shader" />
+    <None Include="shaders\text2d.shader" />
     <None Include="shaders\texture.frag" />
     <None Include="shaders\texture.vert" />
   </ItemGroup>

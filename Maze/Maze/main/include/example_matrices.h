@@ -29,7 +29,7 @@ public:
 		shader_->Load(ShaderTypeFragment, "shaders/simple_transform.frag");
 		shader_->Link();
 
-		shader_->Use();
+		shader_->Bind();
 		shader_->SetUniform("MVP", &mvp_);
 	}
 

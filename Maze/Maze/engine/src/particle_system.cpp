@@ -61,7 +61,7 @@ bool ParticleSystem::Init(const glm::vec3& position) {
 		// can serve both as vertex buffers as well as transform feedback buffers.
 	}
 
-	texture_ = new Texture;
+	texture_ = new Texture2D;
 	texture_->Load("textures/fireworks_red.jpg");
 
 	randomTexture_ = new RandomTexture;
@@ -129,7 +129,7 @@ void ParticleSystem::InitBillboardShader() {
 }
 
 void ParticleSystem::UpdateParticles(float deltaTime) {
-	updateShader_->Use();
+	updateShader_->Bind();
 	updateShader_->SetUniform("time", time_);
 	updateShader_->SetUniform("deltaTime", deltaTime);
 
@@ -189,16 +189,14 @@ void ParticleSystem::UpdateParticles(float deltaTime) {
 }
 
 void ParticleSystem::RenderParticles(const glm::mat4& VP, const glm::vec3& cameraPosition) {
-	billboardShader_->Use();
+	billboardShader_->Bind();
 	billboardShader_->SetUniform("cameraPosition", &cameraPosition);
 	billboardShader_->SetUniform("VP", &VP);
 
-	glActiveTexture(GL_TEXTURE0);
-	texture_->Use();
+	texture_->Bind(GL_TEXTURE0);
 	billboardShader_->SetUniform("textureSampler", 0);
 
-	glActiveTexture(GL_TEXTURE1);
-	randomTexture_->Use();
+	randomTexture_->Bind(GL_TEXTURE1);
 	updateShader_->SetUniform("randomTexture", 1);
 
 	glDisable(GL_RASTERIZER_DISCARD);

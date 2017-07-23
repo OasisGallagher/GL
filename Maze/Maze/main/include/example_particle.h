@@ -36,7 +36,7 @@ public:
 
 		camera_->Reset(glm::vec3(0, 0, 20), glm::vec3(0));
 
-		texture_ = new Texture;
+		texture_ = new Texture2D;
 		texture_->Load("textures/particle.dds");
 
 		shader_->Load(ShaderTypeVertex, "shaders/particle.vert");
@@ -113,7 +113,7 @@ private:
 	}
 
 	void RenderParticles() {
-		shader_->Use();
+		shader_->Bind();
 
 		glBindBuffer(GL_ARRAY_BUFFER, vbo_[1]);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, Globals::kMaxParticleCount * sizeof(GLfloat)* 4, positionBuffer_);
@@ -121,8 +121,7 @@ private:
 		glBindBuffer(GL_ARRAY_BUFFER, vbo_[2]);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, Globals::kMaxParticleCount * sizeof(GLubyte)* 4, colorBuffer_);
 
-		glActiveTexture(GL_TEXTURE0);
-		texture_->Use();
+		texture_->Bind(GL_TEXTURE0);
 		shader_->SetUniform("textureSampler", 0);
 
 		const glm::mat4& proj = camera_->GetProjMatrix();
@@ -226,7 +225,7 @@ private:
 	}
 
 private:
-	Texture* texture_;
+	Texture2D* texture_;
 
 	Particle* particles_;
 

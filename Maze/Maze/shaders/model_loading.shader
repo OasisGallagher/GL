@@ -24,7 +24,7 @@ void main() {
 
 #shader frag
 
-#include "light.h"
+#include "base/light.h"
 
 in VertOut {
 	vec2 UV;

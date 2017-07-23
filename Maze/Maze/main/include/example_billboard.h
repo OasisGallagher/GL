@@ -5,7 +5,7 @@
 class Example_Billboards : public Example {
 public:
 	Example_Billboards() {
-		texture_ = new Texture;
+		texture_ = new Texture2D;
 		texture_->Load("textures/billboard.dds");
 
 		glGenVertexArrays(1, &vao_);
@@ -39,10 +39,9 @@ public:
 	virtual void Update(float deltaTime) {
 		Example::Update(deltaTime);
 
-		shader_->Use();
+		shader_->Bind();
 
-		glActiveTexture(GL_TEXTURE0);
-		texture_->Use();
+		texture_->Bind(GL_TEXTURE0);
 		shader_->SetUniform("textureSampler", 0);
 
 		const glm::mat4& view = camera_->GetViewMatrix();
@@ -75,7 +74,7 @@ public:
 	}
 
 private:
-	Texture* texture_;
+	Texture2D* texture_;
 
 	GLuint vao_, vbo_[1];
 };

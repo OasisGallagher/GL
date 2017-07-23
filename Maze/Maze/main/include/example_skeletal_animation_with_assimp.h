@@ -25,7 +25,7 @@ public:
 	virtual void Update(float deltaTime) {
 		Example::Update(deltaTime);
 
-		shader_->Use();
+		shader_->Bind();
 
 		time_ += deltaTime;
 

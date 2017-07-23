@@ -27,7 +27,7 @@ public:
 
 public:
 	virtual void Update(float deltaTime) {
-		shader_->Use();
+		shader_->Bind();
 
 		glEnableVertexAttribArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, vbo_);

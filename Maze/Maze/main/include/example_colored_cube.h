@@ -100,7 +100,7 @@ public:
 		shader_->Load(ShaderTypeVertex, "shaders/colored.vert");
 		shader_->Load(ShaderTypeFragment, "shaders/colored.frag");
 		shader_->Link();
-		shader_->Use();
+		shader_->Bind();
 
 		shader_->SetUniform("MVP", &mvp);
 	}

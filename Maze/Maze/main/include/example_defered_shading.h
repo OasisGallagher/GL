@@ -222,7 +222,7 @@ private:
 	}
 
 	void GeometryPass() {
-		shader_->Use();
+		shader_->Bind();
 
 		gbuffer_.BindForGeometryPass();
 
@@ -257,7 +257,7 @@ private:
 	// test can be used to discard pixels prior to pixel shader execution. It works by comparing
 	// the value at the current pixel location in the stencil buffer with a reference value. 
 	void StencilPass(unsigned index) {
-		null_.Use();
+		null_.Bind();
 
 		gbuffer_.BindForStencilPass();
 		// We enable depth test here because the stencil operation depends on it.
@@ -299,7 +299,7 @@ private:
 	void PointLightsPass(int index) {
 		gbuffer_.BindForLightPass();
 
-		ps_.Use();
+		ps_.Bind();
 		ps_.SetUniform("cameraPosition", &camera_->GetPosition());
 
 		// It sets up the stencil test to pass when the stencil value is not equal to zero.
@@ -359,7 +359,7 @@ private:
 	void DirectionalLightsPass() {
 		gbuffer_.BindForLightPass();
 
-		ds_.Use();
+		ds_.Bind();
 		ds_.SetUniform("cameraPosition", &camera_->GetPosition());
 		
 		glDisable(GL_DEPTH_TEST);

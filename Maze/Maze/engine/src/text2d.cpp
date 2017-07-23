@@ -5,20 +5,22 @@
 #include "shader.h"
 #include "texture.h"
 #include "utilities.h"
+#include "render_state.h"
 
 extern App app;
 
 Text2D::Text2D() {
 	shader_ = new Shader;
-	texture_ = new Texture;
+	texture_ = new Texture2D;
+
+	color_ = glm::vec3(1);
 
  	glGenVertexArrays(1, &vao_);
  	glBindVertexArray(vao_);
  
  	glGenBuffers(COUNT_OF(vbo_), vbo_);
 
-	shader_->Load(ShaderTypeVertex, "shaders/text2d.vert");
-	shader_->Load(ShaderTypeFragment, "shaders/text2d.frag");
+	shader_->Load("shaders/text2d.shader");
 	shader_->Link();
 }
 
@@ -34,10 +36,17 @@ bool Text2D::Load(const std::string& path) {
 	return texture_->Load(path);
 }
 
+void Text2D::SetColor(const glm::vec3& color) {
+	color_ = color;
+}
+
 void Text2D::Print(const std::string& text, int x, int y, int size) {
 	const float uvOffset = 1 / 16.f;
 
-	glm::vec2 halfWindowSize(200, 150);
+	int width, height;
+	app.GetWindowSize(width, height);
+	glm::vec2 halfWindowSize(width, height);
+	halfWindowSize /= 2;
 
 	std::vector<glm::vec2> uvs;
 	std::vector<glm::vec2> vertices;
@@ -88,10 +97,10 @@ void Text2D::Print(const std::string& text, int x, int y, int size) {
 	glBindBuffer(GL_ARRAY_BUFFER, vbo_[1]);
 	glBufferData(GL_ARRAY_BUFFER, uvs.size() * sizeof(glm::vec2), &uvs[0], GL_STATIC_DRAW);
 
-	shader_->Use();
-	glActiveTexture(GL_TEXTURE0);
-	texture_->Use();
-	shader_->SetUniform("sampler", 0);
+	shader_->Bind();
+	texture_->Bind(GL_TEXTURE0);
+	shader_->SetUniform("tex", 0);
+	shader_->SetUniform("color", &color_);
 	
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo_[0]);
@@ -101,11 +110,14 @@ void Text2D::Print(const std::string& text, int x, int y, int size) {
 	glBindBuffer(GL_ARRAY_BUFFER, vbo_[1]);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
 	
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	RenderState::PushBlendEnabled(GL_TRUE);
+	RenderState::PushBlendAlphaFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	glDrawArrays(GL_TRIANGLES, 0, vertices.size());
-	glDisable(GL_BLEND);
 
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
+
+	RenderState::PopBlendEnabled();
+	RenderState::PopBlendAlphaFunc();
 }

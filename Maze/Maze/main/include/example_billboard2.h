@@ -5,7 +5,7 @@
 class Example_Billboards2 : public Example {
 public:
 	Example_Billboards2() {
-		texture_ = new Texture;
+		texture_ = new Texture2D;
 		texture_->Load("textures/monster.png");
 
 		glGenVertexArrays(1, &vao_);
@@ -40,10 +40,9 @@ public:
 	virtual void Update(float deltaTime) {
 		Example::Update(deltaTime);
 
-		shader_->Use();
+		shader_->Bind();
 
-		glActiveTexture(GL_TEXTURE0);
-		texture_->Use();
+		texture_->Bind(GL_TEXTURE0);
 		shader_->SetUniform("textureSampler", 0);
 		shader_->SetUniform("cameraPosition", &camera_->GetPosition());
 		glm::mat4 VP = camera_->GetProjMatrix() * camera_->GetViewMatrix();
@@ -57,7 +56,7 @@ public:
 	}
 
 private:
-	Texture* texture_;
+	Texture2D* texture_;
 	GLuint vao_;
 	GLuint vbo_[2];
 

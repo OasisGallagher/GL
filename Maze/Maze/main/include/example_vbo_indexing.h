@@ -7,8 +7,8 @@
 class Example_VBOIndexing : public Example {
 public:
 	Example_VBOIndexing() {
-		texture_ = new Texture;
-		info_ = new ModelInfo;
+		//texture_ = new Texture2D;
+		//info_ = new ModelInfo;
 		text_ = new Text2D;
 
 		text_->Load("textures/font.dds");
@@ -60,12 +60,12 @@ public:
 	}
 
 	~Example_VBOIndexing() {
-		delete info_;
+		//delete info_;
 		delete text_;
-		delete texture_;
+		//delete texture_;
 
-		glDeleteVertexArrays(1, &vao_);
-		glDeleteBuffers(COUNT_OF(vbo_), vbo_);
+		//glDeleteVertexArrays(1, &vao_);
+		//glDeleteBuffers(COUNT_OF(vbo_), vbo_);
 	}
 
 public:
@@ -92,7 +92,8 @@ public:
 		glDisableVertexAttribArray(1);
 		glDisableVertexAttribArray(2);
 		*/
-		text_->Print("1", 0, 200, 512);
+		text_->SetColor(glm::vec3(1, 0, 0));
+		text_->Print("text out put text", 0, 200, 16);
 	}
 
 	virtual void GetEnvRequirement(AppEnv& env) {
@@ -105,8 +106,8 @@ private:
 
 	Text2D* text_;
 
-	ModelInfo* info_;
-	Texture* texture_;
-	GLuint vao_, vbo_[4];
-	std::vector<unsigned> indices_;
+	//ModelInfo* info_;
+	//Texture2D* texture_;
+	//GLuint vao_, vbo_[4];
+	//std::vector<unsigned> indices_;
 };

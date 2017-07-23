@@ -30,8 +30,8 @@ int main() {
 	if (!app.Initialize()) {
 		return -1;
 	}
+	Example* example = new Example_SkyBox;
 
-	Example* example = new Example_ModelLoading;
 	app.SetExample(example);
 
 	app.EnterMainLoop();

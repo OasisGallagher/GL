@@ -1,9 +1,6 @@
 Example_NormalMapping:
 	有奇怪的三角形阴影.
 
-Example_VBOIndexing:
-	字体显示不正确, 与mipmap有关?
-
 Example_ShadowMaps:
 	未深入.
 

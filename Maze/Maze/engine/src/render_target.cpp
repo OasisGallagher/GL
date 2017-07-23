@@ -36,14 +36,23 @@ void RenderTarget::Bind(GLenum* buffers, GLuint count) {
 
 	GLenum* colors = nullptr;
 
-	if (buffers == nullptr && index_ > 0) {
-		colors = new GLenum[index_];
-		for (GLuint i = 0; i < index_; ++i) {
-			colors[i] = GL_COLOR_ATTACHMENT0 + i;
+	if (buffers == nullptr) {
+		if (index_ > 0) {
+			colors = new GLenum[index_];
+			for (GLuint i = 0; i < index_; ++i) {
+				colors[i] = GL_COLOR_ATTACHMENT0 + i;
+			}
+
+			count = index_;
+		}
+		else {
+			colors = new GLenum[1];
+			colors[0] = GL_NONE;
+			count = 1;
 		}
 
 		buffers = colors;
-		count = index_;
+
 	}
 
 	if (buffers != nullptr) {

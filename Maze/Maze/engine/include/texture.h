@@ -1,93 +1,43 @@
 #pragma once
 #include <string>
-#include <vector>
 
 #include <gl/glew.h>
 
-typedef std::vector<unsigned char> bytes;
-
-struct TextureData {
-	GLsizei width;
-	GLsizei height;
-
-	bytes pixels;
-	GLenum format;
-	GLuint mipMapCount;
-};
-
-class Texture {
+class Texture2D {
 public:
-	Texture();
-	~Texture();
+	Texture2D();
+	~Texture2D();
 
 public:
-	bool Use();
+	void Bind(GLenum target);
+	void Unbind();
 	bool Load(const std::string& path);
 
 private:
-	bool LoadBmp(const std::string& path);
-	bool LoadDDS(const std::string& path);
-	bool LoadCommon(const std::string& path);
-
-	bool GetBmpData(const std::string& path, TextureData& td);
-	bool GetDDSData(const std::string& path, TextureData& td);
-
-	GLuint CreateFromBmp(const TextureData& td);
-	GLuint CreateFromDDS(const TextureData& td);
-
+	bool LoadTexture(const std::string& path);
 	void Destroy();
 
-	bool UseTexture();
 private:
-	GLuint textureID_;
+	GLuint texture_;
 };
 
-class CubemapTexture {
+class Texture3D {
 public:
-	CubemapTexture();
-	~CubemapTexture();
+	Texture3D();
+	~Texture3D();
 
 public:
-	bool Load(const std::string& posx, const std::string& negx,
-		const std::string& posy, const std::string& negy,
-		const std::string& posz, const std::string& negz
-	);
+	void Bind(GLenum target);
+	void Unbind();
 
-	void Use();
+	bool Load(const std::string* textures);
 
 private:
 	void Destroy();
-	GLuint CreateCubeTexture();
+	GLuint CreateCubeTexture(const std::string* textures);
 
 private:
-	GLuint textureID_;
-	std::string fileNames_[6];
-};
-
-enum RenderTargetType {
-	RenderTexture2D,
-	RenderDepthTexture,
-};
-
-class RenderTexture {
-public:
-	RenderTexture(RenderTargetType target, GLint width, GLint height);
-	~RenderTexture();
-
-public:
-	void Use();
-	GLuint GetTexture() const;
-
-private:
-	void Create(RenderTargetType target, GLint width, GLint height);
-	void CreateTexture2D(GLint width, GLint height);
-	void CreateDepthTexture(GLint width, GLint height);
-
-private:
-	GLuint fbo_;
-
-	GLuint depthBuffer_;
-	GLuint targetTexture_;
+	GLuint texture_;
 };
 
 class RandomTexture {
@@ -97,12 +47,14 @@ public:
 
 public:
 	bool Load(unsigned size);
-	void Use();
+
+	void Bind(GLenum target);
+	void Unbind();
 
 private:
 	GLuint LoadRandomTexture(unsigned size);
 	void Destroy();
 
 private:
-	GLuint textureID_;
+	GLuint texture_;
 };

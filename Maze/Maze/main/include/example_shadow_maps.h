@@ -1,36 +1,17 @@
 #pragma once
 #include "loader.h"
 #include "example.h"
+#include "render_state.h"
+#include "render_target.h"
 
 class Example_ShadowMaps : public Example {
 public:
 	Example_ShadowMaps() {
-		texture_ = new Texture;
+		texture_ = new Texture2D;
 		texture_->Load("textures/room_uvmap.dds");
 
-		modelInfo_ = new ModelInfo;
-		ModelLoader::Load("models/room_thickwalls.obj", *modelInfo_);
-		VBOIndexer::Index(*modelInfo_, indices_, *modelInfo_);
-
-		glGenVertexArrays(1, &vao_);
-		glBindVertexArray(vao_);
-
-		glGenBuffers(COUNT_OF(vbo_), vbo_);
-
-		glBindBuffer(GL_ARRAY_BUFFER, vbo_[0]);
-		glBufferData(GL_ARRAY_BUFFER, modelInfo_->vertices.size() * sizeof(glm::vec3), &modelInfo_->vertices[0], GL_STATIC_DRAW);
-
-		glBindBuffer(GL_ARRAY_BUFFER, vbo_[1]);
-		glBufferData(GL_ARRAY_BUFFER, modelInfo_->uvs.size() * sizeof(glm::vec2), &modelInfo_->uvs[0], GL_STATIC_DRAW);
-
-		glBindBuffer(GL_ARRAY_BUFFER, vbo_[2]);
-		glBufferData(GL_ARRAY_BUFFER, modelInfo_->normals.size() * sizeof(glm::vec3), &modelInfo_->normals[0], GL_STATIC_DRAW);
-
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo_[3]);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_.size() * sizeof(unsigned), &indices_[0], GL_STATIC_DRAW);
-
-		glBindBuffer(GL_ARRAY_BUFFER, vbo_[4]);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(Globals::kQuadCoordinates), Globals::kQuadCoordinates, GL_STATIC_DRAW);
+		quad_.Load("models/quad_r.obj");
+		room_.Load("models/room_thickwalls.obj");
 
 		depthShader_ = new Shader;
 		depthShader_->Load(ShaderTypeVertex, "shaders/depth.vert");
@@ -42,13 +23,14 @@ public:
 		shadowShader_->Load(ShaderTypeFragment, "shaders/shadow.frag");
 		shadowShader_->Link();
 
-		depthTexture_ = new RenderTexture(RenderDepthTexture, Globals::kWindowWidth, Globals::kWindowHeight);
+		renderTarget_.Create(Globals::kWindowWidth, Globals::kWindowHeight);
+		renderTarget_.AddDepthTexture(GL_DEPTH_COMPONENT16, GL_NEAREST, GL_NEAREST, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
 
 		shader_->Load(ShaderTypeVertex, "shaders/basic_shadow.vert");
 		shader_->Load(ShaderTypeFragment, "shaders/basic_shadow.frag");
 		shader_->Link();
 
-		camera_->Reset(glm::vec3(-20, 5, -15/*4, 0, 19*/), glm::vec3(0));
+		camera_->Reset(glm::vec3(40, 20, -10), glm::vec3(0));
 
 		glm::vec3 LightInvDirection_worldspace(0.5f, 2, 2);
 		shader_->SetUniform("LightInvDirection_worldspace", &LightInvDirection_worldspace);
@@ -56,14 +38,9 @@ public:
 
 	~Example_ShadowMaps() {
 		delete texture_;
-		delete modelInfo_;
-		delete depthTexture_;
 
 		delete depthShader_;
 		delete shadowShader_;
-
-		glDeleteVertexArrays(1, &vao_);
-		glDeleteBuffers(COUNT_OF(vbo_), vbo_);
 	}
 
 public:
@@ -93,47 +70,27 @@ private:
 		m = camera_->GetProjMatrix() * camera_->GetViewMatrix() * m;
 		shader_->SetUniform("MVP", &m);
 
-		shader_->Use();
+		shader_->Bind();
 		shader_->SetUniform("ShadowMVP", &shadowMVP_);
 
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, depthTexture_->GetTexture());
+		glBindTexture(GL_TEXTURE_2D, renderTarget_.GetDepthTexture());
 		shader_->SetUniform("shadowSampler", 0);
 
-		glActiveTexture(GL_TEXTURE1);
-		texture_->Use();
+		texture_->Bind(GL_TEXTURE1);
 		shader_->SetUniform("textureSampler", 1);
 
-		glEnableVertexAttribArray(0);
-		glBindBuffer(GL_ARRAY_BUFFER, vbo_[0]);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
-
-		glEnableVertexAttribArray(1);
-		glBindBuffer(GL_ARRAY_BUFFER, vbo_[1]);
-		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
-
-		glEnableVertexAttribArray(2);
-		glBindBuffer(GL_ARRAY_BUFFER, vbo_[2]);
-		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
-
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo_[3]);
-		glDrawElements(GL_TRIANGLES, indices_.size(), GL_UNSIGNED_INT, nullptr);
-
-		glDisableVertexAttribArray(0);
-		glDisableVertexAttribArray(1);
-		glDisableVertexAttribArray(2);
+		room_.Render();
 	}
 
 	void ShadowMapPass() {
-		depthTexture_->Use();
-		glViewport(0, 0, Globals::kWindowWidth, Globals::kWindowHeight);
+		renderTarget_.Clear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+		renderTarget_.Bind(nullptr, 0);
 
-		glEnable(GL_CULL_FACE);
-		glCullFace(GL_BACK);
+		RenderState::PushCullFaceEnabled(GL_TRUE);
+		RenderState::PushCullFaceFunc(GL_BACK);
 
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		depthShader_->Use();
+		depthShader_->Bind();
 
 		glm::vec3 LightInvDirection_worldspace(0.5f, 2, 2);
 
@@ -152,46 +109,34 @@ private:
 
 		depthShader_->SetUniform("depthMVP", &depthMVP);
 
-		glEnableVertexAttribArray(0);
-		glBindBuffer(GL_ARRAY_BUFFER, vbo_[0]);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+		RenderState::PopCullFaceEnabled();
+		RenderState::PopCullFaceFunc();
 
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo_[3]);
-		glDrawElements(GL_TRIANGLES, indices_.size(), GL_UNSIGNED_INT, nullptr);
-
-		glDisableVertexAttribArray(0);
+		room_.Render();
 	}
 
 	void RenderShadowMap() {
 		glViewport(0, 0, 128, 96);
 
-		shadowShader_->Use();
+		shadowShader_->Bind();
 
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, depthTexture_->GetTexture());
+		glBindTexture(GL_TEXTURE_2D, renderTarget_.GetDepthTexture());
 		shadowShader_->SetUniform("sampler", 0);
 
-		glEnableVertexAttribArray(0);
-		glBindBuffer(GL_ARRAY_BUFFER, vbo_[4]);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
-
-		glDrawArrays(GL_TRIANGLES, 0, 6);
-
-		glDisableVertexAttribArray(0);
+		quad_.Render();
 	}
 
 private:
-	GLuint vao_;
-	GLuint vbo_[5];
-	std::vector<unsigned> indices_;
-
 	glm::mat4 shadowMVP_;
 
-	Texture* texture_;
-	ModelInfo* modelInfo_;
+	Texture2D* texture_;
+
+	Mesh room_;
+	Mesh quad_;
 
 	Shader* depthShader_;
 	Shader* shadowShader_;
 
-	RenderTexture* depthTexture_;
+	RenderTarget renderTarget_;
 };

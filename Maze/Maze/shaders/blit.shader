@@ -27,5 +27,3 @@ uniform sampler2D source;
 void main() {
 	fragColor = texture(source, fragIn.texCoord) * 0.3f;
 }
-
-

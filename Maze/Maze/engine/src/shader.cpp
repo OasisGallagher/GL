@@ -2,6 +2,7 @@
 #include "loader.h"
 #include "shader.h"
 #include "utilities.h"
+#include "render_state.h"
 
 struct ShaderDescription {
 	GLenum glShaderType;
@@ -62,9 +63,13 @@ bool Shader::Link() {
 	return LinkShader();
 }
 
-bool Shader::Use() {
-	glUseProgram(program_);
+bool Shader::Bind() {
+	RenderState::PushProgram(program_);
 	return true;
+}
+
+void Shader::Unbind() {
+	RenderState::PopProgram();
 }
 
 bool Shader::GetErrorMessage(GLuint shaderObj, std::string& answer) {
@@ -707,20 +712,20 @@ bool ShaderXLoader::ParseShaderSource(std::vector<std::string>& lines) {
 	return true;
 }
 
-bool ShaderXLoader::ParsePreprocesser(const std::string& preprocesser) {
-	size_t pos = preprocesser.find(' ');
-	Assert(pos > 1, "empty preprocesser");
-	std::string cmd = preprocesser.substr(1, pos - 1);
-	std::string parameter = Utility::Trim(preprocesser.substr(pos));
+bool ShaderXLoader::Preprocess(const std::string& line) {
+	size_t pos = line.find(' ');
+	Assert(pos > 1, "unable to preprocess" + line);
+	std::string cmd = line.substr(1, pos - 1);
+	std::string parameter = Utility::Trim(line.substr(pos));
 
 	if (cmd == SHADER) {
-		return ShaderPreprocesser(parameter);
+		return PreprocessShader(parameter);
 	}
 	else if (cmd == INCLUDE) {
-		return IncludePreprocesser(parameter);
+		return PreprocessInclude(parameter);
 	}
 
-	source_ += preprocesser + '\n';
+	source_ += line + '\n';
 	return true;
 }
 
@@ -738,7 +743,7 @@ ShaderType ShaderXLoader::ParseShaderType(const std::string& tag) {
 bool ShaderXLoader::ReadShaderSource(std::vector<std::string> &lines) {
 	for (size_t i = 0; i < lines.size(); ++i) {
 		const std::string& line = lines[i];
-		if (line.front() == '#' && !ParsePreprocesser(line)) {
+		if (line.front() == '#' && !Preprocess(line)) {
 			return false;
 		}
 
@@ -750,7 +755,7 @@ bool ShaderXLoader::ReadShaderSource(std::vector<std::string> &lines) {
 	return true;
 }
 
-bool ShaderXLoader::ShaderPreprocesser(std::string parameter) {
+bool ShaderXLoader::PreprocessShader(std::string parameter) {
 	ShaderType newType = ParseShaderType(parameter);
 
 	if (newType != type_) {
@@ -774,7 +779,7 @@ bool ShaderXLoader::ShaderPreprocesser(std::string parameter) {
 	return true;
 }
 
-bool ShaderXLoader::IncludePreprocesser(std::string &parameter) {
+bool ShaderXLoader::PreprocessInclude(std::string &parameter) {
 	std::vector<std::string> lines;
 	if (!TextLoader::Load("shaders/" + parameter.substr(1, parameter.length() - 2), lines)) {
 		return false;

@@ -147,7 +147,7 @@ private:
 		buffer_.Write();
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		shader_->Use();
+		shader_->Bind();
 
 		std::vector<glm::mat4> transforms;
 		mesh_.GetBoneTransform(time_, transforms);
@@ -175,7 +175,7 @@ private:
 	void MotionBlurPass() {
 		buffer_.Read();
 
-		motionBlurShader_.Use();
+		motionBlurShader_.Bind();
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

@@ -5,8 +5,8 @@
 class Example_TexturedCube : public Example {
 public:
 	Example_TexturedCube() {
-		texture0_ = new Texture;
-		texture1_ = new Texture;
+		texture0_ = new Texture2D;
+		texture1_ = new Texture2D;
 
 		glGenVertexArrays(1, &vao_);
 		glBindVertexArray(vao_);
@@ -106,12 +106,10 @@ public:
 		texture0_->Load("textures/uvtemplate.dds");
 		texture1_->Load("textures/uvtemplate.bmp");
 
-		glActiveTexture(GL_TEXTURE0);
-		texture0_->Use();
+		texture0_->Bind(GL_TEXTURE0);
 		//shader_->SetUniform("textureSamplerDDS", 0);
 
-		glActiveTexture(GL_TEXTURE1);
-		texture1_->Use();
+		texture1_->Bind(GL_TEXTURE1);
 		//shader_->SetUniform("textureSamplerBmp", 1);
 	}
 
@@ -127,7 +125,7 @@ public:
 	virtual void Update(float deltaTime) {
 		Example::Update(deltaTime);
 
-		shader_->Use();
+		shader_->Bind();
 		
 		glm::mat4 model(1);
 		model = glm::translate(model, glm::vec3(0, 0, -12));
@@ -151,6 +149,6 @@ public:
 private:
 	glm::mat4 mvp_;
 
-	Texture* texture0_, *texture1_;
+	Texture2D* texture0_, *texture1_;
 	GLuint vao_, vbo_[2];
 };

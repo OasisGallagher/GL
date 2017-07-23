@@ -11,10 +11,10 @@ public:
 		shader_->Load(ShaderTypeFragment, "shaders/tessellation.frag");
 		shader_->Link();
 
-		displacementMap_ = new Texture;
+		displacementMap_ = new Texture2D;
 		displacementMap_->Load("textures/heightmap.jpg");
 
-		colorMap_ = new Texture;
+		colorMap_ = new Texture2D;
 		colorMap_->Load("textures/diffuse.jpg");
 
 		mesh_ = new Mesh;
@@ -32,7 +32,7 @@ public:
 	virtual void Update(float deltaTime) {
 		Example::Update(deltaTime);
 
-		shader_->Use();
+		shader_->Bind();
 
 		shader_->SetUniform("gEyeWorldPos", &camera_->GetPosition());
 
@@ -42,12 +42,10 @@ public:
 		shader_->SetUniform("gWorld", &m);
 		shader_->SetUniform("gVP", &vp);
 
-		glActiveTexture(GL_TEXTURE0);
-		displacementMap_->Use();
+		displacementMap_->Bind(GL_TEXTURE0);
 		shader_->SetUniform("gDisplacementMap", 0);
 
-		glActiveTexture(GL_TEXTURE1);
-		colorMap_->Use();
+		colorMap_->Bind(GL_TEXTURE1);
 		shader_->SetUniform("gColorMap", 1);
 
 		shader_->SetUniform("gDispFactor", 0.25f);
@@ -66,6 +64,6 @@ private:
 
 	//GLuint vao_, vbo_[3];
 
-	Texture* colorMap_;
-	Texture* displacementMap_;
+	Texture2D* colorMap_;
+	Texture2D* displacementMap_;
 };

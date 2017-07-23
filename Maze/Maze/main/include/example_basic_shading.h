@@ -6,7 +6,7 @@
 class Example_BasicShading : public Example {
 public:
 	Example_BasicShading() {
-		texture_ = new Texture;
+		texture_ = new Texture2D;
 		info_ = new ModelInfo;
 
 		texture_->Load("textures/suzanne_uvmap.dds");
@@ -14,7 +14,7 @@ public:
 		shader_->Load(ShaderTypeVertex, "shaders/basic.vert");
 		shader_->Load(ShaderTypeFragment, "shaders/spotlight.frag");
 		shader_->Link();
-		shader_->Use();
+		shader_->Bind();
 
 		glGenVertexArrays(1, &vao_);
 		glBindVertexArray(vao_);
@@ -32,8 +32,7 @@ public:
 		glBindBuffer(GL_ARRAY_BUFFER, vbo_[2]);
 		glBufferData(GL_ARRAY_BUFFER, info_->normals.size() * sizeof(glm::vec3), &info_->normals[0], GL_STATIC_DRAW);
 
-		glActiveTexture(GL_TEXTURE0);
-		texture_->Use();
+		texture_->Bind(GL_TEXTURE0);
 		shader_->SetUniform("textureSampler", 0);
 
 		camera_->Reset(glm::vec3(6, 0, 6), glm::vec3(0));
@@ -87,6 +86,6 @@ public:
 
 private:
 	ModelInfo* info_;
-	Texture* texture_;
+	Texture2D* texture_;
 	GLuint vao_, vbo_[3];
 };
