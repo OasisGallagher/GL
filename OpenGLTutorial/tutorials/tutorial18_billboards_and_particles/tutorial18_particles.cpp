@@ -286,7 +286,13 @@ int main( void )
 		// but this is outside the scope of this tutorial.
 		// http://www.opengl.org/wiki/Buffer_Object_Streaming
 
-
+		// https://www.khronos.org/opengl/wiki/Synchronization#Implicit_synchronization
+		// Most attempts to write to a buffer object, either with glBufferSubData or mapping, 
+		// will halt until all rendering commands using that part of the buffer object have completed.
+		// However, if you invalidate the buffer object before uploading to it, the implementation will
+		// be able to allocate new storage for the buffer and simply orphan the old one 
+		// (deleting it later when it is no longer used). This will allow the buffer object to be immediately
+		// available for uploading new data.
 		glBindBuffer(GL_ARRAY_BUFFER, particles_position_buffer);
 		glBufferData(GL_ARRAY_BUFFER, MaxParticles * 4 * sizeof(GLfloat), NULL, GL_STREAM_DRAW); // Buffer orphaning, a common way to improve streaming perf. See above link for details.
 		glBufferSubData(GL_ARRAY_BUFFER, 0, ParticlesCount * sizeof(GLfloat) * 4, g_particule_position_size_data);
