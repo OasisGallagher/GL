@@ -158,3 +158,4 @@ $RECYCLE.BIN/
 /Suede/*.db
 /Suede/Suede/GeneratedFiles
 /Suede/Engine/internal/base/*.swp
+/Suede/Engine/internal/file/*.swp
