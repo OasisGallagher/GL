@@ -8,7 +8,7 @@
 
 # Build results
 
-[Dd]ebug/
+#[Dd]ebug/
 [Rr]elease/
 x64/
 build/
@@ -159,3 +159,7 @@ $RECYCLE.BIN/
 /Suede/Suede/GeneratedFiles
 /Suede/Engine/internal/base/*.swp
 /Suede/Engine/internal/file/*.swp
+/ogldev-source/Windows/ogldev/Debug
+/assimp-master/sln/*
+/Maze/Maze/Debug
+/Maze/Debug
