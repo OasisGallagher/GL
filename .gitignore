@@ -157,9 +157,8 @@ $RECYCLE.BIN/
 /Suede/*.opendb
 /Suede/*.db
 /Suede/Suede/GeneratedFiles
-/Suede/Engine/internal/base/*.swp
-/Suede/Engine/internal/file/*.swp
-/ogldev-source/Windows/ogldev/Debug
-/assimp-master/sln/*
-/Maze/Maze/Debug
-/Maze/Debug
+/Suede/Engine/lib/GLEF.lib
+/Suede/Engine/lib/Shared.lib
+/Suede/Suede/bin/Engine.dll
+/Suede/Suede/bin/GLEF.dll
+/Suede/Suede/bin/Shared.dll
