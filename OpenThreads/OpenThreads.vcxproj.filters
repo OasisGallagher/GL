@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier>{22af48c5-3c34-4ef0-9655-d26c8ed324f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{c84fd7d2-72f8-4842-88e6-d96edcd1073c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\win32">
+      <UniqueIdentifier>{c21f0e15-012b-4e8e-85c6-ea4fcc7d2889}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\common">
+      <UniqueIdentifier>{2dec77ae-99da-4839-8056-c208df7ade9f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="OpenThreads\Atomic">
+      <Filter>include</Filter>
+    </None>
+    <None Include="OpenThreads\Barrier">
+      <Filter>include</Filter>
+    </None>
+    <None Include="OpenThreads\Block">
+      <Filter>include</Filter>
+    </None>
+    <None Include="OpenThreads\Condition">
+      <Filter>include</Filter>
+    </None>
+    <None Include="OpenThreads\Config">
+      <Filter>include</Filter>
+    </None>
+    <None Include="OpenThreads\exports">
+      <Filter>include</Filter>
+    </None>
+    <None Include="OpenThreads\Mutex">
+      <Filter>include</Filter>
+    </None>
+    <None Include="OpenThreads\ReadWriteMutex">
+      <Filter>include</Filter>
+    </None>
+    <None Include="OpenThreads\ReentrantMutex">
+      <Filter>include</Filter>
+    </None>
+    <None Include="OpenThreads\ScopedLock">
+      <Filter>include</Filter>
+    </None>
+    <None Include="OpenThreads\Thread">
+      <Filter>include</Filter>
+    </None>
+    <None Include="OpenThreads\Version">
+      <Filter>include</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\win32\WIN32Condition.cpp">
+      <Filter>src\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="src\win32\Win32Mutex.cpp">
+      <Filter>src\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="src\win32\Win32Thread.cpp">
+      <Filter>src\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="src\win32\Win32ThreadBarrier.cpp">
+      <Filter>src\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="src\common\Atomic.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="src\common\Version.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
