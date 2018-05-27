@@ -93,7 +93,7 @@ namespace ZThread {
     
         // Allow no further additions in the canceled state
         if(_canceled)
-          throw Cancellation_Exception();
+          THROW_EXCEPTION(Cancellation_Exception());
 
         _queue.push_back( item );
 
@@ -129,7 +129,7 @@ namespace ZThread {
           Guard<LockType> g(_lock, timeout);
       
           if(_canceled)
-            throw Cancellation_Exception();
+            THROW_EXCEPTION(Cancellation_Exception());
       
           _queue.push_back(item);
 
@@ -164,7 +164,7 @@ namespace ZThread {
           _notEmpty.wait();
     
         if(_queue.size() == 0) // Queue canceled
-          throw Cancellation_Exception();  
+          THROW_EXCEPTION(Cancellation_Exception());  
       
         T item = _queue.front();
         _queue.pop_front();
@@ -200,11 +200,11 @@ namespace ZThread {
       
         while(_queue.size() == 0 && !_canceled) {
           if(!_notEmpty.wait(timeout))
-            throw Timeout_Exception();
+            THROW_EXCEPTION(Timeout_Exception());
         }
 
         if( _queue.size() == 0) // Queue canceled
-          throw Cancellation_Exception();  
+          THROW_EXCEPTION(Cancellation_Exception());  
 
         T item = _queue.front();
         _queue.pop_front();

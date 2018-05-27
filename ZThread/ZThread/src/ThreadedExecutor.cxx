@@ -132,9 +132,9 @@ namespace ZThread {
           case Monitor::TIMEDOUT:
             return false;
           case Monitor::INTERRUPTED:
-            throw Interrupted_Exception();
+            THROW_EXCEPTION(Interrupted_Exception());
           default:
-            throw Synchronization_Exception();
+            THROW_EXCEPTION(Synchronization_Exception());
         } 
        
         return true;

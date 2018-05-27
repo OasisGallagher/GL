@@ -36,7 +36,7 @@ namespace ZThread {
  * this package.
  *
  */
-class Synchronization_Exception {
+class Synchronization_Exception : public std::exception{
 
   // Restrict heap allocation
   static void * operator new(size_t size);
@@ -182,7 +182,7 @@ class Timeout_Exception : public Synchronization_Exception {
  * The last operation that was attempted on a Queue could not find 
  * the item that was indicated (during that last Queue method invocation)
  */
-class NoSuchElement_Exception {
+class NoSuchElement_Exception : public std::exception {
  public:
   
   //! Create a new exception

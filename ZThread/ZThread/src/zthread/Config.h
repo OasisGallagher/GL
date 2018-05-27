@@ -214,5 +214,12 @@
 #  define ZTHREAD_INLINE inline 
 #endif
 
+#include <exception>
+typedef void(*ZTExceptionHandler)(const std::exception& exception);
+
+ZTHREAD_API extern ZTExceptionHandler ztException; 
+
+#define THROW_EXCEPTION(exception)	ztException(exception)
+
 #endif // __ZTCONFIG_H__
 

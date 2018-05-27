@@ -276,7 +276,7 @@ class TimedLockedScope {
   static void shareScope(LockHolder<LockType1>& l1, LockHolder<LockType2>& l2) {
 
     if(!l2.getLock().tryAcquire(TimeOut))
-      throw Timeout_Exception();
+      THROW_EXCEPTION(Timeout_Exception());
        
   }
 
@@ -284,7 +284,7 @@ class TimedLockedScope {
   static void createScope(LockHolder<LockType>& l) {
 
     if(!l.getLock().tryAcquire(TimeOut))
-      throw Timeout_Exception();
+      THROW_EXCEPTION(Timeout_Exception());
 
   }
 
@@ -413,7 +413,7 @@ public:
   Guard(LockType& lock, unsigned long timeout) : LockHolder<LockType>(lock) {
 
     if(!LockingPolicy::createScope(*this, timeout))
-      throw Timeout_Exception();
+      THROW_EXCEPTION(Timeout_Exception());
 
   };
 

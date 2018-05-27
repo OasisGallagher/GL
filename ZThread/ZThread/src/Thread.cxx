@@ -98,7 +98,7 @@ namespace ZThread {
   void Thread::cancel() {
 
     if(ThreadImpl::current() == _impl)
-      throw InvalidOp_Exception();
+      THROW_EXCEPTION(InvalidOp_Exception());
 
     _impl->cancel();
 

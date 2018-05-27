@@ -32,7 +32,7 @@ const ThreadOps ThreadOps::INVALID(0);
 ThreadOps::ThreadOps()  : _queue(0), _tid(0) { 
   
   if(MPCreateQueue(&_queue) != noErr)
-    throw Initialization_Exception();
+    THROW_EXCEPTION(Initialization_Exception());
 
 }
 

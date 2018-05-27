@@ -75,7 +75,7 @@ namespace ZThread {
     inline T get() const {
 
       if(!_valid)
-        throw InvalidOp_Exception();
+        THROW_EXCEPTION(InvalidOp_Exception());
 
       return static_cast<T>(::TlsGetValue(_key));
 

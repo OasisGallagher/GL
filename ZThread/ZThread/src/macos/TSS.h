@@ -58,7 +58,7 @@ namespace ZThread {
     
       if(!init || MPAllocateTaskStorageIndex(&_key) != noErr) {
         assert(0);
-        throw Initialization_Exception();
+        THROW_EXCEPTION(Initialization_Exception());
       }
 
     }
@@ -104,7 +104,7 @@ namespace ZThread {
     
       if(status != noErr) {
         assert(0);
-        throw Synchronization_Exception();
+        THROW_EXCEPTION(Synchronization_Exception());
       }
 
       return oldValue;

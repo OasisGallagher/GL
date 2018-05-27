@@ -52,12 +52,12 @@ namespace ZThread {
     // Canceled Executors will not accept new tasks, quick 
     // check to avoid excessive locking in the canceled state
     if(_canceled) 
-      throw Cancellation_Exception();
+      THROW_EXCEPTION(Cancellation_Exception());
     
     Guard<Mutex> g(_lock);
     
     if(_canceled) // Double check
-      throw Cancellation_Exception();
+      THROW_EXCEPTION(Cancellation_Exception());
     
     // Run the task.
     Task(task)->run();
@@ -67,7 +67,7 @@ namespace ZThread {
   void SynchronousExecutor::wait() {
     
     if(Thread::interrupted())
-      throw Interrupted_Exception();
+      THROW_EXCEPTION(Interrupted_Exception());
     
     Guard<Mutex> g(_lock);
     
@@ -79,7 +79,7 @@ namespace ZThread {
   bool SynchronousExecutor::wait(unsigned long) {
 
     if(Thread::interrupted())
-      throw Interrupted_Exception();
+      THROW_EXCEPTION(Interrupted_Exception());
     
     Guard<Mutex> g(_lock);
     return true;

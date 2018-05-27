@@ -295,5 +295,8 @@
     <ClCompile Include="src\Time.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\zthread\Config.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

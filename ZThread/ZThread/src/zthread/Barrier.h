@@ -113,7 +113,7 @@ namespace ZThread {
       Guard<LockType> g(_lock);
     
       if(_broken) 
-        throw BrokenBarrier_Exception();
+        THROW_EXCEPTION(BrokenBarrier_Exception());
 
       // Break the barrier if an arriving thread is interrupted
       if(Thread::interrupted()) {
@@ -122,7 +122,7 @@ namespace ZThread {
         _arrived.broadcast();
         _broken = true;
 
-        throw Interrupted_Exception();
+        THROW_EXCEPTION(Interrupted_Exception());
 
       }
     
@@ -179,7 +179,7 @@ namespace ZThread {
         // If the thread woke because it was notified by the thread
         // that broke the barrier, throw.
         if(_broken) 
-          throw BrokenBarrier_Exception();
+          THROW_EXCEPTION(BrokenBarrier_Exception());
    
       } 
 
@@ -213,7 +213,7 @@ namespace ZThread {
       Guard<LockType> g(_lock);
     
       if(_broken) 
-        throw BrokenBarrier_Exception();
+        THROW_EXCEPTION(BrokenBarrier_Exception());
 
       // Break the barrier if an arriving thread is interrupted
       if(Thread::interrupted()) {
@@ -222,7 +222,7 @@ namespace ZThread {
         _arrived.broadcast();
         _broken = true;
 
-        throw Interrupted_Exception();
+        THROW_EXCEPTION(Interrupted_Exception());
 
       }
 
@@ -281,7 +281,7 @@ namespace ZThread {
         // If the thread woke because it was notified by the thread
         // that broke the barrier, throw.
         if(_broken) 
-          throw BrokenBarrier_Exception();
+          THROW_EXCEPTION(BrokenBarrier_Exception());
    
       } 
 

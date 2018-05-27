@@ -174,7 +174,7 @@ namespace ZThread {
           return false;
           
         case Monitor::INTERRUPTED:
-          throw Interrupted_Exception();
+          THROW_EXCEPTION(Interrupted_Exception());
           
         default:
           break;
@@ -295,7 +295,7 @@ namespace ZThread {
       switch(monitor.wait(ms)) {
         
         case Monitor::INTERRUPTED:
-          throw Interrupted_Exception();
+          THROW_EXCEPTION(Interrupted_Exception());
           
         default:
           return;
@@ -354,7 +354,7 @@ namespace ZThread {
 
       // Return to the idle state & report the error if it doesn't work out.
       _state.setIdle();    
-      throw Synchronization_Exception();    
+      THROW_EXCEPTION(Synchronization_Exception());    
 
 
     }

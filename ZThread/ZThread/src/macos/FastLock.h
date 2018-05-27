@@ -58,7 +58,7 @@ class FastLock : private NonCopyable {
     
     if(!init || MPCreateCriticalRegion(&_mtx) != noErr) {
       assert(0);
-      throw Initialization_Exception();
+      THROW_EXCEPTION(Initialization_Exception());
     }
 
   }
@@ -82,7 +82,7 @@ class FastLock : private NonCopyable {
   inline void acquire() {
     
     if(MPEnterCriticalRegion(_mtx, kDurationForever) != noErr)
-      throw Synchronization_Exception();
+      THROW_EXCEPTION(Synchronization_Exception());
 
   }
 
@@ -109,7 +109,7 @@ class FastLock : private NonCopyable {
     } 
     
     assert(0);
-    throw Synchronization_Exception();
+    THROW_EXCEPTION(Synchronization_Exception());
 
   }
   
@@ -123,7 +123,7 @@ class FastLock : private NonCopyable {
   inline void release() {
     
     if(MPExitCriticalRegion(_mtx) != noErr)
-      throw Synchronization_Exception();
+      THROW_EXCEPTION(Synchronization_Exception());
 
   }
   

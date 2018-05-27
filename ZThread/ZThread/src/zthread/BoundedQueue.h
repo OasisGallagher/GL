@@ -124,7 +124,7 @@ namespace ZThread {
           _notFull.wait();
       
         if(_canceled)
-          throw Cancellation_Exception();
+          THROW_EXCEPTION(Cancellation_Exception());
 
         _queue.push_back(item);
         _notEmpty.signal(); // Wake any waiters
@@ -169,7 +169,7 @@ namespace ZThread {
               return false;
       
           if(_canceled)
-            throw Cancellation_Exception();
+            THROW_EXCEPTION(Cancellation_Exception());
       
           _queue.push_back(item);
           _notEmpty.signal(); // Wake any waiters
@@ -203,7 +203,7 @@ namespace ZThread {
           _notEmpty.wait();
     
         if( _queue.size() == 0) // Queue canceled
-          throw Cancellation_Exception();  
+          THROW_EXCEPTION(Cancellation_Exception());  
 
         T item = _queue.front();
         _queue.pop_front();
@@ -242,11 +242,11 @@ namespace ZThread {
         // Wait for items to be added
         while (_queue.size() == 0 && !_canceled) {
           if(!_notEmpty.wait(timeout))
-            throw Timeout_Exception();
+            THROW_EXCEPTION(Timeout_Exception());
         }
 
         if(_queue.size() == 0)  // Queue canceled
-          throw Cancellation_Exception();  
+          THROW_EXCEPTION(Cancellation_Exception());  
 
         T item = _queue.front();
         _queue.pop_front();

@@ -139,9 +139,9 @@ namespace ZThread {
           case Monitor::TIMEDOUT:
             return false;
           case Monitor::INTERRUPTED:
-            throw Interrupted_Exception();
+            THROW_EXCEPTION(Interrupted_Exception());
           default:
-            throw Synchronization_Exception();
+            THROW_EXCEPTION(Synchronization_Exception());
         } 
        
         return true;
@@ -590,7 +590,7 @@ namespace ZThread {
   void PoolExecutor::size(size_t n) {
     
     if(n < 1)
-      throw InvalidOp_Exception();
+      THROW_EXCEPTION(InvalidOp_Exception());
 
     for(size_t m = _impl->workers(n); m > 0; --m)
       Thread t(new Worker(_impl));

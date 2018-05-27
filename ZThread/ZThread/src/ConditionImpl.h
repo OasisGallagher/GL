@@ -270,10 +270,10 @@ void ConditionImpl<List>::wait() {
         break;
       
       case Monitor::INTERRUPTED:
-        throw Interrupted_Exception();
+        THROW_EXCEPTION(Interrupted_Exception());
       
       default:
-        throw Synchronization_Exception();
+        THROW_EXCEPTION(Synchronization_Exception());
     }   
 
   }
@@ -359,13 +359,13 @@ bool ConditionImpl<List>::wait(unsigned long timeout) {
         break;
       
       case Monitor::INTERRUPTED:
-        throw Interrupted_Exception();
+        THROW_EXCEPTION(Interrupted_Exception());
       
       case Monitor::TIMEDOUT:
         return false;
 
       default:
-        throw Synchronization_Exception();
+        THROW_EXCEPTION(Synchronization_Exception());
     }   
 
     return true;

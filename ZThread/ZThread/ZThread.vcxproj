@@ -215,6 +215,7 @@
     <ClCompile Include="src\ThreadOps.cxx" />
     <ClCompile Include="src\ThreadQueue.cxx" />
     <ClCompile Include="src\Time.cxx" />
+    <ClCompile Include="src\zthread\Config.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

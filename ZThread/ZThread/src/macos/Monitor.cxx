@@ -32,7 +32,7 @@ Monitor::Monitor() : _owner(0), _waiting(false), _pending(false) {
   
   if(MPCreateSemaphore(1, 0, &_sema) != noErr) {
     assert(0);
-    throw Initialization_Exception();
+    THROW_EXCEPTION(Initialization_Exception());
   }
 
 }

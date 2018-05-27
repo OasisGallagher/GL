@@ -57,7 +57,7 @@ class FastLock : private NonCopyable {
   inline FastLock() {
 
     if(pthread_mutex_init(&_mtx, 0) != 0)
-      throw Initialization_Exception();
+      THROW_EXCEPTION(Initialization_Exception());
 
   }
   
@@ -80,7 +80,7 @@ class FastLock : private NonCopyable {
   inline void acquire() {
     
     if(pthread_mutex_lock(&_mtx) != 0)
-      throw Synchronization_Exception();
+      THROW_EXCEPTION(Synchronization_Exception());
 
   }
 
@@ -108,7 +108,7 @@ class FastLock : private NonCopyable {
   inline void release() {
     
     if(pthread_mutex_unlock(&_mtx) != 0)
-      throw Synchronization_Exception();
+      THROW_EXCEPTION(Synchronization_Exception());
 
   }
   

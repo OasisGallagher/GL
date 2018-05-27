@@ -130,10 +130,10 @@ namespace ZThread {
             break;
 
           case Monitor::INTERRUPTED:
-            throw Interrupted_Exception();
+            THROW_EXCEPTION(Interrupted_Exception());
             
           default:
-            throw Synchronization_Exception();
+            THROW_EXCEPTION(Synchronization_Exception());
         } 
             
       }
@@ -207,13 +207,13 @@ namespace ZThread {
             break;
 
           case Monitor::INTERRUPTED:
-            throw Interrupted_Exception();
+            THROW_EXCEPTION(Interrupted_Exception());
           
           case Monitor::TIMEDOUT:
             return false;
 
           default:
-            throw Synchronization_Exception();
+            THROW_EXCEPTION(Synchronization_Exception());
         } 
             
       }
@@ -233,7 +233,7 @@ namespace ZThread {
 
     // Make sure the operation is valid
     if(!(_owner == &m))
-      throw InvalidOp_Exception();
+      THROW_EXCEPTION(InvalidOp_Exception());
 
     // Update the count, if it has reached 0, wake another waiter.
     if(--_count == 0) {

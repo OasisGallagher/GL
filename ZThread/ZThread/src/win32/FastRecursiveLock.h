@@ -58,7 +58,7 @@ class FastRecursiveLock : private NonCopyable {
     _hMutex = ::CreateMutex(0, 0, 0);
     assert(_hMutex != NULL);
     if(_hMutex == NULL)
-      throw Initialization_Exception();
+      THROW_EXCEPTION(Initialization_Exception());
 
   }
 
@@ -72,7 +72,7 @@ class FastRecursiveLock : private NonCopyable {
 
     if(::WaitForSingleObject(_hMutex, INFINITE) != WAIT_OBJECT_0) {
       assert(0);
-      throw Synchronization_Exception();
+      THROW_EXCEPTION(Synchronization_Exception());
     }
 
   }
@@ -81,7 +81,7 @@ class FastRecursiveLock : private NonCopyable {
 
     if(::ReleaseMutex(_hMutex) == 0) {
       assert(0);
-      throw Synchronization_Exception();
+      THROW_EXCEPTION(Synchronization_Exception());
     }
 
   }
@@ -98,7 +98,7 @@ class FastRecursiveLock : private NonCopyable {
     }
 
     assert(0);
-    throw Synchronization_Exception();
+    THROW_EXCEPTION(Synchronization_Exception());
 
   }
 
