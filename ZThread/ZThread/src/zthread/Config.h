@@ -196,6 +196,7 @@
 #  pragma warning(disable:4786)
 #  pragma warning(disable:4251)
 #  pragma warning(disable:4355)
+#  pragma warning(disable:4715)
 #endif
 
 // Ensure that only one implementation is selected
@@ -215,11 +216,14 @@
 #endif
 
 #include <exception>
+
 typedef void(*ZTExceptionHandler)(const std::exception& exception);
 
-ZTHREAD_API extern ZTExceptionHandler ztException; 
+namespace ZThread {
+	ZTHREAD_API extern ZTExceptionHandler ztException;
+}
 
-#define THROW_EXCEPTION(exception)	ztException(exception)
+#define THROW_EXCEPTION(exception)	ZThread::ztException(exception)
 
 #endif // __ZTCONFIG_H__
 
