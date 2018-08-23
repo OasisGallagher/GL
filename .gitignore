@@ -162,3 +162,5 @@ $RECYCLE.BIN/
 /Suede/Suede/bin/Engine.dll
 /Suede/Suede/bin/GLEF.dll
 /Suede/Suede/bin/Shared.dll
+/qtimgui/demo-widget/debug
+/qtimgui/demo-widget/QtImGui.VC.db

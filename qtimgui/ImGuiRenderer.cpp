@@ -38,7 +38,6 @@ QByteArray g_currentClipboardText;
 
 void ImGuiRenderer::initialize(WindowWrapper *window) {
     m_window.reset(window);
-    //initializeOpenGLFunctions();
 
     ImGui::CreateContext();
 
@@ -323,8 +322,8 @@ void ImGuiRenderer::onMousePressedChange(QMouseEvent *event)
 void ImGuiRenderer::onWheel(QWheelEvent *event)
 {
     // 5 lines per unit
-    g_MouseWheelH += event->pixelDelta().x() / (ImGui::GetTextLineHeight());
-    g_MouseWheel += event->pixelDelta().y() / (5.0 * ImGui::GetTextLineHeight());
+	g_MouseWheelH = 0;// += event->pixelDelta().x() / (ImGui::GetTextLineHeight());
+    g_MouseWheel += event->delta() / (5.0 * ImGui::GetTextLineHeight());
 }
 
 void ImGuiRenderer::onKeyPressRelease(QKeyEvent *event)
@@ -356,6 +355,7 @@ void ImGuiRenderer::onKeyPressRelease(QKeyEvent *event)
 
 bool ImGuiRenderer::eventFilter(QObject *watched, QEvent *event)
 {
+	Q_UNUSED(watched);
     switch (event->type()) {
     case QEvent::MouseButtonPress:
     case QEvent::MouseButtonRelease:
@@ -371,7 +371,9 @@ bool ImGuiRenderer::eventFilter(QObject *watched, QEvent *event)
     default:
         break;
     }
-    return QObject::eventFilter(watched, event);
+
+	return true;
+    //return QObject::eventFilter(watched, event);
 }
 
 ImGuiRenderer* ImGuiRenderer::instance() {

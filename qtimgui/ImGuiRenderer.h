@@ -4,7 +4,6 @@
 #include <QPoint>
 #include <imgui.h>
 #include <memory>
-
 #include <GL/glew.h>
 
 class QMouseEvent;
