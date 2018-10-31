@@ -137,7 +137,8 @@ int __cdecl ReportHook(int /*reportHook*/, wchar_t *message, int* /*returnValue*
 
 int main(int argc, char **argv) {
     VLDSetReportHook(VLD_RPTHOOK_INSTALL, ReportHook);
-    ::testing::InitGoogleTest(&argc, argv);
+	int* p = new int;
+   // ::testing::InitGoogleTest(&argc, argv);
     int res = RUN_ALL_TESTS();
     VLDMarkAllLeaksAsReported();
     VLDSetReportHook(VLD_RPTHOOK_REMOVE, ReportHook);
