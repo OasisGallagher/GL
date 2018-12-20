@@ -26,6 +26,15 @@
 
 namespace ZThread {
 
+  static ThreadImpl* g_mainThreadImpl;
+
+  void Thread::markMainThread() {
+	  g_mainThreadImpl = ThreadImpl::current();
+  }
+
+  bool Thread::isMainThread() {
+	  return g_mainThreadImpl == ThreadImpl::current();
+  }
 
   Thread::Thread() 
     : _impl( ThreadImpl::current() ) { 
